@@ -13,9 +13,11 @@
 </body>
 <script>
   fetch('https://www.apiopen.top/journalismApi').then(res=>res.json()).then((data)=>{
-    document.getElementById('app').innerHTML = data.toString();
-  }).catch((data)=>{
-    document.getElementById('app').innerHTML = data.toString();
+    document.getElementById('app').innerHTML = data.data.map((item,index)=>{
+      return item.title;
+    });
+  }).catch(()=>{
+    document.getElementById('app').innerHTML = 'network error';
   })
 </script>
 </html>
