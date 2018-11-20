@@ -13,9 +13,9 @@
 </body>
 <script>
   fetch('https://www.apiopen.top/journalismApi').then(res=>res.json()).then((data)=>{
-    document.getElementById('app').innerHTML = data;
+    document.getElementById('app').innerHTML = data.toString();
   }).catch((data)=>{
-    document.getElementById('app').innerHTML = data;
+    document.getElementById('app').innerHTML = data.toString();
   })
 </script>
 </html>
