@@ -1,1 +1,21 @@
-hello,world!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <title>IO</title>
+</head>
+
+<body>
+  <div id="app">loading...</div>
+</body>
+<script>
+  fetch('https://www.apiopen.top/journalismApi').then(res=>res.json()).then((data)=>{
+    document.getElementById('app').innerHTML = data;
+  }).catch((data)=>{
+    document.getElementById('app').innerHTML = data;
+  })
+</script>
+</html>
