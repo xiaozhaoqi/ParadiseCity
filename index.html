@@ -14,7 +14,7 @@
 <script>
   fetch('https://www.apiopen.top/journalismApi').then(res=>res.json()).then((data)=>{
     document.getElementById('app').innerHTML = data.data.toutiao.map((item,index)=>{
-      return item.title;
+      return '<h2>' + item.title + '</h2>';
     });
   }).catch(()=>{
     document.getElementById('app').innerHTML = 'network error';
