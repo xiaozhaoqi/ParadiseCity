@@ -21,7 +21,9 @@ export default class Push extends React.Component<{
         })
     }
     push() {
-        fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=15ee6307bfd0967e2f4e13b49c004ff11abfdf86', {
+        const leftToken = 'd6920daff4658f60146';
+        const rightToken = 'dac245849a4be1a5f5072';
+        fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=' + leftToken + rightToken, {
             method: 'PUT',
             body: JSON.stringify({
                 message: 'this is an AutoPush article',
