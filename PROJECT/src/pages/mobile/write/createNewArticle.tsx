@@ -2,22 +2,32 @@
 import React from 'react';
 import { Button, InputItem, TextareaItem } from 'antd-mobile';
 import Link from 'umi/link';
+import styles from '../index.css';
 // import fetch from 'dva/fetch';
 
-export default class Push extends React.Component<{
-    dispatch: any;
-}, {
-        text: string
+export default class Push extends React.Component<
+    {
+        dispatch: any;
+    },
+    {
+        title: string;
+        content: string;
     }> {
     constructor(props) {
         super(props);
         this.state = {
-            text: ''
+            title: '',
+            content: ''
         }
     }
-    handleText(e) {
+    handleTitleChange(e) {
         this.setState({
-            text: e.target.value
+            title: e
+        })
+    }
+    handleContentChange(e) {
+        this.setState({
+            content: e
         })
     }
     push() {
@@ -26,11 +36,17 @@ export default class Push extends React.Component<{
         fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=' + leftToken + rightToken, {
             method: 'PUT',
             body: JSON.stringify({
-                message: 'this is an AutoPush article',
-                content: btoa(this.state.text)
+                message: 'AutoPush Article: '+ this.state.title,
+                // @ts-ignore
+                content: btoa(unescape(encodeURIComponent((JSON.stringify({
+                    title: this.state.title,
+                    content: this.state.content,
+                    time: Date.now()
+                })))))
             })
         }).then(res => res.json()).then((res) => {
             console.log(res);
+            alert('发布成功')
         }).catch((err) => {
             console.log(err);
         })
@@ -38,18 +54,22 @@ export default class Push extends React.Component<{
     render() {
         return (
             <div>
-                <Button type="primary" onClick={this.push.bind(this)}>发布</Button>
-                <Link to='/'>返回</Link>
                 <InputItem
                     clear
                     placeholder="输入标题"
-                >标题</InputItem>
+                    onChange={this.handleTitleChange.bind(this)}
+                />
                 <TextareaItem
                     rows={5}
                     count={200}
                     placeholder='输入内容'
+                    onChange={this.handleContentChange.bind(this)}
                 />
-                <textarea onChange={this.handleText.bind(this)}></textarea>
+                <div style={{display:'flex'}}>
+                    <div className={styles.btn} onClick={this.push.bind(this)}>发布</div>
+                    <Link to='/' className={styles.btn}>返回</Link>
+                </div>
+                
             </div>
         )
     }

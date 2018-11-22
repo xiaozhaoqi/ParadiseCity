@@ -3,6 +3,12 @@
 export default {
   exportStatic: true,
   outputPath: '../',
+  targets: {
+    ie: 9,
+    chrome: 49, 
+    android: 6,
+    ios: 8
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {

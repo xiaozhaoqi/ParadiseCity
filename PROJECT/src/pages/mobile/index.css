@@ -1,0 +1,21 @@
+.btn{
+    display: block;
+    width: 40%;
+    height: 50px;
+    line-height: 50px;
+    margin: 20px;
+    font-size: 16px;
+    background-color: #108ee9;
+    color: #fff;
+    border: 1px solid #108ee9;
+    border-radius: 5px;
+    outline: 0 none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    white-space: nowrap;
+}

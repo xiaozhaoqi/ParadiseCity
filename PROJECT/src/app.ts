@@ -1,11 +1,11 @@
-
-
 export const dva = {
   config: {
-    onError(err) {
-      err.preventDefault();
-      console.log(err.message);
+    onError(e) {
+      e.preventDefault();
+      console.error(e.message);
     },
   },
+  plugins: [
+    // require('dva-logger')(),
+  ],
 };
-
