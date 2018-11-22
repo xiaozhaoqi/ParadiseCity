@@ -31,8 +31,8 @@ export default class Push extends React.Component<
         })
     }
     push() {
-        const leftToken = 'd6920daff4658f60146';
-        const rightToken = 'dac245849a4be1a5f5072';
+        const leftToken = '61e06fdec3996fbda3c';
+        const rightToken = 'eb8094d137bf927e7e5b2';
         fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=' + leftToken + rightToken, {
             method: 'PUT',
             body: JSON.stringify({
