@@ -1,15 +1,17 @@
 
 import React from 'react';
-import { Button, InputItem, TextareaItem } from 'antd-mobile';
+import { Button, InputItem, TextareaItem, WingBlank, WhiteSpace, Toast } from 'antd-mobile';
 import Link from 'umi/link';
 import styles from '../index.css';
+import { connect } from 'dva';
+import { any } from 'prop-types';
 // import fetch from 'dva/fetch';
 
-export default class Push extends React.Component<
-    {
-        dispatch: any;
-    },
-    {
+class CreateNewArticle extends React.Component<{
+    dispatch: any;
+    loading: boolean;
+    isSuccessSubmit: boolean;
+}, {
         title: string;
         content: string;
     }> {
@@ -31,46 +33,54 @@ export default class Push extends React.Component<
         })
     }
     push() {
-        const leftToken = '61e06fdec3996fbda3c';
-        const rightToken = 'eb8094d137bf927e7e5b2';
-        fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=' + leftToken + rightToken, {
-            method: 'PUT',
-            body: JSON.stringify({
-                message: 'AutoPush Article: '+ this.state.title,
-                // @ts-ignore
-                content: btoa(unescape(encodeURIComponent((JSON.stringify({
-                    title: this.state.title,
-                    content: this.state.content,
-                    time: Date.now()
-                })))))
-            })
-        }).then(res => res.json()).then((res) => {
-            console.log(res);
-            alert('发布成功')
-        }).catch((err) => {
-            console.log(err);
+        this.props.dispatch({
+            type: 'global/sendNewArticle',
+            payload: {
+                title: this.state.title,
+                content: this.state.content
+            }
         })
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.isSuccessSubmit){
+            Toast.success('发布成功', 2);
+        }
+        this.props.dispatch({
+            type: 'global/changeSubmitState',
+            payload: false
+        })
+
     }
     render() {
         return (
             <div>
-                <InputItem
-                    clear
-                    placeholder="输入标题"
-                    onChange={this.handleTitleChange.bind(this)}
-                />
-                <TextareaItem
-                    rows={5}
-                    count={200}
-                    placeholder='输入内容'
-                    onChange={this.handleContentChange.bind(this)}
-                />
-                <div style={{display:'flex'}}>
-                    <div className={styles.btn} onClick={this.push.bind(this)}>发布</div>
-                    <Link to='/' className={styles.btn}>返回</Link>
-                </div>
-                
+                <WingBlank size="sm">
+                    <WhiteSpace size="lg" />
+                    <InputItem
+                        clear
+                        placeholder="输入标题"
+                        onChange={this.handleTitleChange.bind(this)}
+                    />
+                    <TextareaItem
+                        clear
+                        rows={10}
+                        count={200}
+                        placeholder='输入内容'
+                        onChange={this.handleContentChange.bind(this)}
+                    />
+                    <div className={styles.bottomBtn} onClick={this.push.bind(this)}>发布</div>
+                    <WhiteSpace size="lg" />
+                </WingBlank>
             </div>
         )
     }
-};
+}
+
+function mapStateToProps(state) {
+    return {
+        loading: state.loading.global,
+        isSuccessSubmit: state.global.isSuccessSubmit
+    };
+}
+
+export default connect(mapStateToProps)(CreateNewArticle);
