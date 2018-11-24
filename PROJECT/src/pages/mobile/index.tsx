@@ -42,7 +42,7 @@ class BasicLayout extends React.Component<{
 
   render() {
     return (
-      <div style={{ height: window.screen.height, position: 'fixed', bottom: '0',width:'100%' }}>
+      <div style={{ height: '100%', position: 'fixed', bottom: '0',width:'100%' }}>
         <TabBar
           unselectedTintColor="#949494"
           tintColor="#33A3F4"
