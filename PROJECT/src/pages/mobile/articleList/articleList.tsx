@@ -25,7 +25,7 @@ class ArticleList extends React.Component<{
     return (
       <div>
         {
-          this.props.articleList.map((item, index) => {
+          this.props.articleList ? this.props.articleList.map((item, index) => {
             let time = (new Date(item.time)).toLocaleString();
             return (
               <WingBlank size="lg">
@@ -33,7 +33,6 @@ class ArticleList extends React.Component<{
                 <Card>
                   <Card.Header
                     title={item.title}
-                  // extra={<span>this is extra</span>}
                   />
                   <Card.Body>
                     <div>{item.content}</div>
@@ -43,7 +42,7 @@ class ArticleList extends React.Component<{
                 <WhiteSpace size="lg" />
               </WingBlank>
             )
-          })
+          }) : null
         }
       </div>
     )

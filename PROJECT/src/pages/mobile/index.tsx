@@ -1,7 +1,7 @@
-import { Icon, TabBar } from 'antd-mobile';
+import { Icon, TabBar, Toast } from 'antd-mobile';
 import { connect } from 'dva';
 import React from 'react';
-import router from 'umi/router';
+// import router from 'umi/router';
 import ArticleList from './articleList/articleList';
 import CreateNewArticle from './write/createNewArticle';
 // import Redirect from 'umi/redirect';
@@ -18,6 +18,7 @@ class BasicLayout extends React.Component<{
   }>{
   constructor(props) {
     super(props);
+    Toast.info('欢迎来到xiaozhaoqi.github.io', 2);
   }
 
   renderContent(pageText) {
@@ -41,7 +42,7 @@ class BasicLayout extends React.Component<{
 
   render() {
     return (
-      <div style={{ height: window.screen.height }}>
+      <div style={{ height: window.screen.height, position: 'fixed', bottom: '0',width:'100%' }}>
         <TabBar
           unselectedTintColor="#949494"
           tintColor="#33A3F4"
@@ -69,8 +70,8 @@ class BasicLayout extends React.Component<{
             <ArticleList />
           </TabBar.Item>
           <TabBar.Item
-            icon={<img src={require("../../assets/tab1close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab1open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab2close.png")} width="21px" height="21px" />}
+            selectedIcon={<img src={require("../../assets/tab2open.png")} width="21px" height="21px" />}
             title="记录"
             key="write"
             selected={this.props.tabSelected == 2}
@@ -84,8 +85,8 @@ class BasicLayout extends React.Component<{
             <CreateNewArticle />
           </TabBar.Item>
           <TabBar.Item
-            icon={<img src={require("../../assets/tab1close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab1open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab3close.png")} width="21px" height="21px" />}
+            selectedIcon={<img src={require("../../assets/tab3open.png")} width="21px" height="21px" />}
             title="相册"
             key="photo"
             selected={this.props.tabSelected == 3}

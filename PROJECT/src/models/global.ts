@@ -12,16 +12,20 @@ export default {
     reducers: {
         updateArticleList(state, action) {
             let articleList = [];
-            action.payload.map((item, index) => {
-                articleList.push({
-                    title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
-                    content: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
-                    time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
+            if (action.payload) {
+                action.payload.map((item, index) => {
+                    articleList.push({
+                        title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
+                        content: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
+                        time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
+                    })
                 })
-            })
-            articleList.sort(function (a, b) {
-                return b.time - a.time;
-            })
+            }
+            if(articleList){
+                articleList.sort(function (a, b) {
+                    return b.time - a.time;
+                })
+            }
             return {
                 ...state,
                 articleList: articleList

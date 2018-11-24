@@ -33,6 +33,14 @@ class CreateNewArticle extends React.Component<{
         })
     }
     push() {
+        if (!this.state.title) {
+            Toast.info('你不写标题怎么行！', 1);
+            return 0;
+        }
+        if (!this.state.content) {
+            Toast.info('你不写内容怎么行！', 1);
+            return 0;
+        }
         this.props.dispatch({
             type: 'global/sendNewArticle',
             payload: {
@@ -41,8 +49,8 @@ class CreateNewArticle extends React.Component<{
             }
         })
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.isSuccessSubmit){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isSuccessSubmit) {
             Toast.success('发布成功', 2);
         }
         this.props.dispatch({
