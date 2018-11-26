@@ -1,0 +1,14 @@
+{
+    "name": "IO Page", 
+    "description": "The app that helps you understand PWA", 
+    "display": "standalone", 
+    "start_url": "/", 
+    "theme_color": "#313131",
+    "background_color": "#313131", 
+    "icons": [
+        {
+            "src": "tab2open.png",
+            "sizes": "72x72 96x96 128x128 256x256"
+        }
+    ]
+}

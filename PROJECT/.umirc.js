@@ -5,7 +5,7 @@ export default {
   outputPath: '../',
   targets: {
     ie: 9,
-    chrome: 49, 
+    chrome: 49,
     android: 6,
     ios: 8
   },
@@ -17,6 +17,7 @@ export default {
       dynamicImport: true,
       title: 'IO',
       dll: true,
+      pwa: true,
       routes: {
         exclude: [],
       },

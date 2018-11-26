@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button, InputItem, TextareaItem, WingBlank, WhiteSpace, Toast } from 'antd-mobile';
-import Link from 'umi/link';
+// import Link from 'umi/link';
 import styles from '../index.css';
 import { connect } from 'dva';
 import { any } from 'prop-types';
