@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.3351ceaf452c5fe3b71337d6c5a2b84f.js"
+  "/precache-manifest.10c05d5c8ad74ffe4436c38070c2547a.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "ioboard"});

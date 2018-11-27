@@ -43,6 +43,10 @@ class PhotoList extends React.Component<{
 
     onChange = (files, type, index) => {
         if (type === 'add') {
+            if (files[files.length - 1].url.length > 1000000) {
+                Toast.fail('超过1MB无法上传', 1);
+                return 0;
+            }
             this.props.dispatch({
                 type: 'global/sendNewPhoto',
                 payload: {
