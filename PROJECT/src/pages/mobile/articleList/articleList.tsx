@@ -3,7 +3,7 @@ import { Button, Card, WingBlank, WhiteSpace } from 'antd-mobile';
 import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
-// PC entry
+
 class ArticleList extends React.Component<{
   articleList: Array<{
     title: string;

@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "react-router-breadcrumbs-hoc": "^2.1.5",
-    "react-transition-group": "^2.5.0"
+    "react-transition-group": "^2.5.0",
+    "react-wx-images-viewer": "^1.0.6"
   }
 }

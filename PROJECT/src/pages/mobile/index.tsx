@@ -4,6 +4,7 @@ import React from 'react';
 // import router from 'umi/router';
 import ArticleList from './articleList/articleList';
 import CreateNewArticle from './write/createNewArticle';
+import PhotoList from './photo/photoList';
 // import Redirect from 'umi/redirect';
 
 /*
@@ -54,8 +55,8 @@ class BasicLayout extends React.Component<{
           <TabBar.Item
             title="文章"
             key="article"
-            icon={<img src={require("../../assets/tab1close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab1open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab1close.png")} width="21px" height="21px" alt=""/>}
+            selectedIcon={<img src={require("../../assets/tab1open.png")} width="21px" height="21px" alt=""/>}
             selected={this.props.tabSelected == 1}
             onPress={() => {
               this.props.dispatch({
@@ -70,8 +71,8 @@ class BasicLayout extends React.Component<{
             <ArticleList />
           </TabBar.Item>
           <TabBar.Item
-            icon={<img src={require("../../assets/tab2close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab2open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab2close.png")} width="21px" height="21px" alt=""/>}
+            selectedIcon={<img src={require("../../assets/tab2open.png")} width="21px" height="21px" alt=""/>}
             title="记录"
             key="write"
             selected={this.props.tabSelected == 2}
@@ -85,8 +86,8 @@ class BasicLayout extends React.Component<{
             <CreateNewArticle />
           </TabBar.Item>
           <TabBar.Item
-            icon={<img src={require("../../assets/tab3close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab3open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab3close.png")} width="21px" height="21px" alt=""/>}
+            selectedIcon={<img src={require("../../assets/tab3open.png")} width="21px" height="21px" alt=""/>}
             title="相册"
             key="photo"
             selected={this.props.tabSelected == 3}
@@ -97,11 +98,11 @@ class BasicLayout extends React.Component<{
               })
             }}
           >
-            {this.renderContent('Friend')}
+            <PhotoList />
           </TabBar.Item>
           <TabBar.Item
-            icon={<img src={require("../../assets/tab4close.png")} width="21px" height="21px" />}
-            selectedIcon={<img src={require("../../assets/tab4open.png")} width="21px" height="21px" />}
+            icon={<img src={require("../../assets/tab4close.png")} width="21px" height="21px" alt="" />}
+            selectedIcon={<img src={require("../../assets/tab4open.png")} width="21px" height="21px" alt=""/>}
             title="我的"
             key="my"
             selected={this.props.tabSelected == 4}
