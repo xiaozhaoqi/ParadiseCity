@@ -8,7 +8,7 @@ export default {
         tabSelected: 1,
         isTabBarHidden: false,
         isSuccessSubmit: false,
-        photoFiles:[]
+        photoFiles: []
     },
     reducers: {
         updateArticleList(state, action) {
@@ -22,7 +22,7 @@ export default {
                     })
                 })
             }
-            if(articleList){
+            if (articleList) {
                 articleList.sort(function (a, b) {
                     return b.time - a.time;
                 })
@@ -55,8 +55,15 @@ export default {
             if (action.payload) {
                 action.payload.map((item, index) => {
                     photoFiles.push({
-                        url: atob(item.content)
+                        title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
+                        url: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
+                        time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
                     })
+                })
+            }
+            if (photoFiles) {
+                photoFiles.sort(function (a, b) {
+                    return a.time - b.time;
                 })
             }
             return {
@@ -95,16 +102,18 @@ export default {
         // 图片
         *getCurrentPhotoList(action, { call, put }) {
             const photoList = yield call(getPhotoList);
-            const photo = yield photoList.map((item, i) => {
-                return call(getPhoto, photoList[i].name);
-            });
-            yield put({
-                type: 'updatePhotoList',
-                payload: photo
-            })
+            if (photoList) {
+                const photo = yield photoList.map((item, i) => {
+                    return call(getPhoto, photoList[i].name);
+                });
+                yield put({
+                    type: 'updatePhotoList',
+                    payload: photo
+                })
+            }
         },
         *sendNewPhoto(action, { put, call }) {
-            const isSuccessSubmit = yield call(sendNewPhoto, action.payload);
+            const isSuccessSubmit = yield call(sendNewPhoto, action.payload.title, action.payload.content);
             if (isSuccessSubmit) {
                 yield put({
                     type: 'changeSubmitState',
@@ -118,7 +127,8 @@ export default {
             }
         },
         *removePhoto(action, { put, call }) {
-            const isSuccessSubmit = yield call(removePhoto, action.payload);
+            const photoInfo = yield call(getPhoto, action.payload + '.png');
+            const isSuccessSubmit = yield call(removePhoto, action.payload, photoInfo.sha);
             if (isSuccessSubmit) {
                 yield put({
                     type: 'changeSubmitState',

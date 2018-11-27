@@ -62,7 +62,7 @@ class CreateNewArticle extends React.Component<{
     render() {
         return (
             <div>
-                <WingBlank size="sm">
+                <WingBlank size="md">
                     <WhiteSpace size="lg" />
                     <InputItem
                         clear

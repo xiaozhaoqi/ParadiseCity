@@ -45,16 +45,33 @@ class PhotoList extends React.Component<{
         if (type === 'add') {
             this.props.dispatch({
                 type: 'global/sendNewPhoto',
-                payload: files[files.length - 1].url
+                payload: {
+                    title: Date.now(),
+                    content: files[files.length - 1].url
+                }
             })
         }
-        else {
-            Toast.info(type + '功能未完成', 2)
+        if (type === 'remove') {
+            // 点击 × 返回的files数组表示的是移除当前图片后的结果集
+            // files与store中的图片对象集合photoFiles匹配，差值为当前移除的对象
+            // match匹配集合：默认值为false，当photoFiles中的对象在files中找到时，标记为true
+            let match = new Array(this.props.photoFiles.length).fill(false);
+            for (let i = 0; i < this.props.photoFiles.length; i++) {
+                for (let j = 0; j < files.length; j++) {
+                    if (this.props.photoFiles[i].title === files[j].title) {
+                        match[i] = true;
+                    }
+                }
+            }
+            // 标记位为false的项是当前移除的对象
+            this.props.dispatch({
+                type: 'global/removePhoto',
+                payload: this.props.photoFiles[match.indexOf(false)].title
+            })
         }
-        // todo: remove
     }
     handleSelectFail = (msg) => {
-        console.log(msg)
+        Toast.fail(msg, 2)
     }
 
     handleClickPhoto = (index, fs) => {

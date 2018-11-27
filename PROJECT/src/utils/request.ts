@@ -37,7 +37,12 @@ async function sendNewArticle(title, content) {
 async function getPhotoList() {
   return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2?access_token=' + leftToken + rightToken, {
     method: 'GET',
-  }).then(res => res.json()).then((res) => {
+  }).then(res => {
+    if(res.status < 299)
+      return res.json();
+    else
+      return null;
+  }).then((res) => {
     return res;
   }).catch((err) => { console.log(err); })
 }
@@ -48,13 +53,17 @@ async function getPhoto(name) {
     return res;
   }).catch((err) => { console.log(err); })
 }
-async function sendNewPhoto(url) {
-  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2/' + Math.random() + '.png?access_token=' + leftToken + rightToken, {
+async function sendNewPhoto(title, content) {
+  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2/' + title + '.png?access_token=' + leftToken + rightToken, {
     method: 'PUT',
     body: JSON.stringify({
-      message: 'AutoPush Photo',
+      message: 'AutoPush Photo: ' + title,
       // @ts-ignore
-      content: btoa(url)
+      content: btoa(unescape(encodeURIComponent((JSON.stringify({
+        title: title,
+        content: content,
+        time: title
+      })))))
     })
   }).then(res => res.json()).then((res) => {
     return true;
@@ -62,9 +71,14 @@ async function sendNewPhoto(url) {
     return false;
   })
 }
-async function removePhoto(name) {
-  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2/' + name + '?access_token=' + leftToken + rightToken, {
-    method: 'GET',
+async function removePhoto(title, sha) {
+  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2/' + title + '.png?access_token=' + leftToken + rightToken, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      message: 'AutoDelete Photo: ' + title,
+      // @ts-ignore
+      sha: sha
+    })
   }).then(res => res.json()).then((res) => {
     return res;
   }).catch((err) => { console.log(err); })
