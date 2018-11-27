@@ -7,6 +7,7 @@ import WxImageViewer from 'react-wx-images-viewer';
 
 class PhotoList extends React.Component<{
     isSuccessSubmit: boolean;
+    isSuccessRemove: boolean;
     loading: boolean;
     photoFiles: any;
     dispatch: any;
@@ -34,17 +35,27 @@ class PhotoList extends React.Component<{
             this.props.dispatch({
                 type: 'global/getCurrentPhotoList',
             })
+            this.props.dispatch({
+                type: 'global/changeSubmitState',
+                payload: false
+            })
         }
-        this.props.dispatch({
-            type: 'global/changeSubmitState',
-            payload: false
-        })
+        if (nextProps.isSuccessRemove) {
+            Toast.success('移除成功', 2);
+            this.props.dispatch({
+                type: 'global/getCurrentPhotoList',
+            })
+            this.props.dispatch({
+                type: 'global/changeRemoveState',
+                payload: false
+            })
+        }
     }
 
     onChange = (files, type, index) => {
         if (type === 'add') {
             if (files[files.length - 1].url.length > 1000000) {
-                Toast.fail('超过1MB无法上传', 1);
+                Toast.fail('超过1MB无法上传', 2);
                 return 0;
             }
             this.props.dispatch({
@@ -115,7 +126,8 @@ function mapStateToProps(state) {
     return {
         loading: state.loading.global,
         photoFiles: state.global.photoFiles,
-        isSuccessSubmit: state.global.isSuccessSubmit
+        isSuccessSubmit: state.global.isSuccessSubmit,
+        isSuccessRemove: state.global.isSuccessRemove
     };
 }
 

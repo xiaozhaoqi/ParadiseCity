@@ -8,6 +8,7 @@ export default {
         tabSelected: 1,
         isTabBarHidden: false,
         isSuccessSubmit: false,
+        isSuccessRemove: false,
         photoFiles: []
     },
     reducers: {
@@ -48,6 +49,12 @@ export default {
             return {
                 ...state,
                 isSuccessSubmit: action.payload
+            }
+        },
+        changeRemoveState(state, action) {
+            return {
+                ...state,
+                isSuccessRemove: action.payload
             }
         },
         updatePhotoList(state, action) {
@@ -110,6 +117,11 @@ export default {
                     type: 'updatePhotoList',
                     payload: photo
                 })
+            } else {
+                yield put({
+                    type: 'updatePhotoList',
+                    payload: []
+                })
             }
         },
         *sendNewPhoto(action, { put, call }) {
@@ -128,15 +140,15 @@ export default {
         },
         *removePhoto(action, { put, call }) {
             const photoInfo = yield call(getPhoto, action.payload + '.png');
-            const isSuccessSubmit = yield call(removePhoto, action.payload, photoInfo.sha);
-            if (isSuccessSubmit) {
+            const isSuccessRemove = yield call(removePhoto, action.payload, photoInfo.sha);
+            if (isSuccessRemove) {
                 yield put({
-                    type: 'changeSubmitState',
+                    type: 'changeRemoveState',
                     payload: true
                 })
             } else {
                 yield put({
-                    type: 'changeSubmitState',
+                    type: 'changeRemoveState',
                     payload: false
                 })
             }
