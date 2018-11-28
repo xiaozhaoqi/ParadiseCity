@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/404/index.html"
   },
   {
-    "revision": "0bceebb86fbb2e0aa55d",
+    "revision": "f4c36674905ae396a028",
     "url": "/vendors.chunk.css"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/pwacompat.min.js"
   },
   {
-    "revision": "bacd048760fa7040bb02",
+    "revision": "b41fdb5a9a9f38e78ea0",
     "url": "/umi.js"
   },
   {
@@ -24,11 +24,11 @@ self.__precacheManifest = [
     "url": "/tab2open.png"
   },
   {
-    "revision": "bacd048760fa7040bb02",
+    "revision": "b41fdb5a9a9f38e78ea0",
     "url": "/umi.css"
   },
   {
-    "revision": "0bceebb86fbb2e0aa55d",
+    "revision": "f4c36674905ae396a028",
     "url": "/vendors.async.js"
   },
   {

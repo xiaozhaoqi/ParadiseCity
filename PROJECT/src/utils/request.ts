@@ -4,7 +4,12 @@ const rightToken = 'eb8094d137bf927e7e5b2';
 async function getArticleList() {
   return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1?access_token=' + leftToken + rightToken, {
     method: 'GET',
-  }).then(res => res.json()).then((res) => {
+  }).then(res => {
+    if (res.status < 299)
+      return res.json();
+    else
+      return null;
+  }).then((res) => {
     return res;
   }).catch((err) => { console.log(err); })
 }
@@ -16,7 +21,8 @@ async function getArticle(name) {
   }).catch((err) => { console.log(err); })
 }
 async function sendNewArticle(title, content) {
-  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + Math.random() + '.md?access_token=' + leftToken + rightToken, {
+  const time = Date.now();
+  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + time + '.md?access_token=' + leftToken + rightToken, {
     method: 'PUT',
     body: JSON.stringify({
       message: 'AutoPush Article: ' + title,
@@ -24,7 +30,7 @@ async function sendNewArticle(title, content) {
       content: btoa(unescape(encodeURIComponent((JSON.stringify({
         title: title,
         content: content,
-        time: Date.now()
+        time: time
       })))))
     })
   }).then(res => res.json()).then((res) => {
@@ -33,12 +39,24 @@ async function sendNewArticle(title, content) {
     return false;
   })
 }
+async function removeArticle(title, sha) {
+  return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/' + title + '.md?access_token=' + leftToken + rightToken, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      message: 'AutoDelete article: ' + title,
+      // @ts-ignore
+      sha: sha
+    })
+  }).then(res => res.json()).then((res) => {
+    return res;
+  }).catch((err) => { console.log(err); })
+}
 // 图片
 async function getPhotoList() {
   return await fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test2?access_token=' + leftToken + rightToken, {
     method: 'GET',
   }).then(res => {
-    if(res.status < 299)
+    if (res.status < 299)
       return res.json();
     else
       return null;
@@ -90,5 +108,6 @@ export {
   sendNewPhoto,
   getPhotoList,
   getPhoto,
-  removePhoto
+  removePhoto,
+  removeArticle
 }

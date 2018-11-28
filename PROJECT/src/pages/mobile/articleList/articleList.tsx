@@ -1,5 +1,5 @@
 import Link from 'umi/link';
-import { Button, Card, WingBlank, WhiteSpace } from 'antd-mobile';
+import { Button, Card, WingBlank, WhiteSpace, Icon, Toast } from 'antd-mobile';
 import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
@@ -11,6 +11,7 @@ class ArticleList extends React.Component<{
     time: number;
   }>;
   dispatch: any;
+  isSuccessRemove: boolean;
 }, {}>{
   constructor(props) {
     super(props);
@@ -19,6 +20,24 @@ class ArticleList extends React.Component<{
     }
     props.dispatch({
       type: 'global/getCurrentArticleList'
+    })
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isSuccessRemove) {
+      Toast.success('移除成功', 2);
+      this.props.dispatch({
+        type: 'global/getCurrentArticleList',
+      })
+      this.props.dispatch({
+        type: 'global/changeRemoveState',
+        payload: false
+      })
+    }
+  }
+  handleRemoveCard = (e) => {
+    this.props.dispatch({
+      type: 'global/removeArticle',
+      payload: e.target.getAttribute('data-time')
     })
   }
   render() {
@@ -33,6 +52,7 @@ class ArticleList extends React.Component<{
                 <Card>
                   <Card.Header
                     title={item.title}
+                    extra={<span onClick={this.handleRemoveCard} data-time={item.time}>×</span>}
                   />
                   <Card.Body>
                     <div>{item.content}</div>
@@ -52,7 +72,8 @@ class ArticleList extends React.Component<{
 function mapStateToProps(state) {
   return {
     loading: state.loading.global,
-    articleList: state.global.articleList
+    articleList: state.global.articleList,
+    isSuccessRemove: state.global.isSuccessRemove
   };
 }
 
