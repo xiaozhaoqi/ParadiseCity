@@ -1,12 +1,10 @@
 import { Icon, TabBar, Toast } from 'antd-mobile';
 import { connect } from 'dva';
 import React from 'react';
-// import router from 'umi/router';
 import ArticleList from './articleList/articleList';
 import CreateNewArticle from './write/createNewArticle';
 import PhotoList from './photo/photoList';
 import Info from './info/info';
-// import Redirect from 'umi/redirect';
 
 /*
 移动端根节点组件
@@ -101,7 +99,6 @@ class BasicLayout extends React.Component<{
             <Info />
           </TabBar.Item>
         </TabBar>
-        {this.props.loading ? <Icon type="loading" size="lg" style={{ position: 'absolute', top: '47%', left: '47%' }} /> : null}
       </div>
     );
   }

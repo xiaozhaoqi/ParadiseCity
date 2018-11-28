@@ -3,8 +3,10 @@ import { Button, Card, WingBlank, WhiteSpace, Icon, Toast } from 'antd-mobile';
 import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
+import SkeletonScreen from './skeletonScreen';
 
 class ArticleList extends React.Component<{
+  loading: boolean;
   articleList: Array<{
     title: string;
     content: string;
@@ -35,6 +37,7 @@ class ArticleList extends React.Component<{
     }
   }
   handleRemoveCard = (e) => {
+    Toast.info('正在移除...', 1);
     this.props.dispatch({
       type: 'global/removeArticle',
       payload: e.target.getAttribute('data-time')
@@ -44,22 +47,24 @@ class ArticleList extends React.Component<{
     return (
       <div>
         {
-          this.props.articleList ? this.props.articleList.map((item, index) => {
+          this.props.loading ? <SkeletonScreen /> : null
+        }
+        {
+          this.props.articleList && !this.props.loading ? this.props.articleList.map((item, index) => {
             let time = (new Date(item.time)).toLocaleString();
             return (
               <WingBlank size="lg">
-                <WhiteSpace size="lg" />
+                <WhiteSpace size="md" />
                 <Card>
                   <Card.Header
                     title={item.title}
                     extra={<span onClick={this.handleRemoveCard} data-time={item.time}>×</span>}
                   />
-                  <Card.Body>
-                    <div>{item.content}</div>
+                  <Card.Body className={styles.cardBody}>
+                    <p>{item.content}</p>
                   </Card.Body>
                   <Card.Footer content={time} />
                 </Card>
-                <WhiteSpace size="lg" />
               </WingBlank>
             )
           }) : null

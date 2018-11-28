@@ -9,6 +9,7 @@ import {
   removePhoto,
   removeArticle
 } from '../utils/request';
+import { resolve } from 'path';
 
 export default {
   namespace: 'global',
@@ -91,6 +92,10 @@ export default {
   effects: {
     // 文字
     *getCurrentArticleList(action, { call, put }) {
+      // 模拟网络延迟
+      // yield new Promise((resolve) => {
+      //   setTimeout(resolve, 3000);
+      // })
       const articleList = yield call(getArticleList);
       if (articleList) {
         const article = yield articleList.map((item, i) => {

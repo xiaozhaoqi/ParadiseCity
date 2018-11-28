@@ -44,3 +44,54 @@
     white-space: nowrap;
     z-index: 10;
 }
+
+.cardBody {
+  min-height: auto !important;
+  height: 100% !important;
+  max-height: 300px !important;
+}
+
+.skeleton {
+  width: 90%;
+  height: 120px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 5%;
+}
+
+.skeletonTitle {
+  width: 60%;
+  height: 20px;
+  transform-origin: left;
+  border-radius: 5px;
+  animation: skeleton-stretch 1.2s linear infinite alternate;
+  background: rgba(194, 207, 214, 0.3);
+}
+
+.skeletonTime {
+  width: 40%;
+  height: 20px;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: rgba(194, 207, 214, 0.3);
+}
+
+.skeletonContent {
+  width: 90%;
+  height: 40px;
+  margin-top: 10px;
+  border-radius: 5px;
+  transform-origin: left;
+  animation: skeleton-stretch 0.7s linear infinite alternate;
+  background: rgba(194, 207, 214, 0.3);
+}
+
+@keyframes skeleton-stretch {
+  from {
+    transform: scalex(1);
+  }
+  to {
+    transform: scalex(.3);
+  }
+}
