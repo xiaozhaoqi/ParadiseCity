@@ -1,45 +1,72 @@
-
 import React from 'react';
-import { Button } from 'antd';
-import Link from 'umi/link';
-// import fetch from 'dva/fetch';
+import { Button, Popconfirm } from 'antd';
 
-export default class Push extends React.Component<{
-    dispatch: any
-},{
-    text: string
-}> {
-    constructor(props){
-        super(props);
-        this.state = {
-            text: ''
-        }
-    }
-    handleText(e){
-        this.setState({
-            text: e.target.value
-        })
-    }
-    push() {
-        fetch('https://api.github.com/repos/xiaozhaoqi/xiaozhaoqi.github.io/contents/test1/'+ Math.random() +'.md?access_token=15ee6307bfd0967e2f4e13b49c004ff11abfdf86', {
-            method: 'PUT',
-            body: JSON.stringify({
-                message: 'this is an AutoPush article',
-                content: btoa(this.state.text)
-            })
-        }).then(res => res.json()).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
-    render() {
-        return (
-            <div>
-                <Button type="primary" onClick={this.push.bind(this)}>发布</Button>
-                <Link to='/'>返回</Link>
-                <textarea onChange={this.handleText.bind(this)}></textarea>
-            </div>
-        )
-    }
-};
+const Markdown = require('react-markdown/with-html');
+const styles = require('../index.css');
+
+export default class Push extends React.Component<
+  {
+    dispatch: any;
+  },
+  {
+    text: string;
+  }
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+    };
+  }
+  handleText(e) {
+    this.setState({
+      text: e.target.value,
+    });
+  }
+  push() {
+    // this.props.dispatch({
+    //   type:'global/sendNewArticle',
+    //   payload: {
+    //     title:
+    //     content:
+    //   }
+    // })
+  }
+  render() {
+    return (
+      <div>
+        <textarea
+          onChange={this.handleText.bind(this)}
+          className={styles.writeArea}
+          autoFocus
+          value={this.state.text}
+        />
+        <Markdown source={this.state.text} className={styles.parseMarkdown} escapeHtml={false} />
+        <Button type="default" onClick={this.push.bind(this)} className={styles.submitButton}>
+          发布
+        </Button>
+        <Popconfirm
+          title="确定清除编辑内容？"
+          onConfirm={() => {
+            this.setState({ text: '' });
+          }}
+          okText="确定"
+          cancelText="取消"
+        >
+          <Button type="danger" className={styles.submitButton}>
+            重置
+          </Button>
+        </Popconfirm>
+        <Button
+          type="dashed"
+          onClick={() => {
+            window.open('https://www.jianshu.com/p/191d1e21f7ed', '_blank');
+          }}
+          className={styles.submitButton}
+        >
+          Help
+        </Button>
+      </div>
+    );
+  }
+}

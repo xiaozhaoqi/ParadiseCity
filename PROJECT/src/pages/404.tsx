@@ -1,7 +1,3 @@
-export default function(){
-    return (
-        <div>
-            走错了~
-        </div>
-    )
+export default function() {
+  return <div>走错了~</div>;
 }

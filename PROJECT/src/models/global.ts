@@ -7,9 +7,8 @@ import {
   getPhotoList,
   getPhoto,
   removePhoto,
-  removeArticle
+  removeArticle,
 } from '../utils/request';
-import { resolve } from 'path';
 
 export default {
   namespace: 'global',
@@ -19,7 +18,7 @@ export default {
     isTabBarHidden: false,
     isSuccessSubmit: false,
     isSuccessRemove: false,
-    photoFiles: []
+    photoFiles: [],
   },
   reducers: {
     updateArticleList(state, action) {
@@ -30,42 +29,42 @@ export default {
             title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
             content: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
             time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
-          })
-        })
+          });
+        });
       }
       if (articleList) {
-        articleList.sort(function (a, b) {
+        articleList.sort(function(a, b) {
           return b.time - a.time;
-        })
+        });
       }
       return {
         ...state,
-        articleList: articleList
-      }
+        articleList: articleList,
+      };
     },
     hideTabBar(state, action) {
       return {
         ...state,
-        isTabBarHidden: action.payload
-      }
+        isTabBarHidden: action.payload,
+      };
     },
     changeTabSelected(state, action) {
       return {
         ...state,
-        tabSelected: action.payload
-      }
+        tabSelected: action.payload,
+      };
     },
     changeSubmitState(state, action) {
       return {
         ...state,
-        isSuccessSubmit: action.payload
-      }
+        isSuccessSubmit: action.payload,
+      };
     },
     changeRemoveState(state, action) {
       return {
         ...state,
-        isSuccessRemove: action.payload
-      }
+        isSuccessRemove: action.payload,
+      };
     },
     updatePhotoList(state, action) {
       let photoFiles = [];
@@ -75,18 +74,18 @@ export default {
             title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
             url: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
             time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
-          })
-        })
+          });
+        });
       }
       if (photoFiles) {
-        photoFiles.sort(function (a, b) {
+        photoFiles.sort(function(a, b) {
           return a.time - b.time;
-        })
+        });
       }
       return {
         ...state,
-        photoFiles: photoFiles
-      }
+        photoFiles: photoFiles,
+      };
     },
   },
   effects: {
@@ -103,27 +102,31 @@ export default {
         });
         yield put({
           type: 'updateArticleList',
-          payload: article
-        })
+          payload: article,
+        });
       } else {
         yield put({
           type: 'updateArticleList',
-          payload: []
-        })
+          payload: [],
+        });
       }
     },
     *sendNewArticle(action, { put, call }) {
-      const isSuccessSubmit = yield call(sendNewArticle, action.payload.title, action.payload.content);
+      const isSuccessSubmit = yield call(
+        sendNewArticle,
+        action.payload.title,
+        action.payload.content
+      );
       if (isSuccessSubmit) {
         yield put({
           type: 'changeSubmitState',
-          payload: true
-        })
+          payload: true,
+        });
       } else {
         yield put({
           type: 'changeSubmitState',
-          payload: false
-        })
+          payload: false,
+        });
       }
     },
     *removeArticle(action, { put, call }) {
@@ -132,13 +135,13 @@ export default {
       if (isSuccessRemove) {
         yield put({
           type: 'changeRemoveState',
-          payload: true
-        })
+          payload: true,
+        });
       } else {
         yield put({
           type: 'changeRemoveState',
-          payload: false
-        })
+          payload: false,
+        });
       }
     },
     // 图片
@@ -150,27 +153,31 @@ export default {
         });
         yield put({
           type: 'updatePhotoList',
-          payload: photo
-        })
+          payload: photo,
+        });
       } else {
         yield put({
           type: 'updatePhotoList',
-          payload: []
-        })
+          payload: [],
+        });
       }
     },
     *sendNewPhoto(action, { put, call }) {
-      const isSuccessSubmit = yield call(sendNewPhoto, action.payload.title, action.payload.content);
+      const isSuccessSubmit = yield call(
+        sendNewPhoto,
+        action.payload.title,
+        action.payload.content
+      );
       if (isSuccessSubmit) {
         yield put({
           type: 'changeSubmitState',
-          payload: true
-        })
+          payload: true,
+        });
       } else {
         yield put({
           type: 'changeSubmitState',
-          payload: false
-        })
+          payload: false,
+        });
       }
     },
     *removePhoto(action, { put, call }) {
@@ -179,14 +186,14 @@ export default {
       if (isSuccessRemove) {
         yield put({
           type: 'changeRemoveState',
-          payload: true
-        })
+          payload: true,
+        });
       } else {
         yield put({
           type: 'changeRemoveState',
-          payload: false
-        })
+          payload: false,
+        });
       }
-    }
+    },
   },
 };

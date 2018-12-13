@@ -4,22 +4,20 @@ import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
 
-class Info extends React.Component<{
- 
-  dispatch: any;
-}, {}>{
+class Info extends React.Component<
+  {
+    dispatch: any;
+  },
+  {}
+> {
   constructor(props) {
     super(props);
     if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = "/pc";
+      window.location.pathname = '/pc';
     }
   }
   render() {
-    return (
-      <div>
-          
-      </div>
-    )
+    return <div />;
   }
 }
 

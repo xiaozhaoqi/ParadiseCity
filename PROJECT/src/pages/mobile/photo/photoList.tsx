@@ -5,28 +5,31 @@ import { connect } from 'dva';
 import React from 'react';
 import WxImageViewer from 'react-wx-images-viewer';
 
-class PhotoList extends React.Component<{
-  isSuccessSubmit: boolean;
-  isSuccessRemove: boolean;
-  loading: boolean;
-  photoFiles: any;
-  dispatch: any;
-}, {
+class PhotoList extends React.Component<
+  {
+    isSuccessSubmit: boolean;
+    isSuccessRemove: boolean;
+    loading: boolean;
+    photoFiles: any;
+    dispatch: any;
+  },
+  {
     url: any;
     isPreviewPhoto: boolean;
-  }>{
+  }
+> {
   constructor(props) {
     super(props);
     if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = "/pc";
+      window.location.pathname = '/pc';
     }
     props.dispatch({
-      type: 'global/getCurrentPhotoList'
-    })
+      type: 'global/getCurrentPhotoList',
+    });
     this.state = {
       url: [],
-      isPreviewPhoto: false
-    }
+      isPreviewPhoto: false,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,21 +37,21 @@ class PhotoList extends React.Component<{
       Toast.success('上传成功', 2);
       this.props.dispatch({
         type: 'global/getCurrentPhotoList',
-      })
+      });
       this.props.dispatch({
         type: 'global/changeSubmitState',
-        payload: false
-      })
+        payload: false,
+      });
     }
     if (nextProps.isSuccessRemove) {
       Toast.success('移除成功', 2);
       this.props.dispatch({
         type: 'global/getCurrentPhotoList',
-      })
+      });
       this.props.dispatch({
         type: 'global/changeRemoveState',
-        payload: false
-      })
+        payload: false,
+      });
     }
   }
 
@@ -62,9 +65,9 @@ class PhotoList extends React.Component<{
         type: 'global/sendNewPhoto',
         payload: {
           title: Date.now(),
-          content: files[files.length - 1].url
-        }
-      })
+          content: files[files.length - 1].url,
+        },
+      });
     }
     if (type === 'remove') {
       // 点击 × 返回的files数组表示的是移除当前图片后的结果集
@@ -81,27 +84,26 @@ class PhotoList extends React.Component<{
       // 标记位为false的项是当前移除的对象
       this.props.dispatch({
         type: 'global/removePhoto',
-        payload: this.props.photoFiles[match.indexOf(false)].title
-      })
+        payload: this.props.photoFiles[match.indexOf(false)].title,
+      });
     }
-  }
-  handleSelectFail = (msg) => {
-    Toast.fail(msg, 2)
-  }
+  };
+  handleSelectFail = msg => {
+    Toast.fail(msg, 2);
+  };
 
   handleClickPhoto = (index, fs) => {
     this.setState({
       url: [fs[index].url],
-      isPreviewPhoto: true
-    })
-  }
+      isPreviewPhoto: true,
+    });
+  };
   onClose = () => {
     this.setState({
-      isPreviewPhoto: false
-    })
-  }
+      isPreviewPhoto: false,
+    });
+  };
   render() {
-
     return (
       <div>
         <ImagePicker
@@ -113,14 +115,18 @@ class PhotoList extends React.Component<{
           onFail={this.handleSelectFail}
           length={4}
         />
-        {
-          this.state.isPreviewPhoto ? <WxImageViewer urls={this.state.url} onClose={this.onClose} /> : null
-        }
-        {
-          this.props.loading ? <Icon type="loading" size="lg" style={{ position: 'relative', top: '150px', left: '45%' }} /> : null
-        }
+        {this.state.isPreviewPhoto ? (
+          <WxImageViewer urls={this.state.url} onClose={this.onClose} />
+        ) : null}
+        {this.props.loading ? (
+          <Icon
+            type="loading"
+            size="lg"
+            style={{ position: 'relative', top: '150px', left: '45%' }}
+          />
+        ) : null}
       </div>
-    )
+    );
   }
 }
 
@@ -129,7 +135,7 @@ function mapStateToProps(state) {
     loading: state.loading.global,
     photoFiles: state.global.photoFiles,
     isSuccessSubmit: state.global.isSuccessSubmit,
-    isSuccessRemove: state.global.isSuccessRemove
+    isSuccessRemove: state.global.isSuccessRemove,
   };
 }
 
