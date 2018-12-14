@@ -11,12 +11,20 @@ interface IProps {
     time: string;
     title: string;
   }>;
+  photoFiles: Array<{
+    url: string;
+    time: string;
+    title: string;
+  }>;
 }
 class CardList extends React.Component<IProps, {}> {
   constructor(props: IProps) {
     super(props);
     this.props.dispatch({
       type: 'global/getCurrentArticleList',
+    });
+    this.props.dispatch({
+      type: 'global/getCurrentPhotoList',
     });
   }
   public static getDerivedStateFromProps(nextProps: IProps) {
@@ -27,6 +35,7 @@ class CardList extends React.Component<IProps, {}> {
   }
   render() {
     return (
+      <>
       <List
         grid={{
           gutter: 16,
@@ -38,20 +47,40 @@ class CardList extends React.Component<IProps, {}> {
           xxl: 6,
         }}
         dataSource={this.props.loading ? new Array(10) : this.props.articleList}
-        renderItem={item => (
-          <List.Item>
-            {this.props.loading ? (
-              <div className={styles.skeleton}>
-                <div className={styles.skeletonTitle} />
-                <div className={styles.skeletonContent} />
-                <div className={styles.skeletonTime} />
-              </div>
-            ) : (
-              <Card title={item.title}>{item.content}</Card>
-            )}
-          </List.Item>
-        )}
+        renderItem={(item) => {
+          if (item) {
+            let localTime = new Date(item.time).toLocaleString();
+            return (
+              // 真实数据
+              <List.Item>
+                <Card title={item.title}>
+                  <p>{item.content}</p>
+                  <span>{localTime}</span>
+                </Card>
+              </List.Item>
+            )
+          } else {
+            return (
+              // 骨架屏
+              <List.Item>
+                <div className={styles.skeleton}>
+                  <div className={styles.skeletonTitle} />
+                  <div className={styles.skeletonContent} />
+                  <div className={styles.skeletonTime} />
+                </div>
+              </List.Item>
+            )
+          }
+        }
+        }
       />
+      {/* {this.props.photoFiles.map((item,index)=>{
+        console.log(item)
+        return (
+          <img src={item.url} alt={item.title} width="20%"/>
+        )
+      })} */}
+      </>
     );
   }
 }
@@ -60,5 +89,6 @@ export default connect(state => {
   return {
     loading: state.loading.global,
     articleList: state.global.articleList,
+    photoFiles: state.global.photoFiles
   };
 })(CardList);
