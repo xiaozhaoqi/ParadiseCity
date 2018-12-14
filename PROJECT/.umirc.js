@@ -20,11 +20,11 @@ export default {
         dynamicImport: true,
         title: 'IO',
         dll: true,
-        pwa: true,
+        pwa: false,
         routes: {
           exclude: [],
         },
-        hardSource: true,
+        hardSource: false,
       },
     ],
   ],
