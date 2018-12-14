@@ -45,8 +45,8 @@ class PCLayout extends React.Component<
                   title="Hi"
                   onTitleClick={() => { router.push('/pc') }}
                 >
-                  <Menu.Item><Link to="/pc/cardList">留言卡片</Link></Menu.Item>
-                  <Menu.Item><Link to="/pc/write">编辑器</Link></Menu.Item>
+                  <Menu.Item><Link to="/temp/pc/cardList">留言卡片</Link></Menu.Item>
+                  <Menu.Item><Link to="/temp/pc/write">编辑器</Link></Menu.Item>
                 </SubMenu>
               </Menu>
             </Sider>
