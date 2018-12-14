@@ -1,7 +1,10 @@
+import router from 'umi/router';
 export default function() {
-  window.location.pathname = /Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(
+  if(/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(
     navigator.userAgent
-  )
-    ? '/mobile'
-    : '/pc';
+  )){
+    router.push('/mobile');
+  }else{
+    router.push('/pc');
+  }
 }

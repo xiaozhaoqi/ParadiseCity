@@ -3,7 +3,7 @@ import { Button, Card, WingBlank, WhiteSpace } from 'antd-mobile';
 import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
-
+import router from 'umi/router';
 class Info extends React.Component<
   {
     dispatch: any;
@@ -13,7 +13,7 @@ class Info extends React.Component<
   constructor(props) {
     super(props);
     if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = '/pc';
+      router.push('/pc');
     }
   }
   render() {

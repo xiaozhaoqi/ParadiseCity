@@ -18,7 +18,7 @@ class PCLayout extends React.Component<
     crumb: any;
     menuList: any;
   }
-> {
+  > {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -26,7 +26,7 @@ class PCLayout extends React.Component<
       menuList: props.menuList,
     };
     if (/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = '/mobile';
+      router.push('/mobile');
     }
   }
 

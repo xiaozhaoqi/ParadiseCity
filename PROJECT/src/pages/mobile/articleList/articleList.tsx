@@ -4,7 +4,7 @@ import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
 import SkeletonScreen from './skeletonScreen';
-
+import router from 'umi/router';
 class ArticleList extends React.Component<
   {
     loading: boolean;
@@ -21,7 +21,7 @@ class ArticleList extends React.Component<
   constructor(props) {
     super(props);
     if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = '/pc';
+      router.push('/pc');
     }
     props.dispatch({
       type: 'global/getCurrentArticleList',

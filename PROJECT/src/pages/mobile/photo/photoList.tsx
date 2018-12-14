@@ -4,7 +4,7 @@ import styles from '../index.css';
 import { connect } from 'dva';
 import React from 'react';
 import WxImageViewer from 'react-wx-images-viewer';
-
+import router from 'umi/router';
 class PhotoList extends React.Component<
   {
     isSuccessSubmit: boolean;
@@ -21,7 +21,7 @@ class PhotoList extends React.Component<
   constructor(props) {
     super(props);
     if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      window.location.pathname = '/pc';
+      router.push('/pc');
     }
     props.dispatch({
       type: 'global/getCurrentPhotoList',
