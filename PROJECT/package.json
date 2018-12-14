@@ -6,7 +6,8 @@
     "build": "umi build",
     "test": "jest",
     "lint": "eslint --ext .js src mock tests",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "format": "prettier --write ./**/*"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",

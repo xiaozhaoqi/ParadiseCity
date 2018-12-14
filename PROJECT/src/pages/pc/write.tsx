@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Popconfirm } from 'antd';
 
 const Markdown = require('react-markdown/with-html');
-const styles = require('../index.css');
+const styles = require('./index.css');
 
 export default class Push extends React.Component<
   {

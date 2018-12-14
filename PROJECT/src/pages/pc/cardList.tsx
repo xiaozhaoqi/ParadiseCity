@@ -1,7 +1,7 @@
 import { List, Card, Divider } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
-import styles from '../index.css';
+import styles from './index.css';
 
 interface IProps {
   dispatch: any;
@@ -12,7 +12,7 @@ interface IProps {
     title: string;
   }>;
 }
-class CityManage extends React.Component<IProps, {}> {
+class CardList extends React.Component<IProps, {}> {
   constructor(props: IProps) {
     super(props);
     this.props.dispatch({
@@ -21,7 +21,6 @@ class CityManage extends React.Component<IProps, {}> {
   }
   public static getDerivedStateFromProps(nextProps: IProps) {
     const { articleList, loading } = nextProps;
-    console.log(articleList);
     return {
       articleList,
     };
@@ -62,4 +61,4 @@ export default connect(state => {
     loading: state.loading.global,
     articleList: state.global.articleList,
   };
-})(CityManage);
+})(CardList);

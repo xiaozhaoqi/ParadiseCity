@@ -20,9 +20,6 @@ class PhotoList extends React.Component<
 > {
   constructor(props) {
     super(props);
-    if (!/Android|webOS|iPhone|iPad|BlackBerry|SymbianOS|IEMobile/i.test(navigator.userAgent)) {
-      router.push('/pc');
-    }
     props.dispatch({
       type: 'global/getCurrentPhotoList',
     });

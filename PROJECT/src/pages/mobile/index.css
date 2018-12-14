@@ -1,48 +1,48 @@
-.btn{
-    display: block;
-    width: 60%;
-    height: 40px;
-    line-height: 40px;
-    margin: 0 auto;
-    font-size: 16px;
-    background-color: #108ee9;
-    color: #fff;
-    border: 1px solid #108ee9;
-    border-radius: 5px;
-    outline: 0 none;
-    -webkit-appearance: none;
-    box-sizing: border-box;
-    padding: 0;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word;
-    white-space: nowrap;
+.btn {
+  display: block;
+  width: 60%;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 auto;
+  font-size: 16px;
+  background-color: #108ee9;
+  color: #fff;
+  border: 1px solid #108ee9;
+  border-radius: 5px;
+  outline: 0 none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  white-space: nowrap;
 }
 
-.bottomBtn{
-    display: block;
-    position: absolute;
-    bottom: 20px;
-    width: 60%;
-    height: 40px;
-    line-height: 40px;
-    margin: 0 20%;
-    font-size: 16px;
-    background-color: #108ee9;
-    color: #fff;
-    border: 1px solid #108ee9;
-    border-radius: 25px;
-    outline: 0 none;
-    -webkit-appearance: none;
-    box-sizing: border-box;
-    padding: 0;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word;
-    white-space: nowrap;
-    z-index: 10;
+.bottomBtn {
+  display: block;
+  position: absolute;
+  bottom: 20px;
+  width: 60%;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 20%;
+  font-size: 16px;
+  background-color: #108ee9;
+  color: #fff;
+  border: 1px solid #108ee9;
+  border-radius: 25px;
+  outline: 0 none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  white-space: nowrap;
+  z-index: 10;
 }
 
 .cardBody {
@@ -92,6 +92,6 @@
     transform: scalex(1);
   }
   to {
-    transform: scalex(.3);
+    transform: scalex(0.3);
   }
 }

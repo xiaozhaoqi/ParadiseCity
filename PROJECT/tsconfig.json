@@ -1,16 +1,12 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es5",
+    "module": "es6",
     "moduleResolution": "node",
     "importHelpers": true,
     "jsx": "preserve",
     "esModuleInterop": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "allowSyntheticDefaultImports": true
   }
 }
