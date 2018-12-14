@@ -1,9 +1,10 @@
 // ref: https://umijs.org/config/
 export default {
-  exportStatic: true,
+  // exportStatic: true,
   // history: 'hash',
   outputPath: '../docs/',
   publicPath: './',
+  base: '/temp/',
   targets: {
     ie: 9,
     chrome: 49,
@@ -18,7 +19,6 @@ export default {
         antd: true,
         dva: true,
         dynamicImport: true,
-        title: 'IO',
         dll: true,
         pwa: false,
         routes: {
