@@ -2,6 +2,7 @@
 // ref: https://umijs.org/config/
 export default {
   // exportStatic: true,
+  history: 'hash',
   outputPath: '../docs/',
   publicPath: './',
   targets: {
