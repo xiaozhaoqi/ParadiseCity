@@ -3,7 +3,7 @@ export default {
   exportStatic: true,
   // history: 'hash',
   outputPath: '../docs/',
-  publicPath: '/docs/',
+  publicPath: './',
   base: '/temp/',
   targets: {
     ie: 9,
