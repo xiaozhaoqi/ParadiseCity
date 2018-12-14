@@ -1,6 +1,6 @@
 {
-    "name": "IO Page", 
-    "description": "The app that helps you understand PWA", 
+    "name": "IO Board", 
+    "description": "xiaozhaoqi.github.io", 
     "display": "standalone", 
     "start_url": "/", 
     "theme_color": "#313131",

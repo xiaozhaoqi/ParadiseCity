@@ -2,7 +2,7 @@
 // ref: https://umijs.org/config/
 export default {
   exportStatic: true,
-  outputPath: '../',
+  outputPath: '../docs/',
   targets: {
     ie: 9,
     chrome: 49,
