@@ -46,6 +46,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "react-markdown": "^4.0.4",
     "react-router-breadcrumbs-hoc": "^2.1.5",
     "react-transition-group": "^2.5.0",

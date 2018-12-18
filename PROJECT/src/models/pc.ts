@@ -3,10 +3,7 @@ export default {
   state: {
     menuList: [
       {
-        hi: [
-          '留言卡片',
-          '编辑器',
-        ],
+        hi: ['留言卡片', '编辑器'],
       },
     ],
   },

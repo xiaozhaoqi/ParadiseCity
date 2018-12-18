@@ -44,11 +44,20 @@
   }
 }
 
-.writeArea,
-.parseMarkdown {
+.writeArea, .parseMarkdown {
   width: 50%;
-  height: 90%;
-  border: 2px solid #f7f7f7;
+  min-height: 100% !important;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  overflow: auto;
+  float: left;
+  resize: none;
+}
+
+.dangerWriteArea{
+  width: 50%;
+  min-height: 100% !important;
+  border: 1px dashed red;
   border-radius: 10px;
   overflow: auto;
   float: left;
@@ -57,4 +66,19 @@
 
 .submitButton {
   margin: 10px 5px;
+}
+
+.primaryTitle {
+  width: 100%;
+  float: left;
+  border-radius: 5px;
+  margin: 0 0 10px 0;
+}
+
+.dangerTitle {
+  width: 100%;
+  float: left;
+  border-radius: 10px;
+  margin: 0 0 10px 0;
+  border: 1px dashed red;
 }

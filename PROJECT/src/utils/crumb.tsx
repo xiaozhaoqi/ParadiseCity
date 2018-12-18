@@ -6,15 +6,15 @@ const routes = [
   { path: '/', breadcrumb: 'IO Board' },
   { path: '/pc', breadcrumb: 'Hi' },
   { path: '/pc/cardList', breadcrumb: '留言卡片' },
-  { path: '/pc/write', breadcrumb: '编辑器' }
+  { path: '/pc/write', breadcrumb: '编辑器' },
 ];
 
 export default withBreadcrumbs(routes)(({ breadcrumbs }) => (
-  <div style={{margin:'20px 5px'}}>
+  <div style={{ margin: '20px 5px' }}>
     {breadcrumbs.map((breadcrumb, index) => (
       <span key={breadcrumb.key}>
         {breadcrumb}
-        {(index < breadcrumbs.length - 1) && <i> / </i>}
+        {index < breadcrumbs.length - 1 && <i> / </i>}
       </span>
     ))}
   </div>
