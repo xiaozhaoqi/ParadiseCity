@@ -2,7 +2,7 @@ import { List, Card, Divider } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import styles from './index.css';
-
+const Markdown = require('react-markdown/with-html');
 interface IProps {
   dispatch: any;
   loading: any;
@@ -54,7 +54,7 @@ class CardList extends React.Component<IProps, {}> {
                 // 真实数据
                 <List.Item>
                   <Card title={item.title}>
-                    <p>{item.content}</p>
+                    <Markdown source={item.content} className={styles.markDownCard} escapeHtml={false} />
                     <span>{localTime}</span>
                   </Card>
                 </List.Item>

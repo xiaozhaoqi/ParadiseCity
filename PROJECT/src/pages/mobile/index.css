@@ -46,9 +46,9 @@
 }
 
 .cardBody {
-  min-height: auto !important;
-  height: 100% !important;
-  max-height: 300px !important;
+  min-height: 30vh !important;
+  overflow: scroll;
+  clear: both;
 }
 
 .skeleton {

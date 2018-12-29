@@ -1,14 +1,16 @@
 import React from 'react';
 import { Button, Popconfirm, Input, Select } from 'antd';
 import classnames from 'classnames';
+import { connect } from 'dva';
 const Markdown = require('react-markdown/with-html');
 const styles = require('./index.css');
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const TextArea = Input.TextArea;
-export default class Push extends React.Component<
+class Push extends React.Component<
   {
     dispatch: any;
+    loading: any;
   },
   {
     text: string;
@@ -72,7 +74,14 @@ export default class Push extends React.Component<
 
   push = () => {
     if (this.state.title && this.state.text) {
-      console.log(this.state.text,this.state.title,this.state.keyWord,this.state.selectValue)
+      console.log(this.state.text, this.state.title, this.state.keyWord, this.state.selectValue);
+      this.props.dispatch({
+        type: 'global/sendNewArticle',
+        payload: {
+          title: this.state.title,
+          content: this.state.text
+        }
+      })
     } else {
       if (!this.state.title) {
         window.scrollTo({ top: 0 });
@@ -87,13 +96,6 @@ export default class Push extends React.Component<
         })
       }
     }
-    // this.props.dispatch({
-    //   type:'global/sendNewArticle',
-    //   payload: {
-    //     title:
-    //     content:
-    //   }
-    // })
   }
 
   render() {
@@ -169,3 +171,5 @@ export default class Push extends React.Component<
     );
   }
 }
+
+export default connect()(Push);

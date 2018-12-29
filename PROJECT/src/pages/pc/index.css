@@ -44,6 +44,11 @@
   }
 }
 
+.markDownCard {
+  overflow: auto;
+  resize: none;
+}
+
 .writeArea, .parseMarkdown {
   width: 50%;
   min-height: 100% !important;
@@ -54,7 +59,7 @@
   resize: none;
 }
 
-.dangerWriteArea{
+.dangerWriteArea {
   width: 50%;
   min-height: 100% !important;
   border: 1px dashed red;

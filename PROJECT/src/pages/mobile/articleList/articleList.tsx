@@ -5,6 +5,8 @@ import { connect } from 'dva';
 import React from 'react';
 import SkeletonScreen from './skeletonScreen';
 import router from 'umi/router';
+const Markdown = require('react-markdown/with-html');
+
 class ArticleList extends React.Component<
   {
     loading: boolean;
@@ -63,7 +65,7 @@ class ArticleList extends React.Component<
                       }
                     />
                     <Card.Body className={styles.cardBody}>
-                      <p>{item.content}</p>
+                      <Markdown source={item.content} escapeHtml={false} />
                     </Card.Body>
                     <Card.Footer content={time} />
                   </Card>
