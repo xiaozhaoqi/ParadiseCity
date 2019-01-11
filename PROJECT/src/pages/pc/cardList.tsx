@@ -1,4 +1,4 @@
-import { List, Card, Divider } from 'antd';
+import { List, Card, Divider, Icon } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import styles from './index.css';
@@ -33,27 +33,48 @@ class CardList extends React.Component<IProps, {}> {
       articleList,
     };
   }
+  handleRemoveCard = e => {
+    this.props.dispatch({
+      type: 'global/removeArticle',
+      payload: e.target.getAttribute('data-time'),
+    });
+  }
+
+  changeCard = (e) => {
+    console.log(e)
+  }
+
   render() {
+    let closeCardStyle = {
+      display: 'none'
+    };
+    let openCardStyle = {
+      display: 'block'
+    }
     return (
       <>
         <List
           grid={{
-            gutter: 16,
-            xs: 2,
-            sm: 2,
-            md: 3,
-            lg: 3,
-            xl: 4,
-            xxl: 6,
+            column: 1
           }}
-          dataSource={this.props.loading ? new Array(10) : this.props.articleList}
+          dataSource={this.props.loading ? new Array(5) : this.props.articleList}
           renderItem={item => {
             if (item) {
               let localTime = new Date(item.time).toLocaleString();
               return (
                 // 真实数据
                 <List.Item>
-                  <Card title={item.title}>
+                  <Card
+                    hoverable
+                    title={item.title}
+                    bodyStyle={openCardStyle}
+                    extra={
+                      // <span onClick={this.handleRemoveCard} data-time={item.time}>
+                      //   ×
+                      // </span>
+                      <Icon type="retweet" onClick={this.changeCard} />
+                    }
+                  >
                     <Markdown source={item.content} className={styles.markDownCard} escapeHtml={false} />
                     <span>{localTime}</span>
                   </Card>
@@ -73,12 +94,6 @@ class CardList extends React.Component<IProps, {}> {
             }
           }}
         />
-        {/* {this.props.photoFiles.map((item,index)=>{
-        console.log(item)
-        return (
-          <img src={item.url} alt={item.title} width="20%"/>
-        )
-      })} */}
       </>
     );
   }

@@ -8,6 +8,7 @@ import {
   getPhoto,
   removePhoto,
   removeArticle,
+  getInfoFromAPI,
 } from '../utils/request';
 
 export default {
@@ -19,6 +20,7 @@ export default {
     isSuccessSubmit: false,
     isSuccessRemove: false,
     photoFiles: [],
+    infoFromAPI: {}
   },
   reducers: {
     updateArticleList(state, action) {
@@ -33,7 +35,7 @@ export default {
         });
       }
       if (articleList) {
-        articleList.sort(function(a, b) {
+        articleList.sort(function (a, b) {
           return b.time - a.time;
         });
       }
@@ -78,7 +80,7 @@ export default {
         });
       }
       if (photoFiles) {
-        photoFiles.sort(function(a, b) {
+        photoFiles.sort(function (a, b) {
           return a.time - b.time;
         });
       }
@@ -87,6 +89,15 @@ export default {
         photoFiles: photoFiles,
       };
     },
+    saveInfoFromAPI(state, action) {
+      return {
+        ...state,
+        infoFromAPI: {
+          ...state.infoFromAPI,
+          [action.pathname + '_' + action.search]: action.payload
+        }
+      }
+    }
   },
   effects: {
     // 文字
@@ -195,5 +206,16 @@ export default {
         });
       }
     },
+    *getInfoFromAPI(action, { put, call }) {
+      const info = yield call(getInfoFromAPI, action.pathname, action.search);
+      if (info) {
+        yield put({
+          type: 'saveInfoFromAPI',
+          payload: info,
+          pathname: action.pathname,
+          search: action.search
+        })
+      }
+    }
   },
 };

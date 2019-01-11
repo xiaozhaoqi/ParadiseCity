@@ -17,6 +17,11 @@ export default {
     android: 6,
     ios: 8,
   },
+  theme: {
+    'primary-color': 'black',
+    'link-color': 'black',
+    'border-radius-base': '2px',
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [
