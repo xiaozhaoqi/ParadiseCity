@@ -3,7 +3,7 @@ import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon, Button } from 'antd';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import Crumb from '../../utils/crumb';
+import Crumb from './crumb';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;

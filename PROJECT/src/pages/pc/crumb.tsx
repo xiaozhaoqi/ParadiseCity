@@ -1,6 +1,6 @@
 import NavLink from 'umi/navlink';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
-
+import { connect } from 'dva';
 // 更多配置请移步 https://github.com/icd2k3/react-router-breadcrumbs-hoc
 const routes = [
   { path: '/', breadcrumb: 'IO Board' },
@@ -23,3 +23,4 @@ export default withBreadcrumbs(routes)(({ breadcrumbs }) => (
     ))}
   </div>
 ));
+

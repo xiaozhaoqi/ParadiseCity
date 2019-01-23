@@ -90,11 +90,12 @@ export default {
       };
     },
     saveInfoFromAPI(state, action) {
+      const search = action.search.replace(/&+|=+/g, '_');
       return {
         ...state,
         infoFromAPI: {
           ...state.infoFromAPI,
-          [action.pathname + '_' + action.search]: action.payload
+          [action.pathname + '_' + search]: action.payload
         }
       }
     }
