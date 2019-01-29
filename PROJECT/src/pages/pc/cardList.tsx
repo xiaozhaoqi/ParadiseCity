@@ -23,9 +23,9 @@ class CardList extends React.Component<IProps, {}> {
     this.props.dispatch({
       type: 'global/getCurrentArticleList',
     });
-    this.props.dispatch({
-      type: 'global/getCurrentPhotoList',
-    });
+    // this.props.dispatch({
+    //   type: 'global/getCurrentPhotoList',
+    // });
   }
   public static getDerivedStateFromProps(nextProps: IProps) {
     const { articleList, loading } = nextProps;
@@ -41,16 +41,17 @@ class CardList extends React.Component<IProps, {}> {
   }
 
   changeCard = (e) => {
-    console.log(e)
+    try {
+      if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
+        e.target.parentNode.parentNode.nextSibling.style.display = 'none';
+      } else {
+        e.target.parentNode.parentNode.nextSibling.style.display = 'block';
+      }
+    } catch (error) { }
   }
 
   render() {
-    let closeCardStyle = {
-      display: 'none'
-    };
-    let openCardStyle = {
-      display: 'block'
-    }
+    let dateLineList = [];
     return (
       <>
         <List
@@ -60,25 +61,37 @@ class CardList extends React.Component<IProps, {}> {
           dataSource={this.props.loading ? new Array(5) : this.props.articleList}
           renderItem={item => {
             if (item) {
-              let localTime = new Date(item.time).toLocaleString();
+              let time = new Date(item.time);
+              let localTime = time.toLocaleString();
+              let dateLine = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate();
+              dateLineList.push(dateLine);
               return (
                 // 真实数据
-                <List.Item>
-                  <Card
-                    hoverable
-                    title={item.title}
-                    bodyStyle={openCardStyle}
-                    extra={
-                      // <span onClick={this.handleRemoveCard} data-time={item.time}>
-                      //   ×
-                      // </span>
-                      <Icon type="retweet" onClick={this.changeCard} />
-                    }
-                  >
-                    <Markdown source={item.content} className={styles.markDownCard} escapeHtml={false} />
-                    <span>{localTime}</span>
-                  </Card>
-                </List.Item>
+                <>
+                  {dateLineList.indexOf(dateLine) === dateLineList.length - 1 ?
+                    <p>{dateLine}</p>
+                    :
+                    null}
+                  <List.Item>
+                    <Card
+                      hoverable
+                      title={item.title}
+                      bodyStyle={{
+                        display: 'none'
+                      }}
+                      extra={
+                        document.location.search === '?delete' ?
+                          <span onClick={this.handleRemoveCard} data-time={item.time}>×</span>
+                          :
+                          null
+                      }
+                      onClick={this.changeCard}
+                    >
+                      <Markdown source={item.content} className={styles.markDownCard} escapeHtml={false} />
+                      <span>{localTime}</span>
+                    </Card>
+                  </List.Item>
+                </>
               );
             } else {
               return (

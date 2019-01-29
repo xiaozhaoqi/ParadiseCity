@@ -41,17 +41,17 @@ class Main extends React.Component<IProps, {
               </Card>
             </Col>
             {weather.data.forecast.map((item, index) => {
-              return (
-                <Col span={8} key={item.date}>
-                  <Card title={item.date + ' ' + item.type + ' ' + item.fengxiang} style={{ margin: '10px 0', height: '200px', overflow: 'auto' }}>
-                    <p> {item.high} </p>
-                    <p> {item.low} </p>
-                  </Card>
-                </Col>
-              )
+              if (index > 0)
+                return (
+                  <Col span={8} key={item.date}>
+                    <Card title={item.date + ' ' + item.type + ' ' + item.fengxiang} style={{ margin: '10px 0', height: '200px', overflow: 'auto' }}>
+                      <p> {item.high} </p>
+                      <p> {item.low} </p>
+                    </Card>
+                  </Col>
+                )
             })}
           </Row>
-
         </TabPane >
       )
     }
