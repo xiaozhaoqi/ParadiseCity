@@ -213,6 +213,19 @@ async function getInfoFromAPI(pathname, search) {
     });
 }
 
+async function getUserInfo() {
+  return await fetch(
+    'https://api.github.com/search/users?q=xiaozhaoqi'
+  )
+    .then(res => res.json())
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
 export {
   getArticleList,
   getArticle,
@@ -222,5 +235,6 @@ export {
   getPhoto,
   removePhoto,
   removeArticle,
-  getInfoFromAPI
+  getInfoFromAPI,
+  getUserInfo
 };

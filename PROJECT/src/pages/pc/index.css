@@ -62,7 +62,7 @@ li {
 
 .writeArea, .parseMarkdown {
   width: 50%;
-  min-height: 100% !important;
+  min-height: 72vh !important;
   border: 1px solid #e6e6e6;
   border-radius: 10px;
   overflow: auto;
@@ -72,7 +72,7 @@ li {
 
 .dangerWriteArea {
   width: 50%;
-  min-height: 100% !important;
+  min-height: 72vh !important;
   border: 1px dashed red;
   border-radius: 10px;
   overflow: auto;
@@ -82,6 +82,7 @@ li {
 
 .submitButton {
   margin: 10px 5px;
+  border-radius: 5px;
 }
 
 .primaryTitle {
@@ -97,4 +98,12 @@ li {
   border-radius: 10px;
   margin: 0 0 10px 0;
   border: 1px dashed red;
+}
+
+.siderBtn {
+  flex: 1;
+  margin: 10px 5px 0px 5px;
+  border-radius: 5px;
+  background-color: #eff3f6;
+  background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
 }

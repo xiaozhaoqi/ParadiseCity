@@ -9,6 +9,7 @@ import {
   removePhoto,
   removeArticle,
   getInfoFromAPI,
+  getUserInfo
 } from '../utils/request';
 
 export default {
@@ -20,7 +21,8 @@ export default {
     isSuccessSubmit: false,
     isSuccessRemove: false,
     photoFiles: [],
-    infoFromAPI: {}
+    infoFromAPI: {},
+    userInfo: {}
   },
   reducers: {
     updateArticleList(state, action) {
@@ -97,6 +99,12 @@ export default {
           ...state.infoFromAPI,
           [action.pathname + '_' + search]: action.payload
         }
+      }
+    },
+    saveUserInfo(state, action) {
+      return {
+        ...state,
+        userInfo: action.payload
       }
     }
   },
@@ -215,6 +223,15 @@ export default {
           payload: info,
           pathname: action.pathname,
           search: action.search
+        })
+      }
+    },
+    *getUserInfo(action, { put, call }) {
+      const info = yield call(getUserInfo);
+      if (info && info.items) {
+        yield put({
+          type: 'saveUserInfo',
+          payload: info.items[0],
         })
       }
     }

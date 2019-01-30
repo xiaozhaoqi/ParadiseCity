@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Popconfirm, Input, Select } from 'antd';
-import classnames from 'classnames';
+import { Button, Popconfirm, Input, Select, notification, Icon } from 'antd';
 import { connect } from 'dva';
 const Markdown = require('react-markdown/with-html');
 const styles = require('./index.css');
@@ -15,8 +14,6 @@ class Push extends React.Component<
   {
     text: string;
     title: string;
-    keyWord: string;
-    selectValue: string;
     isNullTitle: boolean;
     isNullText: boolean;
   }
@@ -32,17 +29,9 @@ class Push extends React.Component<
     this.state = {
       text: text || '',
       title: title || '',
-      selectValue: '分类一',
-      keyWord: '',
       isNullTitle: false,
       isNullText: false,
     };
-
-  }
-  handleKeyWord = (e) => {
-    this.setState({
-      keyWord: e.target.value
-    });
   }
 
   handleText = (e) => {
@@ -59,22 +48,42 @@ class Push extends React.Component<
     })
   }
 
-  handleSelect = (value) => {
-    this.setState({
-      selectValue: value
-    })
+  openNotification = (message, description, icon) => {
+    notification.open({
+      message,
+      description,
+      icon
+    });
+  };
+
+  clearInput = () => {
+    this.setState({ text: '', title: '' });
+    if (localStorage) {
+      localStorage.removeItem('writing-title');
+      localStorage.removeItem('writing-text');
+    }
   }
 
   save = () => {
     if (localStorage) {
       localStorage.setItem('writing-title', this.state.title);
       localStorage.setItem('writing-text', this.state.text);
+      this.openNotification(
+        '保存草稿成功！',
+        '草稿存储于您的磁盘中，当您下次访问本页时，将自动填充草稿到编辑器中。',
+        <Icon type="smile" style={{ color: 'green' }} />
+      );
+    } else {
+      this.openNotification(
+        '保存草稿失败！',
+        '您的浏览器可能不支持离线存储，请使用Edge、Chrome等现代浏览器体验。',
+        <Icon type="frown" style={{ color: 'red' }} />
+      );
     }
   }
 
   push = () => {
     if (this.state.title && this.state.text) {
-      console.log(this.state.text, this.state.title, this.state.keyWord, this.state.selectValue);
       this.props.dispatch({
         type: 'global/sendNewArticle',
         payload: {
@@ -82,6 +91,12 @@ class Push extends React.Component<
           content: this.state.text
         }
       })
+      this.openNotification(
+        '发布中……',
+        '您的留言正在写入GitHub静态文件服务器，稍后将在留言卡片中展示。',
+        <Icon type="smile" style={{ color: 'green' }} />
+      );
+      this.clearInput();
     } else {
       if (!this.state.title) {
         window.scrollTo({ top: 0 });
@@ -95,25 +110,17 @@ class Push extends React.Component<
           isNullText: true
         })
       }
+      this.openNotification(
+        '现在还不能发布',
+        '您的留言标题或内容为空，请输入完整。',
+        <Icon type="frown" style={{ color: 'red' }} />
+      );
     }
   }
 
   render() {
     return (
       <div>
-        <Select
-          defaultValue="分类一"
-          style={{ float: 'left', margin: '0 10px 10px 0' }}
-          onSelect={this.handleSelect}
-        >
-          <Option value="分类一">分类一</Option>
-          <Option value="分类二">分类二</Option>
-        </Select>
-        <Input
-          placeholder="关键字（；或 ; 分隔）"
-          style={{ width: '300px', float: 'left', borderRadius: '5px' }}
-          onChange={this.handleKeyWord}
-        />
         <Input
           value={this.state.title}
           placeholder="标题"
@@ -131,41 +138,23 @@ class Push extends React.Component<
           <Markdown source={this.state.text} className={styles.parseMarkdown} escapeHtml={false} />
         </div>
         <div style={{ float: 'left' }}>
-          <Button type="primary" onClick={this.push} className={styles.submitButton}>
-            发布
-        </Button>
-          {
-            localStorage ?
-              <Button type="default" onClick={this.save} className={styles.submitButton}>
-                存为草稿
-            </Button>
-              : null
-          }
+          <Button type="primary" onClick={this.push} className={styles.submitButton}>发布</Button>
+          {localStorage ? <Button type="default" onClick={this.save} className={styles.submitButton}>存为草稿</Button> : null}
           <Popconfirm
             title="确定清除正在编辑的内容，并清空草稿箱？"
-            onConfirm={() => {
-              this.setState({ text: '', title: '' });
-              if (localStorage) {
-                localStorage.removeItem('writing-title');
-                localStorage.removeItem('writing-text');
-              }
-            }}
+            onConfirm={this.clearInput}
             okText="确定"
             cancelText="取消"
           >
-            <Button type="danger" className={styles.submitButton}>
-              重置
-            </Button>
+            <Button type="danger" className={styles.submitButton}>重置</Button>
           </Popconfirm>
           <Button
             type="dashed"
             onClick={() => {
-              window.open('https://www.jianshu.com/p/191d1e21f7ed', '_blank');
+              window.open('https://www.baidu.com/s?wd=markdown语法', '_blank');
             }}
             className={styles.submitButton}
-          >
-            Help
-        </Button>
+          >Help</Button>
         </div>
       </div>
     );
