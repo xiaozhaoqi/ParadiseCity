@@ -1,5 +1,3 @@
-import fetchJsonp from 'fetch-jsonp';
-
 const leftToken = '61e06fdec3996fbda3c';
 const rightToken = 'eb8094d137bf927e7e5b2';
 // 文字
