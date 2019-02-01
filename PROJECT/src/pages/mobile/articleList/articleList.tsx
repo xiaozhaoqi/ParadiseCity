@@ -19,7 +19,7 @@ class ArticleList extends React.Component<
     isSuccessRemove: boolean;
   },
   {}
-> {
+  > {
   constructor(props) {
     super(props);
     props.dispatch({
@@ -51,27 +51,28 @@ class ArticleList extends React.Component<
         {this.props.loading ? <SkeletonScreen /> : null}
         {this.props.articleList && !this.props.loading
           ? this.props.articleList.map((item, index) => {
-              let time = new Date(item.time).toLocaleString();
-              return (
-                <WingBlank size="lg">
-                  <WhiteSpace size="md" />
-                  <Card>
-                    <Card.Header
-                      title={item.title}
-                      extra={
+            let time = new Date(item.time).toLocaleString();
+            return (
+              <WingBlank size="lg">
+                <WhiteSpace size="md" />
+                <Card>
+                  <Card.Header
+                    title={item.title}
+                    extra={
+                      document.location.search === '?delete' ?
                         <span onClick={this.handleRemoveCard} data-time={item.time}>
                           ×
-                        </span>
-                      }
-                    />
-                    <Card.Body className={styles.cardBody}>
-                      <Markdown source={item.content} escapeHtml={false} />
-                    </Card.Body>
-                    <Card.Footer content={time} />
-                  </Card>
-                </WingBlank>
-              );
-            })
+                        </span> : null
+                    }
+                  />
+                  <Card.Body className={styles.cardBody}>
+                    <Markdown source={item.content} escapeHtml={false} />
+                  </Card.Body>
+                  <Card.Footer content={time} />
+                </Card>
+              </WingBlank>
+            );
+          })
           : null}
       </div>
     );
