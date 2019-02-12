@@ -1,6 +1,6 @@
 // import Link from 'umi/link';
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Button } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Button, BackTop } from 'antd';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import Crumb from './crumb';
@@ -81,6 +81,7 @@ class PCLayout extends React.Component<
             <Content style={{ padding: '0 32px', minHeight: 280 }}>
               {this.props.children}
             </Content>
+            <BackTop />
           </Layout>
         </Content>
         <Footer style={{ textAlign: 'center', background: '#fff' }}>IO Board ©2018 Created by zhaoqi.xiao</Footer>

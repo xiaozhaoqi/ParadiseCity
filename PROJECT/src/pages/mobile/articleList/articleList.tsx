@@ -45,6 +45,15 @@ class ArticleList extends React.Component<
       payload: e.target.getAttribute('data-time'),
     });
   };
+  switchCardBody = (e) => {
+    try {
+      if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
+        e.target.parentNode.parentNode.nextSibling.style.display = 'none';
+      } else {
+        e.target.parentNode.parentNode.nextSibling.style.display = 'block';
+      }
+    } catch (error) { }
+  }
   render() {
     return (
       <div>
@@ -53,11 +62,14 @@ class ArticleList extends React.Component<
           ? this.props.articleList.map((item, index) => {
             let time = new Date(item.time).toLocaleString();
             return (
-              <WingBlank size="lg">
+              <WingBlank
+                size="lg"
+                key={index}
+              >
                 <WhiteSpace size="md" />
-                <Card>
+                <Card style={{ minHeight: 'auto' }}>
                   <Card.Header
-                    title={item.title}
+                    title={<div onClick={this.switchCardBody} style={{ fontSize: '15px' }}>{item.title}</div>}
                     extra={
                       document.location.search === '?delete' ?
                         <span onClick={this.handleRemoveCard} data-time={item.time}>

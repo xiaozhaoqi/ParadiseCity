@@ -46,9 +46,10 @@
 }
 
 .cardBody {
-  min-height: 30vh !important;
-  overflow: scroll;
-  clear: both;
+  min-height: auto !important;
+  word-break: break-all;
+  display: none;
+  font-size: 14px;
 }
 
 .skeleton {
