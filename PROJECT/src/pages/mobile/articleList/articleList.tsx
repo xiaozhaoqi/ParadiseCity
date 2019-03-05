@@ -46,13 +46,14 @@ class ArticleList extends React.Component<
     });
   };
   switchCardBody = (e) => {
-    try {
-      if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
-        e.target.parentNode.parentNode.nextSibling.style.display = 'none';
-      } else {
-        e.target.parentNode.parentNode.nextSibling.style.display = 'block';
-      }
-    } catch (error) { }
+    // try {
+    //   if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
+    //     e.target.parentNode.parentNode.nextSibling.style.display = 'none';
+    //   } else {
+    //     e.target.parentNode.parentNode.nextSibling.style.display = 'block';
+    //   }
+    // } catch (error) { }
+    router.push('/mobile/wxArticle?title=' + encodeURI(e.target.innerHTML))
   }
   render() {
     return (
@@ -77,9 +78,9 @@ class ArticleList extends React.Component<
                         </span> : null
                     }
                   />
-                  <Card.Body className={styles.cardBody}>
+                  {/* <Card.Body className={styles.cardBody}>
                     <Markdown source={item.content} escapeHtml={false} />
-                  </Card.Body>
+                  </Card.Body> */}
                   <Card.Footer content={time} />
                 </Card>
               </WingBlank>
