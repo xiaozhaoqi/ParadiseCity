@@ -36,10 +36,9 @@ class WxArticle extends React.Component<
         }
       })
     });
-    console.log(this.state.title)
   }
   render() {
-
+    let time = new Date(this.state.renderArticle.time).toLocaleString();
     return (
       <div style={{ wordBreak: 'break-all', wordWrap: 'break-word' }}>
         {this.props.articleList && !this.props.loading
@@ -47,8 +46,38 @@ class WxArticle extends React.Component<
           <WingBlank
             size="lg"
           >
-            <WhiteSpace size="md" />
-            <h2>{this.state.renderArticle.title}</h2>
+            <WhiteSpace size="lg" />
+            <h2 style={{ fontSize: '22px', lineHeight: '1.4', marginBottom: '14px' }}>{this.state.renderArticle.title}</h2>
+            <div style={{
+              marginBottom: '22px',
+              lineHeight: '20px',
+              wordWrap: 'break-word',
+              wordBreak: 'break-all',
+            }}>
+              <span style={{
+                color: 'rgba(0,0,0,0.3)',
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                margin: '0 10px 10px 0',
+                fontSize: '15px',
+              }}>zhaoqi.xiao</span>
+              <span
+                onClick={() => { router.push('/#/mobile') }}
+                style={{
+                  color: '#576b95',
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  margin: '0 10px 10px 0',
+                  fontSize: '15px',
+                }}>IOBoard</span>
+              <span style={{
+                color: 'rgba(0,0,0,0.3)',
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                margin: '0 10px 10px 0',
+                fontSize: '15px',
+              }}>{time}</span>
+            </div>
             <Markdown source={this.state.renderArticle.content} escapeHtml={false} />
           </WingBlank>
           : null}
