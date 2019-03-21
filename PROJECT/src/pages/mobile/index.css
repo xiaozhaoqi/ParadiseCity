@@ -20,31 +20,6 @@
   white-space: nowrap;
 }
 
-.bottomBtn {
-  display: block;
-  position: absolute;
-  bottom: 20px;
-  width: 60%;
-  height: 40px;
-  line-height: 40px;
-  margin: 0 20%;
-  font-size: 16px;
-  background-color: #108ee9;
-  color: #fff;
-  border: 1px solid #108ee9;
-  border-radius: 25px;
-  outline: 0 none;
-  -webkit-appearance: none;
-  box-sizing: border-box;
-  padding: 0;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-word;
-  white-space: nowrap;
-  z-index: 10;
-}
-
 .cardBody {
   min-height: auto !important;
   word-break: break-all;

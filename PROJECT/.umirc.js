@@ -34,7 +34,6 @@ export default {
         // vendor单独打包
         dll: true,
         // pwa需要配置service-worker，现在还没学到这里。
-        // 目前安卓只有chrome能主动触发pwa，小米浏览器要手动设置才能添加到主屏。
         pwa: false,
         routes: {
           exclude: [],
