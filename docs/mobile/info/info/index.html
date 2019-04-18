@@ -1,9 +1,13 @@
 <html><head><link rel="stylesheet" href="./umi.css"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"><meta name="referrer" content="no-referrer"><title>IO Board</title><style>.am-card-header-content {
       min-width: 90% !important;
+    }
+
+    p > img {
+      width: 100% !important;
     }</style><link rel="shortcut icon" href="./tab2open.png" type="image/x-icon"><style>.load-container {
-      width: 100px;
-      height: 100px;
-      margin: 40vh auto;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     .load-container .boxLoading {
@@ -34,7 +38,7 @@
       content: "";
       width: 50px;
       height: 50px;
-      background: #87d068;
+      background: rgb(241, 79, 79, 0.5);
       animation: animate 0.5s linear infinite;
       position: absolute;
       top: 0;
@@ -76,7 +80,5 @@
         transform: scale(1.2, 1);
       }
     }</style><script>document.onreadystatechange = () => {
-      if (document.readyState === 'complete') {
-        document.getElementById('preload').parentNode.removeChild(document.getElementById('preload'));
-      }
+      document.readyState === 'complete' && document.getElementById('preload').parentNode.removeChild(document.getElementById('preload'));
     }</script><script>window.routerBase = "/SweetChild/";</script></head><body><div id="root"></div><div class="load-container" id="preload"><div class="boxLoading"></div></div><script src="./umi.js"></script></body></html>

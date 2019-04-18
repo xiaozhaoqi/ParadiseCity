@@ -19,13 +19,15 @@ class WxArticle extends React.Component<
   {
     title: any;
     renderArticle: any;
+    toTop: string;
   }
   > {
   constructor(props) {
     super(props);
     this.state = {
       title: decodeURI(document.location.hash.split('title=')[1]),
-      renderArticle: {}
+      renderArticle: {},
+      toTop: 'none'
     }
     props.dispatch({
       type: 'global/getCurrentArticleList',
@@ -36,18 +38,26 @@ class WxArticle extends React.Component<
         }
       })
     });
+    window.addEventListener('scroll', (e) => {
+      if (document.body.scrollTop > document.body.offsetHeight) {
+        this.setState({ toTop: 'block' })
+      } else {
+        this.setState({ toTop: 'none' })
+      }
+    })
   }
+
   render() {
     let time = new Date(this.state.renderArticle.time).toLocaleString();
     return (
-      <div style={{ wordBreak: 'break-all', wordWrap: 'break-word' }}>
+      <div style={{ wordBreak: 'break-all', wordWrap: 'break-word', overflow: 'hidden' }}>
         {this.props.articleList && !this.props.loading
           ?
           <WingBlank
             size="lg"
           >
             <WhiteSpace size="lg" />
-            <h2 style={{ fontSize: '22px', lineHeight: '1.4', marginBottom: '14px' }}>{this.state.renderArticle.title}</h2>
+            <h2 style={{ fontSize: '18px', fontWeight: 'bold', lineHeight: '1.4', marginBottom: '14px' }}>{this.state.renderArticle.title}</h2>
             <div style={{
               marginBottom: '22px',
               lineHeight: '20px',
@@ -80,7 +90,25 @@ class WxArticle extends React.Component<
             </div>
             <Markdown source={this.state.renderArticle.content} escapeHtml={false} />
           </WingBlank>
-          : null}
+          :
+          <Icon
+            type="loading"
+            size="lg"
+            style={{ position: 'absolute', top: '50%', left: '45%' }}
+          />}
+        <Icon
+          type="up"
+          size="lg"
+          style={{
+            position: 'fixed',
+            right: '20vw',
+            bottom: '10vh',
+            display: this.state.toTop
+          }}
+          onClick={() => {
+            window.scrollTo({ top: 0 })
+          }}
+        />
       </div>
     );
   }
