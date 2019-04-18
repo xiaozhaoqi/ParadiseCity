@@ -71,7 +71,7 @@ class PCLayout extends React.Component<
                 justifyContent: 'flex-start',
                 flexWrap: 'wrap',
               }}>
-                <Link to="/pc"><Button className={styles.siderBtn}>主页</Button></Link>
+                <Link to="/pc"><Button className={styles.siderBtn}>新闻</Button></Link>
                 <Link to="/pc/about"><Button className={styles.siderBtn}>介绍</Button></Link>
                 <Link to="/pc/cardList"><Button className={styles.siderBtn}>留言卡片</Button></Link>
                 <Link to="/pc/write"><Button className={styles.siderBtn}>编辑器</Button></Link>

@@ -30,77 +30,67 @@ class Main extends React.Component<IProps, {
     let { infoFromAPI, loading } = this.props;
     let news = infoFromAPI.journalismApi_ || null;
     let weather = infoFromAPI.weatherApi_city_北京 || null;
-    let tabs = [];
-    if (weather) {
-      tabs.push(
-        <TabPane tab="天气" key="weather">
-          <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-            <Col span={8}>
-              <Card title={"今日气温：" + weather.data.wendu + "℃"} style={{ margin: '10px 0', height: '200px', overflow: 'auto' }}>
-                <p> {weather.data.ganmao} </p>
-              </Card>
-            </Col>
-            {weather.data.forecast.map((item, index) => {
-              if (index > 0)
-                return (
-                  <Col span={8} key={item.date}>
-                    <Card title={item.date + ' ' + item.type + ' ' + item.fengxiang} style={{ margin: '10px 0', height: '200px', overflow: 'auto' }}>
-                      <p> {item.high} </p>
-                      <p> {item.low} </p>
-                    </Card>
-                  </Col>
-                )
-            })}
-          </Row>
-        </TabPane >
-      )
-    }
-    if (news) {
-      Object.keys(news.data).forEach(function (key) {
-        tabs.push(
-          <TabPane tab={news.data[key][0].category || '推荐'} key={key}>
+    return (
+      <div style={{ overflow: 'hidden' }}>
+        {weather ?
+          <>
+            <h2>weather</h2>
             <List
               size="small"
               bordered
               dataSource={
-                news.data[key].map((item, index) => {
-                  if (item.title) {
+                [
+                  "今日气温：" + weather.data.wendu + "℃",
+                  weather.data.ganmao,
+                  ...weather.data.forecast.map((item, index) => {
                     return (
                       <>
-                        <span onClick={() => {
-                          window.open(item.link)
-                        }}>
-                          {index + 1 + '. ' + item.source + '：' + item.title}
-                        </span>
+                        <span style={{ flex: 1 }}>{item.date}</span>
+                        <span style={{ flex: 1 }}>{item.type}</span>
+                        <span style={{ flex: 1 }}>{item.fengxiang}</span>
+                        <span style={{ flex: 1 }}>{item.high}</span>
+                        <span style={{ flex: 1 }}>{item.low}</span>
                       </>
                     )
-                  } else {
-                    return (
-                      <>
-                        <span>
-                          {index + 1 + '. 这条新闻走丢了'}
-                        </span>
-                      </>
-                    )
-                  }
-                })
+                  })
+                ]
               }
               renderItem={item => (<List.Item>{item}</List.Item>)}
             />
-          </TabPane>
-        )
-      })
-    }
-
-    return (
-      <div>
-        <div style={{
-          height: '6%'
-        }}>
-          <Tabs defaultActiveKey="weather">
-            {tabs.reverse()}
-          </Tabs>
-        </div>
+          </>
+          : null}
+        {news ? Object.keys(news.data).map((item, index) => {
+          return (
+            <div style={{ margin: '10px 0' }}>
+              <h2>{item}</h2>
+              <List
+                size="small"
+                bordered
+                dataSource={
+                  news.data[item].filter((item) => (item.title)).map((item, index) => {
+                    return (
+                      <>
+                        <span
+                          style={{
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => {
+                            window.open(item.link)
+                          }}
+                        >
+                          <a>{item.title}</a>
+                          <span style={{ position: 'absolute', right: '10px' }}>{item.source}</span>
+                        </span>
+                      </>
+                    )
+                  })
+                }
+                renderItem={item => (<List.Item>{item}</List.Item>)}
+              />
+            </div>
+          )
+        }) : null
+        }
       </div>
     );
   }
