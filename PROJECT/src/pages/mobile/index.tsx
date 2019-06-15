@@ -21,6 +21,9 @@ class BasicLayout extends React.Component<
   constructor(props) {
     super(props);
     Toast.info('欢迎来到xiaozhaoqi.github.io', 1);
+    this.props.dispatch({
+      type: 'global/getUserInfo',
+    });
   }
 
   render() {
