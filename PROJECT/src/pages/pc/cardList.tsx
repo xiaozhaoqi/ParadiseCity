@@ -38,17 +38,17 @@ class CardList extends React.Component<IProps, {}> {
       type: 'global/removeArticle',
       payload: e.target.getAttribute('data-time'),
     });
-  }
+  };
 
-  changeCard = (e) => {
+  changeCard = e => {
     try {
       if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
         e.target.parentNode.parentNode.nextSibling.style.display = 'none';
       } else {
         e.target.parentNode.parentNode.nextSibling.style.display = 'block';
       }
-    } catch (error) { }
-  }
+    } catch (error) {}
+  };
 
   render() {
     let dateLineList = [];
@@ -56,38 +56,43 @@ class CardList extends React.Component<IProps, {}> {
       <>
         <List
           grid={{
-            column: 1
+            column: 1,
           }}
           dataSource={this.props.loading ? new Array(5) : this.props.articleList}
           renderItem={item => {
             if (item) {
               let time = new Date(item.time);
               let localTime = time.toLocaleString();
-              let dateLine = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate();
+              let dateLine =
+                time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate();
               dateLineList.push(dateLine);
               return (
                 // 真实数据
                 <>
-                  {dateLineList.indexOf(dateLine) === dateLineList.length - 1 ?
+                  {dateLineList.indexOf(dateLine) === dateLineList.length - 1 ? (
                     <p>{dateLine}</p>
-                    :
-                    null}
+                  ) : null}
                   <List.Item>
                     <Card
                       hoverable
                       title={item.title}
                       bodyStyle={{
-                        display: 'none'
+                        display: 'none',
                       }}
                       extra={
-                        document.location.search === '?delete' ?
-                          <span onClick={this.handleRemoveCard} data-time={item.time}>×</span>
-                          :
-                          null
+                        document.location.search === '?delete' ? (
+                          <span onClick={this.handleRemoveCard} data-time={item.time}>
+                            ×
+                          </span>
+                        ) : null
                       }
                       onClick={this.changeCard}
                     >
-                      <Markdown source={item.content} className={styles.markDownCard} escapeHtml={false} />
+                      <Markdown
+                        source={item.content}
+                        className={styles.markDownCard}
+                        escapeHtml={false}
+                      />
                       <span>{localTime}</span>
                     </Card>
                   </List.Item>

@@ -17,7 +17,7 @@ class Push extends React.Component<
     isNullTitle: boolean;
     isNullText: boolean;
   }
-  > {
+> {
   constructor(props) {
     super(props);
     let title;
@@ -34,25 +34,25 @@ class Push extends React.Component<
     };
   }
 
-  handleText = (e) => {
+  handleText = e => {
     this.setState({
       text: e.target.value,
-      isNullText: e.target.value ? false : true
+      isNullText: e.target.value ? false : true,
     });
-  }
+  };
 
-  handleTitle = (e) => {
+  handleTitle = e => {
     this.setState({
       title: e.target.value,
-      isNullTitle: e.target.value ? false : true
-    })
-  }
+      isNullTitle: e.target.value ? false : true,
+    });
+  };
 
   openNotification = (message, description, icon) => {
     notification.open({
       message,
       description,
-      icon
+      icon,
     });
   };
 
@@ -62,7 +62,7 @@ class Push extends React.Component<
       localStorage.removeItem('writing-title');
       localStorage.removeItem('writing-text');
     }
-  }
+  };
 
   save = () => {
     if (localStorage) {
@@ -80,7 +80,7 @@ class Push extends React.Component<
         <Icon type="frown" style={{ color: 'red' }} />
       );
     }
-  }
+  };
 
   push = () => {
     if (this.state.title && this.state.text) {
@@ -88,9 +88,9 @@ class Push extends React.Component<
         type: 'global/sendNewArticle',
         payload: {
           title: this.state.title,
-          content: this.state.text
-        }
-      })
+          content: this.state.text,
+        },
+      });
       this.openNotification(
         '发布中……',
         '您的留言正在写入GitHub静态文件服务器，稍后将在留言卡片中展示。',
@@ -101,14 +101,14 @@ class Push extends React.Component<
       if (!this.state.title) {
         window.scrollTo({ top: 0 });
         this.setState({
-          isNullTitle: true
-        })
+          isNullTitle: true,
+        });
       }
       if (!this.state.text) {
         window.scrollTo({ top: 0 });
         this.setState({
-          isNullText: true
-        })
+          isNullText: true,
+        });
       }
       this.openNotification(
         '现在还不能发布',
@@ -116,7 +116,7 @@ class Push extends React.Component<
         <Icon type="frown" style={{ color: 'red' }} />
       );
     }
-  }
+  };
 
   render() {
     return (
@@ -138,15 +138,23 @@ class Push extends React.Component<
           <Markdown source={this.state.text} className={styles.parseMarkdown} escapeHtml={false} />
         </div>
         <div style={{ float: 'left' }}>
-          <Button type="primary" onClick={this.push} className={styles.submitButton}>发布</Button>
-          {localStorage ? <Button type="default" onClick={this.save} className={styles.submitButton}>存为草稿</Button> : null}
+          <Button type="primary" onClick={this.push} className={styles.submitButton}>
+            发布
+          </Button>
+          {localStorage ? (
+            <Button type="default" onClick={this.save} className={styles.submitButton}>
+              存为草稿
+            </Button>
+          ) : null}
           <Popconfirm
             title="确定清除正在编辑的内容，并清空草稿箱？"
             onConfirm={this.clearInput}
             okText="确定"
             cancelText="取消"
           >
-            <Button type="danger" className={styles.submitButton}>重置</Button>
+            <Button type="danger" className={styles.submitButton}>
+              重置
+            </Button>
           </Popconfirm>
           <Button
             type="dashed"
@@ -154,7 +162,9 @@ class Push extends React.Component<
               window.open('https://www.baidu.com/s?wd=markdown语法', '_blank');
             }}
             className={styles.submitButton}
-          >Help</Button>
+          >
+            Help
+          </Button>
         </div>
       </div>
     );

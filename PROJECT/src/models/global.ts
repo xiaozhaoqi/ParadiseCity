@@ -9,7 +9,7 @@ import {
   removePhoto,
   removeArticle,
   getInfoFromAPI,
-  getUserInfo
+  getUserInfo,
 } from '../utils/request';
 
 export default {
@@ -22,7 +22,7 @@ export default {
     isSuccessRemove: false,
     photoFiles: [],
     infoFromAPI: {},
-    userInfo: {}
+    userInfo: {},
   },
   reducers: {
     updateArticleList(state, action) {
@@ -37,7 +37,7 @@ export default {
         });
       }
       if (articleList) {
-        articleList.sort(function (a, b) {
+        articleList.sort(function(a, b) {
           return b.time - a.time;
         });
       }
@@ -82,7 +82,7 @@ export default {
         });
       }
       if (photoFiles) {
-        photoFiles.sort(function (a, b) {
+        photoFiles.sort(function(a, b) {
           return a.time - b.time;
         });
       }
@@ -97,16 +97,16 @@ export default {
         ...state,
         infoFromAPI: {
           ...state.infoFromAPI,
-          [action.pathname + '_' + search]: action.payload
-        }
-      }
+          [action.pathname + '_' + search]: action.payload,
+        },
+      };
     },
     saveUserInfo(state, action) {
       return {
         ...state,
-        userInfo: action.payload
-      }
-    }
+        userInfo: action.payload,
+      };
+    },
   },
   effects: {
     // 文字
@@ -222,8 +222,8 @@ export default {
           type: 'saveInfoFromAPI',
           payload: info,
           pathname: action.pathname,
-          search: action.search
-        })
+          search: action.search,
+        });
       }
     },
     *getUserInfo(action, { put, call }) {
@@ -232,8 +232,8 @@ export default {
         yield put({
           type: 'saveUserInfo',
           payload: info.items[0],
-        })
+        });
       }
-    }
+    },
   },
 };

@@ -10,12 +10,22 @@
       min-width: 90% !important;
     }
 
-    p > img {
+    p>img {
       width: 100% !important;
     }
   </style>
   <link rel="shortcut icon" href="./tab2open.png" type="image/x-icon">
   <style>
+    .counter-loading {
+      width: 200px;
+      margin: auto;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
     .load-container {
       width: 100%;
       overflow: hidden;
@@ -102,7 +112,10 @@
 <body>
   <div id="root"></div>
   <div class="load-container" id="preload">
-    <div class="boxLoading"></div>
+    <!-- <div class="boxLoading"></div> -->
+    <img class="counter-loading"
+      src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
+      alt="Flag Counter" />
   </div>
 </body>
 

@@ -15,14 +15,14 @@ class CreateNewArticle extends React.Component<
     isPreview: boolean;
     rightBtn: Array<string>;
   }
-  > {
+> {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
       content: '',
       isPreview: false,
-      rightBtn: ['预览', '编辑']
+      rightBtn: ['预览', '编辑'],
     };
   }
   handleTitleChange(e) {
@@ -74,34 +74,47 @@ class CreateNewArticle extends React.Component<
         <WingBlank size="md">
           <WhiteSpace size="lg" />
           <InputItem clear placeholder="输入标题" onChange={this.handleTitleChange.bind(this)} />
-          {
-            this.state.isPreview
-              ?
-              <Markdown source={this.state.content} escapeHtml={false} />
-              :
-              <TextareaItem
-                clear
-                rows={15}
-                count={65535}
-                placeholder="输入内容"
-                value={this.state.content}
-                onChange={this.handleContentChange.bind(this)}
-              />
-          }
-          <div style={{ display: 'flex', position: 'absolute', bottom: '1vh', width: '100%', justifyContent: 'center' }}>
+          {this.state.isPreview ? (
+            <Markdown source={this.state.content} escapeHtml={false} />
+          ) : (
+            <TextareaItem
+              clear
+              rows={15}
+              count={65535}
+              placeholder="输入内容"
+              value={this.state.content}
+              onChange={this.handleContentChange.bind(this)}
+            />
+          )}
+          <div
+            style={{
+              display: 'flex',
+              position: 'absolute',
+              bottom: '1vh',
+              width: '100%',
+              justifyContent: 'center',
+            }}
+          >
             <Button
               type="primary"
               size="small"
               style={{ width: '30%', marginRight: '5px' }}
               onClick={this.push.bind(this)}
-            >发布</Button>
+            >
+              发布
+            </Button>
             <Button
               size="small"
               style={{ width: '30%' }}
               onClick={() => {
-                this.setState({ isPreview: !this.state.isPreview, rightBtn: this.state.rightBtn.reverse() })
+                this.setState({
+                  isPreview: !this.state.isPreview,
+                  rightBtn: this.state.rightBtn.reverse(),
+                });
               }}
-            >{this.state.rightBtn[0]}</Button>
+            >
+              {this.state.rightBtn[0]}
+            </Button>
           </div>
           <WhiteSpace size="lg" />
         </WingBlank>

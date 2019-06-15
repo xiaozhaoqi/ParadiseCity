@@ -7,7 +7,7 @@
     "test": "jest",
     "lint": "eslint --ext .js src mock tests",
     "precommit": "lint-staged",
-    "format": "prettier --write ./**/*"
+    "format": "prettier --write ./**/*.tsx"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
@@ -32,7 +32,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
+      "pre-commit": "npm run format",
       "pre-push": "npm test"
     }
   },
@@ -46,13 +46,10 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "@antv/g2": "^3.4.10",
-    "@antv/l7": "^1.0.1",
     "classnames": "^2.2.6",
     "react-markdown": "^4.0.4",
     "react-router-breadcrumbs-hoc": "^2.1.5",
     "react-transition-group": "^2.5.0",
-    "react-wx-images-viewer": "^1.0.6",
-    "viser-react": "^2.4.4"
+    "react-wx-images-viewer": "^1.0.6"
   }
 }

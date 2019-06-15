@@ -7,13 +7,10 @@ export default withBreadcrumbs([])(({ breadcrumbs }) => (
     {breadcrumbs.map((breadcrumb, index) => (
       <span key={breadcrumb.key}>
         <NavLink to={breadcrumb.props.match.url}>
-          <span style={{ fontSize: '14px', color: 'black' }}>
-            {breadcrumb}
-          </span>
+          <span style={{ fontSize: '14px', color: 'black' }}>{breadcrumb}</span>
         </NavLink>
         {index < breadcrumbs.length - 1 && <i> / </i>}
       </span>
     ))}
   </div>
 ));
-

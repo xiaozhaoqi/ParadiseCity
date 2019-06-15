@@ -19,7 +19,7 @@ class ArticleList extends React.Component<
     isSuccessRemove: boolean;
   },
   {}
-  > {
+> {
   constructor(props) {
     super(props);
     props.dispatch({
@@ -45,7 +45,7 @@ class ArticleList extends React.Component<
       payload: e.target.getAttribute('data-time'),
     });
   };
-  switchCardBody = (e) => {
+  switchCardBody = e => {
     // try {
     //   if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
     //     e.target.parentNode.parentNode.nextSibling.style.display = 'none';
@@ -53,39 +53,41 @@ class ArticleList extends React.Component<
     //     e.target.parentNode.parentNode.nextSibling.style.display = 'block';
     //   }
     // } catch (error) { }
-    router.push('/mobile/wxArticle?title=' + encodeURI(e.target.innerHTML))
-  }
+    router.push('/mobile/wxArticle?title=' + encodeURI(e.target.innerHTML));
+  };
   render() {
     return (
       <div>
         {this.props.loading ? <SkeletonScreen /> : null}
         {this.props.articleList && !this.props.loading
           ? this.props.articleList.map((item, index) => {
-            let time = new Date(item.time).toLocaleString();
-            return (
-              <WingBlank
-                size="lg"
-                key={index}
-              >
-                <WhiteSpace size="md" />
-                <Card style={{ minHeight: 'auto' }}>
-                  <Card.Header
-                    title={<div onClick={this.switchCardBody} style={{ fontSize: '15px' }}>{item.title}</div>}
-                    extra={
-                      document.location.search === '?delete' ?
-                        <span onClick={this.handleRemoveCard} data-time={item.time}>
-                          ×
-                        </span> : null
-                    }
-                  />
-                  {/* <Card.Body className={styles.cardBody}>
+              let time = new Date(item.time).toLocaleString();
+              return (
+                <WingBlank size="lg" key={index}>
+                  <WhiteSpace size="md" />
+                  <Card style={{ minHeight: 'auto' }}>
+                    <Card.Header
+                      title={
+                        <div onClick={this.switchCardBody} style={{ fontSize: '15px' }}>
+                          {item.title}
+                        </div>
+                      }
+                      extra={
+                        document.location.search === '?delete' ? (
+                          <span onClick={this.handleRemoveCard} data-time={item.time}>
+                            ×
+                          </span>
+                        ) : null
+                      }
+                    />
+                    {/* <Card.Body className={styles.cardBody}>
                     <Markdown source={item.content} escapeHtml={false} />
                   </Card.Body> */}
-                  <Card.Footer content={time} />
-                </Card>
-              </WingBlank>
-            );
-          })
+                    <Card.Footer content={time} />
+                  </Card>
+                </WingBlank>
+              );
+            })
           : null}
       </div>
     );

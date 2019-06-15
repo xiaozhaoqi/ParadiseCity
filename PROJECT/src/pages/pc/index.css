@@ -102,8 +102,16 @@ li {
 
 .siderBtn {
   flex: 1;
-  margin: 10px 5px 0px 5px;
+  width: 200px;
+  margin-top: 10px;
   border-radius: 5px;
   background-color: #eff3f6;
   background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
+}
+
+.siderBtnActive {
+  color: #0d0c0c;
+  background: #fff;
+  border-color: #0d0c0c;
+  text-decoration: none;
 }
