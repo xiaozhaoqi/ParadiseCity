@@ -10,7 +10,7 @@
 ### How to start programming?
 + First, coding in /PROJECT folder.
 + Second, building code and output in /docs folder.
-+ Finally, submit all files to GitHub Pages.
++ Finally, submit all files to Git.
 ### How to write articles on blog?
 + Access [Blog Website](https://xiaozhaoqi.github.io/SweetChild) with PC/Mobile.
 + Writing Article on WYSIWYG Markdown editor.
