@@ -10,6 +10,8 @@ import {
   removeArticle,
   getInfoFromAPI,
   getUserInfo,
+  getHotInfo,
+  getHotDetail
 } from '../utils/request';
 
 export default {
@@ -23,6 +25,8 @@ export default {
     photoFiles: [],
     infoFromAPI: {},
     userInfo: {},
+    hotInfo: {},
+    hotDetail: {}
   },
   reducers: {
     updateArticleList(state, action) {
@@ -37,7 +41,7 @@ export default {
         });
       }
       if (articleList) {
-        articleList.sort(function(a, b) {
+        articleList.sort(function (a, b) {
           return b.time - a.time;
         });
       }
@@ -82,7 +86,7 @@ export default {
         });
       }
       if (photoFiles) {
-        photoFiles.sort(function(a, b) {
+        photoFiles.sort(function (a, b) {
           return a.time - b.time;
         });
       }
@@ -100,6 +104,18 @@ export default {
           [action.pathname + '_' + search]: action.payload,
         },
       };
+    },
+    saveHotInfo(state, action) {
+      return {
+        ...state,
+        hotInfo: action.payload
+      }
+    },
+    saveHotDetail(state, action) {
+      return {
+        ...state,
+        hotDetail: action.payload
+      }
     },
     saveUserInfo(state, action) {
       return {
@@ -223,6 +239,24 @@ export default {
           payload: info,
           pathname: action.pathname,
           search: action.search,
+        });
+      }
+    },
+    *getHotInfo(action, { put, call }) {
+      const info = yield call(getHotInfo);
+      if (info) {
+        yield put({
+          type: 'saveHotInfo',
+          payload: info,
+        });
+      }
+    },
+    *getHotDetail(action, { put, call }) {
+      const info = yield call(getHotDetail, action.payload);
+      if (info) {
+        yield put({
+          type: 'saveHotDetail',
+          payload: info,
         });
       }
     },

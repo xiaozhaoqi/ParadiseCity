@@ -4,8 +4,8 @@ const rightToken = 'eb8094d137bf927e7e5b2';
 async function getArticleList() {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/article?access_token=' +
-      leftToken +
-      rightToken,
+    leftToken +
+    rightToken,
     {
       method: 'GET',
     }
@@ -24,10 +24,10 @@ async function getArticleList() {
 async function getArticle(name) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/article/' +
-      name +
-      '?access_token=' +
-      leftToken +
-      rightToken,
+    name +
+    '?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'GET',
     }
@@ -44,10 +44,10 @@ async function sendNewArticle(title, content) {
   const time = Date.now();
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/article/' +
-      time +
-      '.md?access_token=' +
-      leftToken +
-      rightToken,
+    time +
+    '.md?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'PUT',
       body: JSON.stringify({
@@ -78,10 +78,10 @@ async function sendNewArticle(title, content) {
 async function removeArticle(title, sha) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/article/' +
-      title +
-      '.md?access_token=' +
-      leftToken +
-      rightToken,
+    title +
+    '.md?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'DELETE',
       body: JSON.stringify({
@@ -103,8 +103,8 @@ async function removeArticle(title, sha) {
 async function getPhotoList() {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/photo?access_token=' +
-      leftToken +
-      rightToken,
+    leftToken +
+    rightToken,
     {
       method: 'GET',
     }
@@ -123,10 +123,10 @@ async function getPhotoList() {
 async function getPhoto(name) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/photo/' +
-      name +
-      '?access_token=' +
-      leftToken +
-      rightToken,
+    name +
+    '?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'GET',
     }
@@ -142,10 +142,10 @@ async function getPhoto(name) {
 async function sendNewPhoto(title, content) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/photo/' +
-      title +
-      '.png?access_token=' +
-      leftToken +
-      rightToken,
+    title +
+    '.png?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'PUT',
       body: JSON.stringify({
@@ -176,10 +176,10 @@ async function sendNewPhoto(title, content) {
 async function removePhoto(title, sha) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/photo/' +
-      title +
-      '.png?access_token=' +
-      leftToken +
-      rightToken,
+    title +
+    '.png?access_token=' +
+    leftToken +
+    rightToken,
     {
       method: 'DELETE',
       body: JSON.stringify({
@@ -200,6 +200,28 @@ async function removePhoto(title, sha) {
 
 async function getInfoFromAPI(pathname, search) {
   return await fetch('https://www.apiopen.top/' + pathname + '?' + search)
+    .then(res => res.json())
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+async function getHotInfo() {
+  return await fetch('https://www.printf520.com:8080/GetType')
+    .then(res => res.json())
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+async function getHotDetail(id) {
+  return await fetch('https://www.printf520.com:8080/GetTypeInfo?id=' + id)
     .then(res => res.json())
     .then(res => {
       return res;
@@ -231,4 +253,6 @@ export {
   removeArticle,
   getInfoFromAPI,
   getUserInfo,
+  getHotInfo,
+  getHotDetail
 };
