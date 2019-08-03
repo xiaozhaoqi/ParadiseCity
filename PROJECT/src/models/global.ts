@@ -253,12 +253,10 @@ export default {
     },
     *getHotDetail(action, { put, call }) {
       const info = yield call(getHotDetail, action.payload);
-      if (info) {
-        yield put({
-          type: 'saveHotDetail',
-          payload: info,
-        });
-      }
+      yield put({
+        type: 'saveHotDetail',
+        payload: info,
+      });
     },
     *getUserInfo(action, { put, call }) {
       const info = yield call(getUserInfo);

@@ -8,9 +8,14 @@ interface IProps {
   hotInfo: any;
   hotDetail: any;
 }
-class Main extends React.Component<IProps, {}> {
+class Main extends React.Component<IProps, {
+  focusBtn: string;
+}> {
   constructor(props: IProps) {
     super(props);
+    this.state = {
+      focusBtn: '1'
+    }
     this.props.dispatch({
       type: 'global/getInfoFromAPI',
       pathname: 'journalismApi',
@@ -24,7 +29,12 @@ class Main extends React.Component<IProps, {}> {
     this.props.dispatch({
       type: 'global/getHotInfo'
     })
+    this.props.dispatch({
+      type: 'global/getHotDetail',
+      payload: 1
+    })
   }
+
 
   render() {
     let { infoFromAPI, hotDetail, hotInfo } = this.props;
@@ -32,7 +42,7 @@ class Main extends React.Component<IProps, {}> {
     let weather = infoFromAPI.weatherApi_city_北京 || null;
     return (
       <div style={{ display: 'flex' }}>
-        <div style={{ overflow: 'hidden', flex: '1', marginRight: '10px' }}>
+        <div style={{ overflow: 'hidden', flex: '1', marginRight: '22px' }}>
           {weather ? (
             <>
               <h2>weather</h2>
@@ -43,13 +53,13 @@ class Main extends React.Component<IProps, {}> {
                   '今日气温' + weather.data.wendu + '℃，' + weather.data.ganmao,
                   ...weather.data.forecast.map((item, index) => {
                     return (
-                      <>
+                      <div key={index}>
                         <span style={{ flex: 1 }}>{item.date}</span>
                         <span style={{ flex: 1 }}>{item.type}</span>
                         <span style={{ flex: 1 }}>{item.fengxiang}</span>
                         <span style={{ flex: 1 }}>{item.high}</span>
                         <span style={{ flex: 1 }}>{item.low}</span>
-                      </>
+                      </div>
                     );
                   }),
                 ]}
@@ -60,7 +70,7 @@ class Main extends React.Component<IProps, {}> {
           {news
             ? Object.keys(news.data).map((item, index) => {
               return (
-                <div style={{ margin: '10px 0' }}>
+                <div style={{ margin: '10px 0' }} key={index}>
                   <h2>{item}</h2>
                   <List
                     size="small"
@@ -69,24 +79,23 @@ class Main extends React.Component<IProps, {}> {
                       .filter(item => item.title)
                       .map((item, index) => {
                         return (
-                          <>
-                            <span
-                              style={{
-                                cursor: 'pointer',
-                              }}
-                              onClick={() => {
-                                window.open(item.link);
-                              }}
-                            >
-                              <a style={{ display: 'inline-block', marginRight: '20px' }}>{item.title.slice(0, 26)}</a>
-                              <span style={{ position: 'absolute', right: '10px' }}>
-                                {item.source}
-                              </span>
+                          <span
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => {
+                              window.open(item.link);
+                            }}
+                            key={index}
+                          >
+                            <a style={{ display: 'inline-block', marginRight: '20px' }}>{item.title.slice(0, 26)}</a>
+                            <span style={{ position: 'absolute', right: '10px' }}>
+                              {item.source}
                             </span>
-                          </>
+                          </span>
                         );
                       })}
-                    renderItem={item => <List.Item>{item}</List.Item>}
+                    renderItem={item => <List.Item key={item}>{item}</List.Item>}
                   />
                 </div>
               );
@@ -102,9 +111,11 @@ class Main extends React.Component<IProps, {}> {
               hotInfo.Data.map(item => {
                 return <Button
                   size="small"
-                  type="dashed"
+                  key={item.id}
+                  type={item.id === this.state.focusBtn ? "primary" : "dashed"}
                   style={{ margin: '0 10px 10px 0' }}
                   onClick={() => {
+                    this.setState({ focusBtn: item.id })
                     this.props.dispatch({
                       type: 'global/getHotDetail',
                       payload: item.id
@@ -119,9 +130,9 @@ class Main extends React.Component<IProps, {}> {
                 size="small"
                 bordered
                 dataSource={hotDetail.Data.map(item =>
-                  <a href={item.url} target="_blank">{item.title}</a>
+                  <a href={item.url} target="_blank" key={item.url}>{item.title}</a>
                 )}
-                renderItem={item => <List.Item>{item}</List.Item>}
+                renderItem={item => <List.Item key={item}>{item}</List.Item>}
               />
               : null
           }

@@ -6,6 +6,11 @@
   <meta name="referrer" content="no-referrer" />
   <title>Paradise City</title>
   <style>
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
     .am-card-header-content {
       min-width: 90% !important;
     }
@@ -13,110 +18,33 @@
     p>img {
       width: 100% !important;
     }
-  </style>
-  <link rel="shortcut icon" href="./tab2open.png" type="image/x-icon">
-  <style>
-    .counter-loading {
-      width: 200px;
-      margin: auto;
+
+    .huge {
       position: absolute;
       left: 0;
-      right: 0;
       top: 0;
-      bottom: 0;
-    }
-
-    .load-container {
       width: 100%;
-      overflow: hidden;
+      height: 100%;
     }
 
-    .load-container .boxLoading {
-      width: 50px;
-      height: 50px;
-      margin: auto;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-
-    .load-container .boxLoading:before {
-      content: "";
-      width: 50px;
-      height: 5px;
-      background: #000;
-      opacity: 0.1;
-      position: absolute;
-      top: 59px;
-      left: 0;
-      border-radius: 50%;
-      animation: shadow 0.5s linear infinite;
-    }
-
-    .load-container .boxLoading:after {
-      content: "";
-      width: 50px;
-      height: 50px;
-      background: rgb(241, 79, 79, 0.5);
-      animation: animate 0.5s linear infinite;
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: 3px;
-    }
-
-    @keyframes animate {
-      17% {
-        border-bottom-right-radius: 3px;
-      }
-
-      25% {
-        transform: translateY(9px) rotate(22.5deg);
-      }
-
-      50% {
-        transform: translateY(18px) scale(1, 0.9) rotate(45deg);
-        border-bottom-right-radius: 40px;
-      }
-
-      75% {
-        transform: translateY(9px) rotate(67.5deg);
-      }
-
-      100% {
-        transform: translateY(0) rotate(90deg);
-      }
-    }
-
-    @keyframes shadow {
-
-      0%,
-      100% {
-        transform: scale(1, 1);
-      }
-
-      50% {
-        transform: scale(1.2, 1);
-      }
+    .hide {
+      opacity: 0;
+      z-index: -1;
+      transition: all 1s ease-out;
     }
   </style>
+  <link rel="shortcut icon" href="./huge.jpg" type="image/x-icon">
   <script>
     document.onreadystatechange = () => {
-      document.readyState === 'complete' && document.getElementById('preload').parentNode.removeChild(document.getElementById('preload'));
+      document.readyState === 'complete' && document.querySelector('.huge').classList.add('hide');
     }
   </script>
 </head>
 
 <body>
   <div id="root"></div>
-  <div class="load-container" id="preload">
-    <!-- <div class="boxLoading"></div> -->
-    <img class="counter-loading"
-      src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
-      alt="Flag Counter" />
-  </div>
+  <!-- src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/" -->
+  <img class="huge" src="./huge.jpg" />
 </body>
 
 </html>

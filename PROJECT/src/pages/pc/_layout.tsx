@@ -3,10 +3,8 @@ import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon, Button, BackTop } from 'antd';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import Crumb from './crumb';
 const styles = require('./index.css');
-const { SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 // PC entry
 class PCLayout extends React.Component<
@@ -33,17 +31,8 @@ class PCLayout extends React.Component<
   render() {
     return (
       <>
-        <Content style={{ padding: '0 50px' }}>
-          {/* <div
-            style={{
-              border: '1px solid #e8e8e8',
-              borderTop: '0',
-              padding: '20px',
-            }}
-          >
-            <Crumb />
-          </div> */}
-          <Layout style={{ padding: '24px 0', background: '#fff' }}>
+        <Content style={{ padding: '50px' }}>
+          <Layout style={{ background: '#fff' }}>
             <Sider width={200} style={{
               background: '#fff',
               overflow: 'none',
@@ -51,7 +40,7 @@ class PCLayout extends React.Component<
             }}>
               <Link to="/pc">
                 <img
-                  src={this.props.userInfo.avatar_url}
+                  src="../huge.jpg"
                   alt=""
                   style={{
                     border: '2px solid gray',
@@ -96,22 +85,17 @@ class PCLayout extends React.Component<
                 <Link to="/pc/write">
                   <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>编写文章</Button>
                 </Link>
-                <a href="https://info.flagcounter.com/m1nf">
-                  <img
-                    src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
-                    alt="Flag Counter"
-                    style={{ marginTop: '10px' }}
-                  />
-                </a>
+                <img
+                  src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
+                  alt="Flag Counter"
+                  className={styles.siderBtn}
+                />
               </div>
             </Sider>
             <Content style={{ padding: '0 32px', minHeight: 280 }}>{this.props.children}</Content>
             <BackTop />
           </Layout>
         </Content>
-        <Footer style={{ textAlign: 'center', background: '#fff' }}>
-          IO Board ©2018-2019 Created by zhaoqi.xiao
-        </Footer>
       </>
     );
   }

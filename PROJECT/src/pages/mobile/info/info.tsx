@@ -9,7 +9,7 @@ class Info extends React.Component<{
     return (
       <div style={{ padding: '20px' }}>
         <img
-          src={this.props.userInfo.avatar_url}
+          src="../../huge.jpg"
           alt=""
           style={{
             border: '2px solid gray',
