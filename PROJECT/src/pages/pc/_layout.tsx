@@ -74,16 +74,16 @@ class PCLayout extends React.Component<
                 }}
               >
                 <Link to="/pc">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc' ? styles.siderBtnActive : null}`}>浏览新闻</Button>
+                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc' ? styles.siderBtnActive : null}`}>新闻热榜</Button>
+                </Link>
+                <Link to="/pc/cardList">
+                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/cardList' ? styles.siderBtnActive : null}`}>原创记录</Button>
+                </Link>
+                <Link to="/pc/write">
+                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>开始创作</Button>
                 </Link>
                 <Link to="/pc/about">
                   <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/about' ? styles.siderBtnActive : null}`}>站点介绍</Button>
-                </Link>
-                <Link to="/pc/cardList">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/cardList' ? styles.siderBtnActive : null}`}>文章卡片</Button>
-                </Link>
-                <Link to="/pc/write">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>编写文章</Button>
                 </Link>
                 <img
                   src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
