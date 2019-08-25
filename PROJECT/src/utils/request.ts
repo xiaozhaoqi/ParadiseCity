@@ -40,7 +40,7 @@ async function getArticle(name) {
       console.log(err);
     });
 }
-async function sendNewArticle(title, content) {
+async function sendNewArticle(title, content, category) {
   const time = Date.now();
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/SweetChild/contents/files/article/' +
@@ -60,6 +60,7 @@ async function sendNewArticle(title, content) {
                 title: title,
                 content: content,
                 time: time,
+                category: category
               })
             )
           )

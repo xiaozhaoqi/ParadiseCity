@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Popconfirm, Input, Select, notification, Icon } from 'antd';
+import { Button, Popconfirm, Input, Select, notification, Icon, Radio } from 'antd';
 import { connect } from 'dva';
 const Markdown = require('react-markdown/with-html');
 const styles = require('./index.css');
@@ -16,8 +16,9 @@ class Push extends React.Component<
     title: string;
     isNullTitle: boolean;
     isNullText: boolean;
+    category: string;
   }
-> {
+  > {
   constructor(props) {
     super(props);
     let title;
@@ -31,6 +32,7 @@ class Push extends React.Component<
       title: title || '',
       isNullTitle: false,
       isNullText: false,
+      category: 'life'
     };
   }
 
@@ -89,6 +91,7 @@ class Push extends React.Component<
         payload: {
           title: this.state.title,
           content: this.state.text,
+          category: this.state.category
         },
       });
       this.openNotification(
@@ -121,6 +124,14 @@ class Push extends React.Component<
   render() {
     return (
       <div>
+        <Radio.Group
+          defaultValue="life"
+          style={{ marginBottom: '10px' }}
+          onChange={(e) => { this.setState({ category: e.target.value }) }}
+        >
+          <Radio.Button value="life">生活</Radio.Button>
+          <Radio.Button value="tech">技术</Radio.Button>
+        </Radio.Group>
         <Input
           value={this.state.title}
           placeholder="标题"

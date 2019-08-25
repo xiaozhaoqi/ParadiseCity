@@ -1,4 +1,4 @@
-import { List, Card, Divider, Icon } from 'antd';
+import { List, Card, Divider, Icon, Button } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import styles from './index.css';
@@ -10,6 +10,7 @@ interface IProps {
     content: string;
     time: string;
     title: string;
+    category: string;
   }>;
   photoFiles: Array<{
     url: string;
@@ -17,7 +18,9 @@ interface IProps {
     title: string;
   }>;
 }
-class CardList extends React.Component<IProps, {}> {
+class CardList extends React.Component<IProps, {
+  category: string;
+}> {
   constructor(props: IProps) {
     super(props);
     this.props.dispatch({
@@ -26,6 +29,9 @@ class CardList extends React.Component<IProps, {}> {
     // this.props.dispatch({
     //   type: 'global/getCurrentPhotoList',
     // });
+    this.state = {
+      category: 'life'
+    }
   }
   public static getDerivedStateFromProps(nextProps: IProps) {
     const { articleList, loading } = nextProps;
@@ -47,18 +53,33 @@ class CardList extends React.Component<IProps, {}> {
       } else {
         e.target.parentNode.parentNode.nextSibling.style.display = 'block';
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   render() {
     let dateLineList = [];
     return (
       <>
+        <Button
+          type={this.state.category === 'life' ? "primary" : "dashed"}
+          size="small"
+          style={{ margin: '0 10px 20px 0' }}
+          onClick={() => { this.setState({ category: 'life' }) }}
+        >生活</Button>
+        <Button
+          type={this.state.category === 'tech' ? "primary" : "dashed"}
+          size="small"
+          onClick={() => { this.setState({ category: 'tech' }) }}
+        >技术</Button>
+
         <List
           grid={{
             column: 1,
           }}
-          dataSource={this.props.loading ? new Array(5) : this.props.articleList}
+          dataSource={
+            this.props.loading ? new Array(5) : this.props.articleList.filter((v) => (
+              v.category === this.state.category) || (this.state.category === 'tech' && v.category === undefined)
+            )}
           renderItem={item => {
             if (item) {
               let time = new Date(item.time);

@@ -60,9 +60,9 @@ class PCLayout extends React.Component<
                 }}
               >
                 <h3 style={{ marginTop: '10px' }}>
-                  <a href="https://github.com/xiaozhaoqi" target="_blank">github.com/xiaozhaoqi</a>
+                  在网络上的家
                 </h3>
-                <h3 style={{ fontFamily: 'KaiTi' }}>{'>>> 仅用于学习 <<<'}</h3>
+                <h3>Jovi & Candy</h3>
               </div>
               <div
                 style={{

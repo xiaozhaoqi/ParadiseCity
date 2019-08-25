@@ -37,6 +37,7 @@ export default {
             title: JSON.parse(decodeURIComponent(escape(atob(item.content)))).title,
             content: JSON.parse(decodeURIComponent(escape(atob(item.content)))).content,
             time: JSON.parse(decodeURIComponent(escape(atob(item.content)))).time,
+            category: JSON.parse(decodeURIComponent(escape(atob(item.content)))).category,
           });
         });
       }
@@ -151,7 +152,8 @@ export default {
       const isSuccessSubmit = yield call(
         sendNewArticle,
         action.payload.title,
-        action.payload.content
+        action.payload.content,
+        action.payload.category
       );
       if (isSuccessSubmit) {
         yield put({
