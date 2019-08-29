@@ -21,8 +21,6 @@ class Info extends React.Component<{
         <span style={{ margin: '10px 0 0 20px' }}>
           <a href="https://github.com/xiaozhaoqi" target="_blank"><strong>github.com/xiaozhaoqi</strong></a>
         </span>
-        <h3 style={{ marginTop: '30px', fontFamily: 'KaiTi', textAlign: 'center' }}>{'>>> 仅用于学习 <<<'}</h3>
-        <h1>站点介绍</h1>
         <About />
       </div>
     )

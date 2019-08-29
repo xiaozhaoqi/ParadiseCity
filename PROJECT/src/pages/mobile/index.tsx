@@ -1,8 +1,8 @@
-import { Icon, TabBar, Toast } from 'antd-mobile';
+import { TabBar, Toast } from 'antd-mobile';
 import { connect } from 'dva';
 import React from 'react';
 import ArticleList from './articleList/articleList';
-import CreateNewArticle from './write/createNewArticle';
+import News from './news/index';
 import PhotoList from './photo/photoList';
 import Info from './info/info';
 
@@ -15,15 +15,21 @@ class BasicLayout extends React.Component<
     loading: any;
     tabSelected: number;
     isTabBarHidden: boolean;
+    articleList: any;
   },
   {}
-> {
+  > {
   constructor(props) {
     super(props);
-    Toast.info('欢迎来到xiaozhaoqi.github.io', 1);
+    Toast.info('Welcome to Paradise City', 1);
     this.props.dispatch({
       type: 'global/getUserInfo',
     });
+    if (this.props.articleList.length === 0) {
+      this.props.dispatch({
+        type: 'global/getCurrentArticleList',
+      });
+    }
   }
 
   render() {
@@ -38,7 +44,7 @@ class BasicLayout extends React.Component<
           prerenderingSiblingsNumber={0}
         >
           <TabBar.Item
-            title="文章"
+            title="热搜"
             key="article"
             icon={
               <img src={require('../../assets/tab1close.png')} width="21px" height="21px" alt="" />
@@ -52,12 +58,9 @@ class BasicLayout extends React.Component<
                 type: 'global/changeTabSelected',
                 payload: 1,
               });
-              this.props.dispatch({
-                type: 'global/getCurrentArticleList',
-              });
             }}
           >
-            <ArticleList />
+            <News />
           </TabBar.Item>
           <TabBar.Item
             icon={
@@ -66,7 +69,7 @@ class BasicLayout extends React.Component<
             selectedIcon={
               <img src={require('../../assets/tab2open.png')} width="21px" height="21px" alt="" />
             }
-            title="记录"
+            title="原创"
             key="write"
             selected={this.props.tabSelected == 2}
             onPress={() => {
@@ -76,7 +79,8 @@ class BasicLayout extends React.Component<
               });
             }}
           >
-            <CreateNewArticle />
+            <ArticleList />
+            {/* <CreateNewArticle /> */}
           </TabBar.Item>
           <TabBar.Item
             icon={
@@ -93,9 +97,6 @@ class BasicLayout extends React.Component<
                 type: 'global/changeTabSelected',
                 payload: 3,
               });
-              this.props.dispatch({
-                type: 'global/getCurrentPhotoList',
-              });
             }}
           >
             <PhotoList />
@@ -107,7 +108,7 @@ class BasicLayout extends React.Component<
             selectedIcon={
               <img src={require('../../assets/tab4open.png')} width="21px" height="21px" alt="" />
             }
-            title="我的"
+            title="关于"
             key="my"
             selected={this.props.tabSelected == 4}
             onPress={() => {
@@ -130,6 +131,7 @@ function mapStateToProps(state) {
     loading: state.loading.global,
     tabSelected: state.global.tabSelected,
     isTabBarHidden: state.global.isTabBarHidden,
+    articleList: state.global.articleList
   };
 }
 

@@ -26,9 +26,6 @@ class CardList extends React.Component<IProps, {
     this.props.dispatch({
       type: 'global/getCurrentArticleList',
     });
-    // this.props.dispatch({
-    //   type: 'global/getCurrentPhotoList',
-    // });
     this.state = {
       category: 'life'
     }

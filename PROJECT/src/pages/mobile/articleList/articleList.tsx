@@ -1,11 +1,8 @@
-import Link from 'umi/link';
-import { Button, Card, WingBlank, WhiteSpace, Icon, Toast } from 'antd-mobile';
-import styles from '../index.css';
+import { Card, WingBlank, WhiteSpace, Toast, Tag } from 'antd-mobile';
 import { connect } from 'dva';
 import React from 'react';
 import SkeletonScreen from './skeletonScreen';
 import router from 'umi/router';
-const Markdown = require('react-markdown/with-html');
 
 class ArticleList extends React.Component<
   {
@@ -14,17 +11,20 @@ class ArticleList extends React.Component<
       title: string;
       content: string;
       time: number;
+      category: string;
     }>;
     dispatch: any;
     isSuccessRemove: boolean;
   },
-  {}
-> {
+  {
+    category: string;
+  }
+  > {
   constructor(props) {
     super(props);
-    props.dispatch({
-      type: 'global/getCurrentArticleList',
-    });
+    this.state = {
+      category: 'life'
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.isSuccessRemove) {
@@ -46,21 +46,28 @@ class ArticleList extends React.Component<
     });
   };
   switchCardBody = e => {
-    // try {
-    //   if (e.target.parentNode.parentNode.nextSibling.style.display === 'block') {
-    //     e.target.parentNode.parentNode.nextSibling.style.display = 'none';
-    //   } else {
-    //     e.target.parentNode.parentNode.nextSibling.style.display = 'block';
-    //   }
-    // } catch (error) { }
     router.push('/mobile/wxArticle?title=' + encodeURI(e.target.innerHTML));
   };
   render() {
     return (
       <div>
         {this.props.loading ? <SkeletonScreen /> : null}
+        <div style={{ display: 'flex', margin: '15px 15px 5px 15px' }}>
+          <Tag
+            style={{ flex: '1' }}
+            selected={this.state.category === 'life'}
+            onChange={(selected) => { this.setState({ category: selected ? 'life' : '' }) }}
+          >生活</Tag>
+          <Tag
+            style={{ flex: '1' }}
+            selected={this.state.category === 'tech'}
+            onChange={(selected) => { this.setState({ category: selected ? 'tech' : '' }) }}
+          >技术</Tag>
+        </div>
+
         {this.props.articleList && !this.props.loading
           ? this.props.articleList.map((item, index) => {
+            if ((item.category === this.state.category) || (this.state.category === 'tech' && item.category === undefined)) {
               let time = new Date(item.time).toLocaleString();
               return (
                 <WingBlank size="lg" key={index}>
@@ -76,19 +83,18 @@ class ArticleList extends React.Component<
                         document.location.search === '?delete' ? (
                           <span onClick={this.handleRemoveCard} data-time={item.time}>
                             ×
-                          </span>
+                            </span>
                         ) : null
                       }
                     />
-                    {/* <Card.Body className={styles.cardBody}>
-                    <Markdown source={item.content} escapeHtml={false} />
-                  </Card.Body> */}
                     <Card.Footer content={time} />
                   </Card>
                 </WingBlank>
-              );
-            })
+              )
+            }
+          })
           : null}
+        <p style={{ textAlign: 'center', margin: '15px', borderBottom: '1px dotted #ddd' }}></p>
       </div>
     );
   }
