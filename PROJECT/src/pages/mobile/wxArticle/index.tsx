@@ -8,7 +8,7 @@ class WxArticle extends React.Component<
   {
     loading: boolean;
     articleList: Array<{
-      time: string;
+      title: string;
       content: string;
       time: number;
     }>;
@@ -27,18 +27,7 @@ class WxArticle extends React.Component<
       renderArticle: {},
       toTop: 'none',
     };
-    props
-      .dispatch({
-        type: 'global/getCurrentArticleList',
-      })
-      .then(() => {
-        props.articleList.map((item, index) => {
-          console.log(item.time, this.state.time)
-          if (item.time === this.state.time) {
-            this.setState({ renderArticle: item });
-          }
-        });
-      });
+
     window.addEventListener('scroll', e => {
       if (document.body.scrollTop > document.body.offsetHeight) {
         this.setState({ toTop: 'block' });
@@ -46,6 +35,20 @@ class WxArticle extends React.Component<
         this.setState({ toTop: 'none' });
       }
     });
+  }
+
+  componentDidMount() {
+    this.props
+      .dispatch({
+        type: 'global/getCurrentArticleList',
+      })
+      .then(() => {
+        this.props.articleList.map((item, index) => {
+          if (item.time === this.state.time) {
+            this.setState({ renderArticle: item });
+          }
+        });
+      });
   }
 
   render() {
@@ -67,7 +70,6 @@ class WxArticle extends React.Component<
             </h2>
             <div
               style={{
-                marginBottom: '22px',
                 lineHeight: '20px',
                 wordWrap: 'break-word',
                 wordBreak: 'break-all',
