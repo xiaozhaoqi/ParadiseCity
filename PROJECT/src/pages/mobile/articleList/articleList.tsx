@@ -45,8 +45,8 @@ class ArticleList extends React.Component<
       payload: e.target.getAttribute('data-time'),
     });
   };
-  switchCardBody = e => {
-    router.push('/mobile/wxArticle?title=' + encodeURI(e.target.innerHTML));
+  switchCardBody = time => {
+    router.push('/mobile/wxArticle?time=' + time);
   };
   render() {
     return (
@@ -75,7 +75,7 @@ class ArticleList extends React.Component<
                   <Card style={{ minHeight: 'auto' }}>
                     <Card.Header
                       title={
-                        <div onClick={this.switchCardBody} style={{ fontSize: '15px' }}>
+                        <div onClick={this.switchCardBody.bind(this, item.time)} style={{ fontSize: '15px' }}>
                           {item.title}
                         </div>
                       }

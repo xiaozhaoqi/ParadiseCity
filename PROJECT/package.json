@@ -1,5 +1,5 @@
 {
-  "name": "ioboard",
+  "name": "paradiseCity",
   "private": true,
   "scripts": {
     "start": "umi dev",

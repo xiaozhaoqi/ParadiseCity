@@ -1,6 +1,4 @@
-import Link from 'umi/link';
-import { Button, Card, WingBlank, WhiteSpace, Icon, Toast } from 'antd-mobile';
-import styles from '../index.css';
+import { WingBlank, WhiteSpace, Icon } from 'antd-mobile';
 import { connect } from 'dva';
 import React from 'react';
 import router from 'umi/router';
@@ -10,22 +8,22 @@ class WxArticle extends React.Component<
   {
     loading: boolean;
     articleList: Array<{
-      title: string;
+      time: string;
       content: string;
       time: number;
     }>;
     dispatch: any;
   },
   {
-    title: any;
+    time: any;
     renderArticle: any;
     toTop: string;
   }
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = {
-      title: decodeURI(document.location.search.split('title=')[1]),
+      time: Number(document.location.hash.split('time=')[1]),
       renderArticle: {},
       toTop: 'none',
     };
@@ -35,7 +33,8 @@ class WxArticle extends React.Component<
       })
       .then(() => {
         props.articleList.map((item, index) => {
-          if (item.title === this.state.title) {
+          console.log(item.time, this.state.time)
+          if (item.time === this.state.time) {
             this.setState({ renderArticle: item });
           }
         });
@@ -87,7 +86,7 @@ class WxArticle extends React.Component<
               </span>
               <span
                 onClick={() => {
-                  router.push('/#/mobile');
+                  router.push('/mobile');
                 }}
                 style={{
                   color: '#576b95',
@@ -114,12 +113,12 @@ class WxArticle extends React.Component<
             <Markdown source={this.state.renderArticle.content} escapeHtml={false} />
           </WingBlank>
         ) : (
-          <Icon
-            type="loading"
-            size="lg"
-            style={{ position: 'absolute', top: '50%', left: '45%' }}
-          />
-        )}
+            <Icon
+              type="loading"
+              size="lg"
+              style={{ position: 'absolute', top: '50%', left: '45%' }}
+            />
+          )}
         <Icon
           type="up"
           size="lg"
