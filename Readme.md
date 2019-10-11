@@ -12,6 +12,6 @@
 + Second, building code and output in /docs folder.
 + Finally, submit all files to Git.
 ### How to write articles on blog?
-+ Access [Blog Website](https://xiaozhaoqi.github.io/SweetChild) with PC/Mobile.
++ Access [Blog Website](https://paradise-city.club) with PC/Mobile.
 + Writing Article on WYSIWYG Markdown editor.
 + Article will be saved on free/public repository.

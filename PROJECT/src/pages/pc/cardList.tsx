@@ -1,4 +1,4 @@
-import { List, Card, Divider, Icon, Button } from 'antd';
+import { List, Card, Button } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import styles from './index.css';
@@ -77,6 +77,7 @@ class CardList extends React.Component<IProps, {
             this.props.loading ? new Array(5) : this.props.articleList.filter((v) => (
               v.category === this.state.category) || (this.state.category === 'tech' && v.category === undefined)
             )}
+          rowKey={item => item && item.time}
           renderItem={item => {
             if (item) {
               let time = new Date(item.time);

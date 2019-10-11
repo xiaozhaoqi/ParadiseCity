@@ -1,3 +1,3 @@
 export default function() {
-  return <a href="https://xiaozhaoqi.github.io/SweetChild"><h1>Go Back >>></h1></a>;
+  return <a href="https://paradise-city.club"><h1>Go Back >>></h1></a>;
 }

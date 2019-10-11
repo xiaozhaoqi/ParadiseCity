@@ -25,7 +25,7 @@ class WxArticle extends React.Component<
   constructor(props) {
     super(props);
     this.state = {
-      title: decodeURI(document.location.hash.split('title=')[1]),
+      title: decodeURI(document.location.search.split('title=')[1]),
       renderArticle: {},
       toTop: 'none',
     };
