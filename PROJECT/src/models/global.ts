@@ -10,8 +10,6 @@ import {
   removeArticle,
   getInfoFromAPI,
   getUserInfo,
-  getHotInfo,
-  getHotDetail
 } from '../utils/request';
 
 export default {
@@ -25,8 +23,6 @@ export default {
     photoFiles: [],
     infoFromAPI: {},
     userInfo: {},
-    hotInfo: {},
-    hotDetail: {}
   },
   reducers: {
     updateArticleList(state, action) {
@@ -105,18 +101,6 @@ export default {
           [action.pathname + '_' + search]: action.payload,
         },
       };
-    },
-    saveHotInfo(state, action) {
-      return {
-        ...state,
-        hotInfo: action.payload
-      }
-    },
-    saveHotDetail(state, action) {
-      return {
-        ...state,
-        hotDetail: action.payload
-      }
     },
     saveUserInfo(state, action) {
       return {
@@ -243,22 +227,6 @@ export default {
           search: action.search,
         });
       }
-    },
-    *getHotInfo(action, { put, call }) {
-      const info = yield call(getHotInfo);
-      if (info) {
-        yield put({
-          type: 'saveHotInfo',
-          payload: info,
-        });
-      }
-    },
-    *getHotDetail(action, { put, call }) {
-      const info = yield call(getHotDetail, action.payload);
-      yield put({
-        type: 'saveHotDetail',
-        payload: info,
-      });
     },
     *getUserInfo(action, { put, call }) {
       const info = yield call(getUserInfo);

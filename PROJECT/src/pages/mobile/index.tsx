@@ -25,6 +25,11 @@ class BasicLayout extends React.Component<
     this.props.dispatch({
       type: 'global/getUserInfo',
     });
+    this.props.dispatch({
+      type: 'global/getInfoFromAPI',
+      pathname: 'journalismApi',
+      search: '',
+    });
     if (this.props.articleList.length === 0) {
       this.props.dispatch({
         type: 'global/getCurrentArticleList',
@@ -44,7 +49,7 @@ class BasicLayout extends React.Component<
           prerenderingSiblingsNumber={0}
         >
           <TabBar.Item
-            title="热搜"
+            title="新闻"
             key="article"
             icon={
               <img src={require('../../assets/tab1close.png')} width="21px" height="21px" alt="" />
@@ -69,7 +74,7 @@ class BasicLayout extends React.Component<
             selectedIcon={
               <img src={require('../../assets/tab2open.png')} width="21px" height="21px" alt="" />
             }
-            title="原创"
+            title="记录"
             key="write"
             selected={this.props.tabSelected == 2}
             onPress={() => {
@@ -80,7 +85,6 @@ class BasicLayout extends React.Component<
             }}
           >
             <ArticleList />
-            {/* <CreateNewArticle /> */}
           </TabBar.Item>
           <TabBar.Item
             icon={
@@ -108,7 +112,7 @@ class BasicLayout extends React.Component<
             selectedIcon={
               <img src={require('../../assets/tab4open.png')} width="21px" height="21px" alt="" />
             }
-            title="关于"
+            title="介绍"
             key="my"
             selected={this.props.tabSelected == 4}
             onPress={() => {

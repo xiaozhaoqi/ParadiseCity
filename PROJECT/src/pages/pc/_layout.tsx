@@ -1,6 +1,6 @@
 // import Link from 'umi/link';
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Button, BackTop } from 'antd';
+import { Layout, Menu, Breadcrumb, List, Button, BackTop } from 'antd';
 import { connect } from 'dva';
 import Link from 'umi/link';
 const styles = require('./index.css');
@@ -13,6 +13,8 @@ class PCLayout extends React.Component<
     history: any;
     dispatch: any;
     userInfo: any;
+    infoFromAPI: any;
+
   },
   {
     crumb: any;
@@ -26,9 +28,32 @@ class PCLayout extends React.Component<
     this.props.dispatch({
       type: 'global/getUserInfo',
     });
+    this.props.dispatch({
+      type: 'global/getInfoFromAPI',
+      pathname: 'weatherApi',
+      search: 'city=北京',
+    });
+    this.getNews()
+    this.getArticles()
+  }
+
+  getNews = () => {
+    this.props.dispatch({
+      type: 'global/getInfoFromAPI',
+      pathname: 'journalismApi',
+      search: '',
+    });
+  }
+
+  getArticles = () => {
+    this.props.dispatch({
+      type: 'global/getCurrentArticleList',
+    });
   }
 
   render() {
+    const weather = this.props.infoFromAPI.weatherApi_city_北京 || null;
+
     return (
       <>
         <Content style={{ padding: '50px' }}>
@@ -38,32 +63,32 @@ class PCLayout extends React.Component<
               overflow: 'none',
               width: '200px'
             }}>
-              <Link to="/pc">
-                <img
-                  src="../huge.jpg"
-                  alt=""
-                  style={{
-                    border: '2px solid gray',
-                    width: '200px',
-                    borderRadius: '5px',
-                    minHeight: '200px',
-                  }}
-                />
-              </Link>
               <div
                 style={{
-                  border: '1px solid gray',
                   width: '200px',
                   borderRadius: '5px',
                   height: '75px',
                   textAlign: 'center',
                 }}
+                id="tv"
               >
                 <h3 style={{ marginTop: '10px' }}>
-                  在网络上的家
+                  👫
                 </h3>
                 <h3>Jovi & Candy</h3>
               </div>
+              {weather ?
+                <div
+                  style={{
+                    width: '200px',
+                    margin: '10px 0',
+                    padding: '5px',
+                    borderRadius: '5px',
+                  }}
+                >
+                  {`今日气温${weather.data.wendu}℃，${weather.data.ganmao}`}
+                </div>
+                : null}
               <div
                 style={{
                   display: 'flex',
@@ -74,22 +99,32 @@ class PCLayout extends React.Component<
                 }}
               >
                 <Link to="/pc">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc' ? styles.siderBtnActive : null}`}>新闻热榜</Button>
+                  <Button
+                    className={`${styles.siderBtn} ${document.location.hash === '#/pc' ? styles.siderBtnActive : null}`}
+                    onClick={this.getNews}
+                  >
+                    新闻
+                  </Button>
                 </Link>
                 <Link to="/pc/cardList">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/cardList' ? styles.siderBtnActive : null}`}>原创记录</Button>
+                  <Button
+                    className={`${styles.siderBtn} ${document.location.hash === '#/pc/cardList' ? styles.siderBtnActive : null}`}
+                    onClick={this.getArticles}
+                  >
+                    记录
+                  </Button>
                 </Link>
                 <Link to="/pc/write">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>开始创作</Button>
+                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>
+                    写作
+                  </Button>
                 </Link>
                 <Link to="/pc/about">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/about' ? styles.siderBtnActive : null}`}>站点介绍</Button>
+                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/about' ? styles.siderBtnActive : null}`}>
+                    介绍
+                  </Button>
                 </Link>
-                <img
-                  src="https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/"
-                  alt="Flag Counter"
-                  className={styles.siderBtn}
-                />
+                <div className={styles.flagcounter}></div>
               </div>
             </Sider>
             <Content style={{ padding: '0 32px', minHeight: 280 }}>{this.props.children}</Content>
@@ -104,4 +139,5 @@ class PCLayout extends React.Component<
 export default connect(state => ({
   loading: state.loading.global,
   userInfo: state.global.userInfo,
+  infoFromAPI: state.global.infoFromAPI,
 }))(PCLayout);

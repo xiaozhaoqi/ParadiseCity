@@ -14,8 +14,6 @@ class Push extends React.Component<
   {
     text: string;
     title: string;
-    isNullTitle: boolean;
-    isNullText: boolean;
     category: string;
   }
   > {
@@ -30,25 +28,9 @@ class Push extends React.Component<
     this.state = {
       text: text || '',
       title: title || '',
-      isNullTitle: false,
-      isNullText: false,
       category: 'life'
     };
   }
-
-  handleText = e => {
-    this.setState({
-      text: e.target.value,
-      isNullText: e.target.value ? false : true,
-    });
-  };
-
-  handleTitle = e => {
-    this.setState({
-      title: e.target.value,
-      isNullTitle: e.target.value ? false : true,
-    });
-  };
 
   openNotification = (message, description, icon) => {
     notification.open({
@@ -85,7 +67,7 @@ class Push extends React.Component<
   };
 
   push = () => {
-    if (this.state.title && this.state.text) {
+    if (this.state.title) {
       this.props.dispatch({
         type: 'global/sendNewArticle',
         payload: {
@@ -101,21 +83,9 @@ class Push extends React.Component<
       );
       this.clearInput();
     } else {
-      if (!this.state.title) {
-        window.scrollTo({ top: 0 });
-        this.setState({
-          isNullTitle: true,
-        });
-      }
-      if (!this.state.text) {
-        window.scrollTo({ top: 0 });
-        this.setState({
-          isNullText: true,
-        });
-      }
       this.openNotification(
         '现在还不能发布',
-        '您的留言标题或内容为空，请输入完整。',
+        '请输入标题。',
         <Icon type="frown" style={{ color: 'red' }} />
       );
     }
@@ -124,24 +94,28 @@ class Push extends React.Component<
   render() {
     return (
       <div>
-        <Radio.Group
-          defaultValue="life"
-          style={{ marginBottom: '10px' }}
-          onChange={(e) => { this.setState({ category: e.target.value }) }}
-        >
-          <Radio.Button value="life">生活</Radio.Button>
-          <Radio.Button value="tech">技术</Radio.Button>
-        </Radio.Group>
+        <Button
+          type={this.state.category === 'life' ? "primary" : "dashed"}
+          size="small"
+          style={{ margin: '0 10px 10px 0', borderRadius: '5px' }}
+          onClick={() => { this.setState({ category: 'life' }) }}
+        >生活</Button>
+        <Button
+          type={this.state.category === 'tech' ? "primary" : "dashed"}
+          size="small"
+          style={{ borderRadius: '5px' }}
+          onClick={() => { this.setState({ category: 'tech' }) }}
+        >技术</Button>
         <Input
           value={this.state.title}
           placeholder="标题"
-          onChange={this.handleTitle}
-          className={this.state.isNullTitle ? styles.dangerTitle : styles.primaryTitle}
+          onChange={e => { this.setState({ title: e.target.value }) }}
+          className={styles.primaryTitle}
         />
         <div>
           <TextArea
-            onChange={this.handleText}
-            className={this.state.isNullText ? styles.dangerWriteArea : styles.writeArea}
+            onChange={e => { this.setState({ text: e.target.value }) }}
+            className={styles.writeArea}
             value={this.state.text}
             placeholder="Markdown语法编辑器"
             autosize={true}

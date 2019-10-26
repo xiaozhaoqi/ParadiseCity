@@ -23,19 +23,18 @@ class CardList extends React.Component<IProps, {
 }> {
   constructor(props: IProps) {
     super(props);
-    this.props.dispatch({
-      type: 'global/getCurrentArticleList',
-    });
     this.state = {
       category: 'life'
     }
   }
+
   public static getDerivedStateFromProps(nextProps: IProps) {
-    const { articleList, loading } = nextProps;
+    const { articleList } = nextProps;
     return {
       articleList,
     };
   }
+
   handleRemoveCard = e => {
     this.props.dispatch({
       type: 'global/removeArticle',
@@ -60,12 +59,13 @@ class CardList extends React.Component<IProps, {
         <Button
           type={this.state.category === 'life' ? "primary" : "dashed"}
           size="small"
-          style={{ margin: '0 10px 20px 0' }}
+          style={{ margin: '0 10px 20px 0', borderRadius: '5px' }}
           onClick={() => { this.setState({ category: 'life' }) }}
         >生活</Button>
         <Button
           type={this.state.category === 'tech' ? "primary" : "dashed"}
           size="small"
+          style={{ borderRadius: '5px' }}
           onClick={() => { this.setState({ category: 'tech' }) }}
         >技术</Button>
 

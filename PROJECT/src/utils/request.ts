@@ -210,28 +210,6 @@ async function getInfoFromAPI(pathname, search) {
     });
 }
 
-async function getHotInfo() {
-  return await fetch('https://www.printf520.com:8080/GetType')
-    .then(res => res.json())
-    .then(res => {
-      return res;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
-async function getHotDetail(id) {
-  return await fetch('https://www.printf520.com:8080/GetTypeInfo?id=' + id)
-    .then(res => res.json())
-    .then(res => {
-      return res;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
 async function getUserInfo() {
   return await fetch('https://api.github.com/search/users?q=xiaozhaoqi')
     .then(res => res.json())
@@ -254,6 +232,4 @@ export {
   removeArticle,
   getInfoFromAPI,
   getUserInfo,
-  getHotInfo,
-  getHotDetail
 };
