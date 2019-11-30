@@ -25,11 +25,6 @@ class BasicLayout extends React.Component<
     this.props.dispatch({
       type: 'global/getUserInfo',
     });
-    this.props.dispatch({
-      type: 'global/getInfoFromAPI',
-      pathname: 'journalismApi',
-      search: '',
-    });
     if (this.props.articleList.length === 0) {
       this.props.dispatch({
         type: 'global/getCurrentArticleList',

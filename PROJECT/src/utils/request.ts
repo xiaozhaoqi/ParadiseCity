@@ -198,18 +198,6 @@ async function removePhoto(title, sha) {
       console.log(err);
     });
 }
-
-async function getInfoFromAPI(pathname, search) {
-  return await fetch('https://www.apiopen.top/' + pathname + '?' + search)
-    .then(res => res.json())
-    .then(res => {
-      return res;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
 async function getUserInfo() {
   return await fetch('https://api.github.com/search/users?q=xiaozhaoqi')
     .then(res => res.json())
@@ -230,6 +218,5 @@ export {
   getPhoto,
   removePhoto,
   removeArticle,
-  getInfoFromAPI,
   getUserInfo,
 };

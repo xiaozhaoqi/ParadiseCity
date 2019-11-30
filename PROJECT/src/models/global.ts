@@ -1,4 +1,3 @@
-// import { routerRedux } from 'dva/router';
 import {
   getArticleList,
   getArticle,
@@ -8,7 +7,6 @@ import {
   getPhoto,
   removePhoto,
   removeArticle,
-  getInfoFromAPI,
   getUserInfo,
 } from '../utils/request';
 
@@ -214,17 +212,6 @@ export default {
         yield put({
           type: 'changeRemoveState',
           payload: false,
-        });
-      }
-    },
-    *getInfoFromAPI(action, { put, call }) {
-      const info = yield call(getInfoFromAPI, action.pathname, action.search);
-      if (info) {
-        yield put({
-          type: 'saveInfoFromAPI',
-          payload: info,
-          pathname: action.pathname,
-          search: action.search,
         });
       }
     },

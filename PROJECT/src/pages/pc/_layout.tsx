@@ -1,8 +1,10 @@
 // import Link from 'umi/link';
 import React from 'react';
-import { Layout, Menu, Breadcrumb, List, Button, BackTop } from 'antd';
+import { Layout, message, BackTop } from 'antd';
 import { connect } from 'dva';
 import Link from 'umi/link';
+import Router from 'umi/router';
+
 const styles = require('./index.css');
 const { Content, Sider } = Layout;
 
@@ -13,46 +15,28 @@ class PCLayout extends React.Component<
     history: any;
     dispatch: any;
     userInfo: any;
-    infoFromAPI: any;
-
-  },
-  {
-    crumb: any;
+    articlesLoading: boolean;
   }
   > {
   constructor(props: any) {
     super(props);
-    this.state = {
-      crumb: <Breadcrumb.Item>IO Board</Breadcrumb.Item>,
-    };
     this.props.dispatch({
       type: 'global/getUserInfo',
     });
-    this.props.dispatch({
-      type: 'global/getInfoFromAPI',
-      pathname: 'weatherApi',
-      search: 'city=北京',
-    });
-    this.getNews()
     this.getArticles()
   }
 
-  getNews = () => {
-    this.props.dispatch({
-      type: 'global/getInfoFromAPI',
-      pathname: 'journalismApi',
-      search: '',
-    });
-  }
-
   getArticles = () => {
-    this.props.dispatch({
-      type: 'global/getCurrentArticleList',
-    });
+    if (this.props.articlesLoading) {
+      message.info('正在找最新的文章呢...')
+    } else {
+      this.props.dispatch({
+        type: 'global/getCurrentArticleList',
+      });
+    }
   }
 
   render() {
-    const weather = this.props.infoFromAPI.weatherApi_city_北京 || null;
 
     return (
       <>
@@ -61,70 +45,24 @@ class PCLayout extends React.Component<
             <Sider width={200} style={{
               background: '#fff',
               overflow: 'none',
-              width: '200px'
+              width: '200px',
+              textAlign: 'center',
             }}>
-              <div
-                style={{
-                  width: '200px',
-                  borderRadius: '5px',
-                  height: '75px',
-                  textAlign: 'center',
-                }}
-                id="tv"
-              >
-                <h3 style={{ marginTop: '10px' }}>
-                  👫
-                </h3>
-                <h3>Jovi & Candy</h3>
+              <div onClick={() => { Router.push('/') }}>
+                <h3 title="一个奇怪的emoji图标，在不同系统中会被渲染成灰色或彩色的两个手拉手的人">👫</h3>
+                <h3 title="两个人的“用户名”">Jovi & Candy</h3>
               </div>
-              {weather ?
-                <div
-                  style={{
-                    width: '200px',
-                    margin: '10px 0',
-                    padding: '5px',
-                    borderRadius: '5px',
-                  }}
-                >
-                  {`今日气温${weather.data.wendu}℃，${weather.data.ganmao}`}
-                </div>
-                : null}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  flexWrap: 'wrap',
-                  overflow: 'none',
-                  width: '200px'
-                }}
-              >
-                <Link to="/pc">
-                  <Button
-                    className={`${styles.siderBtn} ${document.location.hash === '#/pc' ? styles.siderBtnActive : null}`}
-                    onClick={this.getNews}
-                  >
-                    新闻
-                  </Button>
-                </Link>
-                <Link to="/pc/cardList">
-                  <Button
-                    className={`${styles.siderBtn} ${document.location.hash === '#/pc/cardList' ? styles.siderBtnActive : null}`}
-                    onClick={this.getArticles}
-                  >
-                    记录
-                  </Button>
+              <div className={styles['sider-menu']}>
+                <Link to="/pc/" onClick={this.getArticles}>
+                  <ruby>记录<rt>ji lu</rt></ruby>
                 </Link>
                 <Link to="/pc/write">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/write' ? styles.siderBtnActive : null}`}>
-                    写作
-                  </Button>
+                  <ruby>写作<rt>xie zuo</rt></ruby>
                 </Link>
                 <Link to="/pc/about">
-                  <Button className={`${styles.siderBtn} ${document.location.hash === '#/pc/about' ? styles.siderBtnActive : null}`}>
-                    介绍
-                  </Button>
+                  <ruby>关于<rt>guan yu</rt></ruby>
                 </Link>
-                <div className={styles.flagcounter}></div>
+                <div className={styles.flagcounter} title="一个简单的访问量统计"></div>
               </div>
             </Sider>
             <Content style={{ padding: '0 32px', minHeight: 280 }}>{this.props.children}</Content>
@@ -139,5 +77,5 @@ class PCLayout extends React.Component<
 export default connect(state => ({
   loading: state.loading.global,
   userInfo: state.global.userInfo,
-  infoFromAPI: state.global.infoFromAPI,
+  articlesLoading: state.loading.effects['global/getCurrentArticleList']
 }))(PCLayout);

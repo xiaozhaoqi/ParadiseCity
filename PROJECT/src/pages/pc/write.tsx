@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Popconfirm, Input, Select, notification, Icon, Radio } from 'antd';
+import { Button, Popconfirm, Input, Select, notification, Icon, message } from 'antd';
 import { connect } from 'dva';
 const Markdown = require('react-markdown/with-html');
 const styles = require('./index.css');
@@ -28,9 +28,25 @@ class Push extends React.Component<
     this.state = {
       text: text || '',
       title: title || '',
-      category: 'life'
+      category: 'life',
     };
   }
+
+  componentDidMount() {
+    if (localStorage) {
+      this.recorder = setInterval(() => {
+        if (Math.abs(localStorage.getItem('writing-text').length - this.state.text.length) > 100) {
+          this.save()
+        }
+      }, 30000)
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.recorder)
+  }
+
+  recorder: any
 
   openNotification = (message, description, icon) => {
     notification.open({
@@ -52,17 +68,7 @@ class Push extends React.Component<
     if (localStorage) {
       localStorage.setItem('writing-title', this.state.title);
       localStorage.setItem('writing-text', this.state.text);
-      this.openNotification(
-        '保存草稿成功！',
-        '草稿存储于您的磁盘中，当您下次访问本页时，将自动填充草稿到编辑器中。',
-        <Icon type="smile" style={{ color: 'green' }} />
-      );
-    } else {
-      this.openNotification(
-        '保存草稿失败！',
-        '您的浏览器可能不支持离线存储，请使用Edge、Chrome等现代浏览器体验。',
-        <Icon type="frown" style={{ color: 'red' }} />
-      );
+      message.info((new Date).toLocaleString() + '，自动保存草稿成功！', 5);
     }
   };
 
@@ -108,29 +114,23 @@ class Push extends React.Component<
         >技术</Button>
         <Input
           value={this.state.title}
-          placeholder="标题"
+          placeholder="题目"
           onChange={e => { this.setState({ title: e.target.value }) }}
           className={styles.primaryTitle}
         />
-        <div>
+        <div className={styles['editor-container']}>
           <TextArea
             onChange={e => { this.setState({ text: e.target.value }) }}
             className={styles.writeArea}
             value={this.state.text}
-            placeholder="Markdown语法编辑器"
-            autosize={true}
+            placeholder="正文"
           />
           <Markdown source={this.state.text} className={styles.parseMarkdown} escapeHtml={false} />
         </div>
-        <div style={{ float: 'left' }}>
+        <div>
           <Button type="primary" onClick={this.push} className={styles.submitButton}>
             发布
           </Button>
-          {localStorage ? (
-            <Button type="default" onClick={this.save} className={styles.submitButton}>
-              存为草稿
-            </Button>
-          ) : null}
           <Popconfirm
             title="确定清除正在编辑的内容，并清空草稿箱？"
             onConfirm={this.clearInput}
@@ -141,15 +141,6 @@ class Push extends React.Component<
               重置
             </Button>
           </Popconfirm>
-          <Button
-            type="dashed"
-            onClick={() => {
-              window.open('https://www.baidu.com/s?wd=markdown语法', '_blank');
-            }}
-            className={styles.submitButton}
-          >
-            Help
-          </Button>
         </div>
       </div>
     );
