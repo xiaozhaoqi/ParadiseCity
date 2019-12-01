@@ -44,7 +44,7 @@ async function sendNewArticle(title, content, category) {
   const time = Date.now();
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/ParadiseCity/contents/files/article/' +
-    time +
+    title + '-' + new Date(time).toLocaleDateString().replace(/\//g, '-') +
     '.md?access_token=' +
     leftToken +
     rightToken,

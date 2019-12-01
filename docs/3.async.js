@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[3],{"i6+/":function(e,t,a){"use strict";var n=a("mZ4U");Object.defineProperty(t,"__esModule",{value:!0}),t.default=c;var u=n(a("FQm9"));function c(){return u.default.createElement("a",{href:"https://paradise-city.club"},u.default.createElement("h1",null,"Go Back >>>"))}}}]);
