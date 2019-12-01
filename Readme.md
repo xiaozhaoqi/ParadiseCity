@@ -2,11 +2,11 @@
 + It's a blog based on the latest front-end technology, back-end based on Github API and free/public repository.
 ### Which technologies i use?
 + Language：TypeScript.
-+ View：React, antd for pc, antd-mobile for mobile.
-+ Router：umi/react-router.
-+ Data：dva/redux, dva/redux-saga.
++ View：React v16 class/hooks.
++ Router：react-router-dom.
++ Data：none.
 + Service：GitHub v3 RESTful API.
-+ Project：dva/webpack, tslint, prettier, husky.
++ Project：Webpack.
 ### How to start programming?
 + First, coding in /PROJECT folder.
 + Second, building code and output in /docs folder.

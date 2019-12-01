@@ -4,6 +4,7 @@ body {
   height: 100%;
   font-size: 18px;
   overflow-x: hidden;
+  word-wrap: break-word;
 }
 
 a, span, li, button, h1, h2, h3, h4, h5, h6 {
@@ -59,6 +60,20 @@ pre {
   margin: 20px 0 0 30px;
   border-radius: 5px;
   background: url("https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/") no-repeat;
+}
+
+@media only screen and (max-width: 600px) {
+  .content {
+    margin-left: 0;
+  }
+  .sider-menu {
+    float: none;
+    width: auto;
+    margin-bottom: 16px;
+  }
+  .flagcounter {
+    margin: auto;
+  }
 }
 
 /* article list */
