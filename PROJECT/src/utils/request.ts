@@ -19,6 +19,7 @@ async function getArticleList() {
     })
     .catch(err => {
       console.log(err);
+      alert('获取记录失败，请检查网络连接。')
     });
 }
 async function getArticle(name) {
@@ -38,13 +39,14 @@ async function getArticle(name) {
     })
     .catch(err => {
       console.log(err);
+      alert('获取记录失败，请检查网络连接。')
     });
 }
 async function sendNewArticle(title, content, category) {
   const time = Date.now();
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/ParadiseCity/contents/files/article/' +
-    title + '-' + new Date(time).toLocaleDateString().replace(/\//g, '-') +
+    title + '-' + time +
     '.md?access_token=' +
     leftToken +
     rightToken,
@@ -73,6 +75,7 @@ async function sendNewArticle(title, content, category) {
       return true;
     })
     .catch(err => {
+      alert('创建记录失败，请检查网络连接。')
       return false;
     });
 }

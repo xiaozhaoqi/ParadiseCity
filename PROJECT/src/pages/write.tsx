@@ -67,25 +67,23 @@ class Push extends React.Component<
     return (
       <div>
         <input
-          className={ styles['write-title'] }
-          value={ this.state.title }
-          placeholder="题目"
-          onChange={ e => { this.setState({ title: e.target.value }) } }
+          className={styles['write-title']}
+          value={this.state.title}
+          onChange={e => { this.setState({ title: e.target.value }) }}
         />
-        <div className={ styles['editor-container'] }>
+        <div className={styles['editor-container']}>
           <textarea
-            onChange={ e => { this.setState({ text: e.target.value }) } }
-            className={ styles['write-textarea'] }
-            value={ this.state.text }
-            placeholder="正文"
+            onChange={e => { this.setState({ text: e.target.value }) }}
+            className={styles['write-textarea']}
+            value={this.state.text}
           />
-          <Markdown source={ this.state.text } className={ styles['parseMarkdown'] } escapeHtml={ false } />
+          <Markdown source={this.state.text} className={styles['parseMarkdown']} escapeHtml={false} />
         </div>
         <div>
-          <button onClick={ this.push } className={ styles['submitButton'] }>
+          <button onClick={this.push} className={styles['submitButton']}>
             发布
           </button>
-          <button className={ styles['submitButton'] } onClick={ this.clearInput }>重置</button>
+          <button className={styles['submitButton']} onClick={this.clearInput}>重置</button>
         </div>
       </div>
     );

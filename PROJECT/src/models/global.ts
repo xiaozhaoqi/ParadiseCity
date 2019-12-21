@@ -6,6 +6,9 @@ import {
   getUserInfo,
 } from '../utils/request';
 
+/*
+  dva框架遗留的API调用模型，已废弃
+*/
 export default {
   namespace: 'global',
   state: {
