@@ -54,6 +54,7 @@ export default (props) => {
                 })
               } }
             >
+              <span>[{ item.date }] </span>
               { item.name.slice(0, item.date === '9999/99/99' ? -3 : - 17) }
             </p>
           ))
