@@ -37,9 +37,9 @@ export default (props) => {
         type === 'titleList' ?
           articleList.map((item) => (
             <p
-              className={styles['title']}
-              key={item.name}
-              onClick={() => {
+              className={ styles['title'] }
+              key={ item.name }
+              onClick={ () => {
                 props.loading()
                 setType('articleDetail');
                 getArticle(item.name).then((v) => {
@@ -52,45 +52,45 @@ export default (props) => {
                     sha: v.sha
                   })
                 })
-              }}
+              } }
             >
-              {item.name.slice(0, item.date === '9999/99/99' ? -3 : - 17)}
+              { item.name.slice(0, item.date === '9999/99/99' ? -3 : - 17) }
             </p>
           ))
           :
           <div>
-            <p className={styles['article-title']}>{article.title}</p>
-            <p className={styles['article-timestamp']}>
+            <p className={ styles['article-title'] }>{ article.title }</p>
+            <p className={ styles['article-timestamp'] }>
               {
                 article.time ?
                   <>
-                    <span
-                      className={styles['back']}
-                      onClick={() => {
+                    <button
+                      className={ styles['back'] }
+                      onClick={ () => {
                         setType('titleList');
                         setArticle({ title: '', content: '', time: '', category: '', sha: '' });
-                      }}
-                    >返回</span>
+                      } }
+                    >返回</button>
                     {
                       document.querySelector(':root').getAttribute('style') === '--mainColor: #f0f0f0' ?
-                        <span
-                          className={styles['back']}
-                          onClick={() => {
+                        <button
+                          className={ styles['back'] }
+                          onClick={ () => {
                             removeArticle(article.title + '-' + article.time, article.sha).then(() => {
                               location.reload()
                             })
-                          }}
-                        >删除</span> : null
+                          } }
+                        >删除</button> : null
                     }
-                    <span>{new Date(article.time).toLocaleString()}</span>
+                    <span>{ new Date(article.time).toLocaleString() }</span>
                   </>
                   : null
               }
             </p>
             <Markdown
-              className={styles['article-content']}
-              source={article.content}
-              escapeHtml={false}
+              className={ styles['article-content'] }
+              source={ article.content }
+              escapeHtml={ false }
             />
           </div>
       }
