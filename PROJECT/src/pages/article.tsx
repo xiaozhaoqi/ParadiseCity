@@ -24,10 +24,10 @@ export default (props) => {
           item.year = 0
           item.month = 0
           item.day = 0
-          item.date = '9999/99/99'
+          item.date = '0000/00/00'
         }
         return item
-      }).sort((a, b) => a.date > b.date ? 1 : -1) || []);
+      }).sort((a, b) => a.date < b.date ? 1 : -1) || []);
     })
   }, [])
 
@@ -55,7 +55,7 @@ export default (props) => {
               } }
             >
               <span>[{ item.date }] </span>
-              { item.name.slice(0, item.date === '9999/99/99' ? -3 : - 17) }
+              { item.name.slice(0, item.date === '0000/00/00' ? -3 : - 17) }
             </p>
           ))
           :
