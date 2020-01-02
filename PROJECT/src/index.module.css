@@ -116,9 +116,10 @@ a[href='/about'] {
 
 .flagcounter {
   width: 200px;
-  height: 75px;
+  height: 100px;
   margin: auto;
   transform: translateX(30px);
+  background-size: contain;
   background: url("https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/") no-repeat;
 }
 
