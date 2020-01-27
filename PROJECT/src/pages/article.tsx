@@ -29,8 +29,8 @@ export default (props) => {
         return item
       }).sort((a, b) => a.date < b.date ? 1 : -1) || []);
       if (window.location.search) {
-        const sha = window.location.search.split('=')[1]
-        const target = articleList.filter(v => v.sha === sha)
+        const sha = window.location.search.split('?s=')[1]
+        const target = articleList.filter(v => sha.indexOf(v.sha) > -1)
         if (target.length) {
           props.loading()
           setType('articleDetail');
