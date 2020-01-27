@@ -71,7 +71,7 @@ export default (props) => {
                         setType('titleList');
                         setArticle({ title: '', content: '', time: '', category: '', sha: '' });
                       } }
-                    >返回</button>
+                    >返回标题列表</button>
                     {
                       document.querySelector(':root').getAttribute('style') === '--mainColor: #f0f0f0' ?
                         <button
