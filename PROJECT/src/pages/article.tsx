@@ -28,6 +28,25 @@ export default (props) => {
         }
         return item
       }).sort((a, b) => a.date < b.date ? 1 : -1) || []);
+      if (window.location.search) {
+        const sha = window.location.search.split('=')[1]
+        const target = articleList.filter(v => v.sha === sha)
+        if (target.length) {
+          props.loading()
+          setType('articleDetail');
+          getArticle(target[0].name).then((v) => {
+            props.loading()
+            window.history.replaceState(null, null, '?s=' + v.sha)
+            v && setArticle({
+              title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
+              content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
+              time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,
+              category: JSON.parse(decodeURIComponent(escape(atob(v.content)))).category,
+              sha: v.sha
+            })
+          })
+        }
+      }
     })
   }, [])
 
@@ -44,6 +63,7 @@ export default (props) => {
                 setType('articleDetail');
                 getArticle(item.name).then((v) => {
                   props.loading()
+                  window.history.replaceState(null, null, '?s=' + v.sha)
                   v && setArticle({
                     title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
                     content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
