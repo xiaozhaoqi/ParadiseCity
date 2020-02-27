@@ -1,57 +1,52 @@
-const leftToken = '61e06fdec3996fbda3c';
-const rightToken = 'eb8094d137bf927e7e5b2';
+const leftToken = '61e06fdec3996fbda3c'
+const rightToken = 'eb8094d137bf927e7e5b2'
 // 文字
 async function getArticleList() {
   return await fetch(
-    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article?access_token=' +
-    leftToken +
-    rightToken,
+    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article',
     {
       method: 'GET',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
     }
   )
-    .then(res => {
-      if (res.status < 299) return res.json();
-      else return null;
+    .then((res) => {
+      if (res.status < 299) return res.json()
+      else return null
     })
-    .then(res => {
-      return res;
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-      alert('获取记录失败，请检查网络连接。')
-    });
 }
 async function getArticle(name) {
   return await fetch(
-    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-    name +
-    '?access_token=' +
-    leftToken +
-    rightToken,
+    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' + name,
     {
       method: 'GET',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return res;
+    .then((res) => res.json())
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-      alert('获取记录失败，请检查网络连接。')
-    });
 }
 async function sendNewArticle(title, content, category) {
-  const time = Date.now();
+  const time = Date.now()
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-    title + '-' + time +
-    '.md?access_token=' +
-    leftToken +
-    rightToken,
+      title +
+      '-' +
+      time +
+      '.md',
     {
       method: 'PUT',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
       body: JSON.stringify({
         message: 'AutoPush Article: ' + title,
         // @ts-ignore
@@ -62,7 +57,7 @@ async function sendNewArticle(title, content, category) {
                 title: title,
                 content: content,
                 time: time,
-                category: category
+                category: category,
               })
             )
           )
@@ -70,24 +65,24 @@ async function sendNewArticle(title, content, category) {
       }),
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return true;
+    .then((res) => res.json())
+    .then((res) => {
+      return true
     })
-    .catch(err => {
-      alert('创建记录失败，请检查网络连接。')
-      return false;
-    });
+    .catch((err) => {
+      return false
+    })
 }
 async function removeArticle(title, sha) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-    title +
-    '.md?access_token=' +
-    leftToken +
-    rightToken,
+      title +
+      '.md',
     {
       method: 'DELETE',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
       body: JSON.stringify({
         message: 'AutoDelete article: ' + title,
         // @ts-ignore
@@ -95,63 +90,64 @@ async function removeArticle(title, sha) {
       }),
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return res;
+    .then((res) => res.json())
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 图片
 async function getPhotoList() {
   return await fetch(
-    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo?access_token=' +
-    leftToken +
-    rightToken,
+    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo',
     {
       method: 'GET',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
     }
   )
-    .then(res => {
-      if (res.status < 299) return res.json();
-      else return null;
+    .then((res) => {
+      if (res.status < 299) return res.json()
+      else return null
     })
-    .then(res => {
-      return res;
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch((err) => {
+      console.log(err)
+    })
 }
 async function getPhoto(name) {
   return await fetch(
-    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' +
-    name +
-    '?access_token=' +
-    leftToken +
-    rightToken,
+    'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' + name,
     {
       method: 'GET',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return res;
+    .then((res) => res.json())
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch((err) => {
+      console.log(err)
+    })
 }
 async function sendNewPhoto(title, content) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' +
-    title +
-    '.png?access_token=' +
-    leftToken +
-    rightToken,
+      title +
+      '.png',
     {
       method: 'PUT',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
       body: JSON.stringify({
         message: 'AutoPush Photo: ' + title,
         // @ts-ignore
@@ -169,23 +165,24 @@ async function sendNewPhoto(title, content) {
       }),
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return true;
+    .then((res) => res.json())
+    .then((res) => {
+      return true
     })
-    .catch(err => {
-      return false;
-    });
+    .catch((err) => {
+      return false
+    })
 }
 async function removePhoto(title, sha) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' +
-    title +
-    '.png?access_token=' +
-    leftToken +
-    rightToken,
+      title +
+      '.png',
     {
       method: 'DELETE',
+      headers: {
+        Authorization: 'token ' + leftToken + rightToken,
+      },
       body: JSON.stringify({
         message: 'AutoDelete Photo: ' + title,
         // @ts-ignore
@@ -193,23 +190,23 @@ async function removePhoto(title, sha) {
       }),
     }
   )
-    .then(res => res.json())
-    .then(res => {
-      return res;
+    .then((res) => res.json())
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch((err) => {
+      console.log(err)
+    })
 }
 async function getUserInfo() {
   return await fetch('https://api.github.com/search/users?q=xiaozhaoqi')
-    .then(res => res.json())
-    .then(res => {
-      return res;
+    .then((res) => res.json())
+    .then((res) => {
+      return res
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 export {
@@ -222,4 +219,4 @@ export {
   removePhoto,
   removeArticle,
   getUserInfo,
-};
+}
