@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+// @ts-nocheck
 import styles from '../index.module.css'
 import Markdown from 'react-markdown/with-html'
 
 import { getArticleList, getArticle, removeArticle } from '../utils/request'
+const { useEffect, useState } = React
 
 export default (props) => {
   const [type, setType] = useState('titleList')

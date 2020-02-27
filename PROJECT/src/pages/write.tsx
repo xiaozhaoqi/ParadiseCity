@@ -1,4 +1,4 @@
-import React from 'react'
+// @ts-nocheck
 import Markdown from 'react-markdown/with-html'
 import styles from '../index.module.css'
 

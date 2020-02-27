@@ -139,6 +139,11 @@ module.exports = function (webpackEnv) {
   };
 
   return {
+    externals: {
+      "react": "React",
+      "react-dom": "ReactDOM",
+      "react-router-dom": "ReactRouterDOM"
+    },
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,

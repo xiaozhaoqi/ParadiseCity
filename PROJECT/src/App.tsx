@@ -1,10 +1,9 @@
-import React from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+// @ts-nocheck
 import Article from './pages/article'
 import Write from './pages/write'
 import About from './pages/about'
 import styles from './index.module.css'
-
+const { BrowserRouter: Router, Switch, Route, Link } = ReactRouterDOM
 export default class Layout extends React.Component {
   state = {
     loading: false,
