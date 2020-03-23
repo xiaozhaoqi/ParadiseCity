@@ -108,7 +108,6 @@ export default (props) => {
                 })
             }}
           >
-            <span>[{item.date}] </span>
             {item.name.slice(0, item.date === '0000/00/00' ? -3 : -17)}
           </p>
         ))
@@ -145,7 +144,6 @@ export default (props) => {
                     DELETE
                   </span>
                 ) : null}
-                <span>{new Date(article.time).toLocaleString()}</span>
               </>
             ) : null}
           </p>
