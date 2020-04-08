@@ -123,13 +123,6 @@ a[href='/about'] {
   color: rgba(0, 0, 0, .4);
 }
 
-.flagcounter {
-  width: 0px;
-  height: 0px;
-  background-size: contain;
-  background: url("https://s11.flagcounter.com/count/m1nf/bg_FFFFFF/txt_000000/border_FFFFFF/columns_2/maxflags_64/viewers_3/labels_1/pageviews_1/flags_0/percent_0/") no-repeat;
-}
-
 .about {
   margin: 10px auto 0;
   text-align: center;
