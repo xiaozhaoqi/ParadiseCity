@@ -1,4 +1,4 @@
-// import React from 'react'
+import styles from '../index.module.css'
 
 export default () => {
   const img = document.createElement('img')
@@ -10,10 +10,11 @@ export default () => {
     load && load.appendChild(img)
   }
   return (
-    <>
-      <p>Hey.</p>
-      <p>Leaving something on the Internet!</p>
-      <div className='load-counter' style={{ marginTop: '1em' }}></div>
-    </>
+    <div className={ styles['about-container'] }>
+      <p>嘿</p>
+      <p>这是我的网络日志</p>
+      <p>看看和你一样的人来自哪里</p>
+      <div className='load-counter' style={ { marginTop: '10px' } }></div>
+    </div>
   )
 }

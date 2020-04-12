@@ -20,6 +20,10 @@ export default class Layout extends React.Component {
 
   componentDidMount() {
     this.loading()
+    this.initData()
+  }
+
+  initData = () => {
     getArticleList().then((articleList = []) => {
       if (document.location.hash) {
         const sha = document.location.hash.split('#')[1]
@@ -52,6 +56,7 @@ export default class Layout extends React.Component {
             item.month = date.getMonth() + 1
             item.day = date.getDate()
             item.date = date.toLocaleDateString()
+            item.catagory = item.name.slice(0, -17).split('-')[1] || '技术'
           } else {
             item.year = 0
             item.month = 0
@@ -62,7 +67,6 @@ export default class Layout extends React.Component {
         }).sort((a, b) => (a.date < b.date ? 1 : -1)) || []
       })
     }).finally(() => { this.loading() })
-
   }
 
   loading = () => {
@@ -78,9 +82,10 @@ export default class Layout extends React.Component {
     return (
       <Router history={ history }>
         <nav className={ styles['sider-menu'] }>
-          <Link to='/'>Article</Link>
-          <label htmlFor='color'>👫</label>
-          <Link to='/write'>Writing</Link>
+          <label htmlFor='color' title="点击更换文字颜色">👫</label>
+          <Link to='/about'>我</Link>
+          <Link to='/write'>创作</Link>
+          <Link to='/' onClick={ this.initData }>首页</Link>
           <input type='color' id='color' onChange={ this.coloring } />
         </nav>
         <div className={ styles['content'] }>
@@ -99,7 +104,6 @@ export default class Layout extends React.Component {
             </Route>
           </Switch>
         </div>
-        <Link to='/about'>Author</Link>
         { this.state.loading ? (
           <div className={ styles['loading'] }></div>
         ) : (

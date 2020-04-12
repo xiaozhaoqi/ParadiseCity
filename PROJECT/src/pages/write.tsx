@@ -14,13 +14,13 @@ class Push extends React.Component<
     category: string
     help: string
   }
-> {
+  > {
   constructor(props) {
     super(props)
     this.state = {
       text: localStorage.getItem('writing-text') || '',
       title: localStorage.getItem('writing-title') || '',
-      category: 'life',
+      category: '',
       help: '',
     }
   }
@@ -55,7 +55,7 @@ class Push extends React.Component<
   push = () => {
     if (this.state.title) {
       this.props.loading()
-      sendNewArticle(this.state.title, this.state.text, '技术').then(() => {
+      sendNewArticle(this.state.title, this.state.text, this.state.category || '技术').then(() => {
         this.props.loading()
         this.setState({ text: '', title: '', help: '😊publish success!' })
       })
@@ -66,37 +66,47 @@ class Push extends React.Component<
 
   render() {
     return (
-      <div>
+      <div className={ styles['write-container'] }      >
         <input
-          className={styles['write-title']}
-          value={this.state.title}
-          onChange={(e) => {
+          className={ styles['write-title'] }
+          placeholder="标题将出现在首页"
+          value={ this.state.title }
+          onChange={ (e) => {
             this.setState({ title: e.target.value })
-          }}
+          } }
         />
-        <div className={styles['editor-container']}>
+        <div className={ styles['editor-container'] }>
           <textarea
-            onChange={(e) => {
+            onChange={ (e) => {
               this.setState({ text: e.target.value })
-            }}
-            className={styles['write-textarea']}
-            value={this.state.text}
+            } }
+            placeholder="使用Markdown语法书写正文，将在右侧面板预览格式"
+            className={ styles['write-textarea'] }
+            value={ this.state.text }
           />
           <Markdown
-            source={this.state.text}
-            className={styles['parseMarkdown']}
-            escapeHtml={false}
+            source={ this.state.text }
+            className={ styles['parseMarkdown'] }
+            escapeHtml={ false }
           />
         </div>
+        <input
+          className={ styles['write-catagory'] }
+          placeholder="自定义分类，默认为[技术]"
+          value={ this.state.category }
+          onChange={ (e) => {
+            this.setState({ category: e.target.value })
+          } }
+        />
         <div>
-          <button onClick={this.push} className={styles['submitButton']}>
+          <button onClick={ this.push } className={ styles['submitButton'] }>
             publish
           </button>
-          <button className={styles['submitButton']} onClick={this.clearInput}>
+          <button className={ styles['submitButton'] } onClick={ this.clearInput }>
             clear
           </button>
         </div>
-        <p style={{ color: 'red' }}>{this.state.help}</p>
+        <p style={ { color: 'red' } }>{ this.state.help }</p>
       </div>
     )
   }

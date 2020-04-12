@@ -11,40 +11,36 @@ export default withRouter((props) => {
     props.history.push('/')
   }
   return (
-    <div>
-      <p className={ styles['article-title'] }>{ article.title }</p>
-      <p className={ styles['article-timestamp'] }>
-        { article.time ? (
-          <>
-            <span
-              className={ styles['back'] }
-              onClick={ () => { props.history.push('/') } }
-            >RETURN</span>
-            { document.querySelector(':root').getAttribute('style') ===
-              '--mainColor: #f0f0f0' ? (
-                <span
-                  className={ styles['back'] }
-                  style={ { color: 'red' } }
-                  onClick={ () => {
-                    removeArticle(article.title + '-' + article.time, article.sha)
-                      .then(() => {
-                        location.href = location.origin
-                      })
-                  } }
-                >DELETE</span>
-              ) : null }
-          </>
-        ) : null }
-      </p>
-      <Markdown
-        className={ styles['article-content'] }
-        source={ article.content }
-        escapeHtml={ false }
-      />
+    <>
       <span
         className={ styles['back'] }
         onClick={ () => { props.history.push('/') } }
-      >RETURN</span>
-    </div>
+      >返回</span>
+      { document.querySelector(':root').getAttribute('style') ===
+        '--mainColor: #f0f0f0' ? (
+          <span
+            className={ styles['back'] }
+            style={ { color: 'red' } }
+            onClick={ () => {
+              removeArticle(article.title + '-' + article.time, article.sha)
+                .then(() => {
+                  location.href = location.origin
+                })
+            } }
+          >删除</span>
+        ) : null }
+      <div className={ styles['article-container'] }>
+        <p className={ styles['article-title'] }>{ article.title }</p>
+        <p className={ styles['article-props'] }>
+          { article.time && <span>最后编辑于 { (new Date(article.time)).toLocaleDateString() }</span> }
+          { article.content && <span>预计阅读时间 { (article.content.length / 200 + 1).toFixed(0) } 分钟</span> }
+        </p>
+        <Markdown
+          className={ styles['article-content'] }
+          source={ article.content }
+          escapeHtml={ false }
+        />
+      </div>
+    </>
   )
 })

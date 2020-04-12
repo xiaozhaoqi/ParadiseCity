@@ -38,10 +38,12 @@ async function sendNewArticle(title, content, category) {
   const time = Date.now()
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-      title +
-      '-' +
-      time +
-      '.md',
+    title +
+    '-' +
+    category +
+    '-' +
+    time +
+    '.md',
     {
       method: 'PUT',
       headers: {
@@ -74,10 +76,13 @@ async function sendNewArticle(title, content, category) {
     })
 }
 async function removeArticle(title, sha) {
+  const token = prompt('输入Token:')
+  alert(token + ' 不是有效的 Token')
+  return Promise.reject();
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-      title +
-      '.md',
+    title +
+    '.md',
     {
       method: 'DELETE',
       headers: {
@@ -141,8 +146,8 @@ async function getPhoto(name) {
 async function sendNewPhoto(title, content) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' +
-      title +
-      '.png',
+    title +
+    '.png',
     {
       method: 'PUT',
       headers: {
@@ -176,8 +181,8 @@ async function sendNewPhoto(title, content) {
 async function removePhoto(title, sha) {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo/' +
-      title +
-      '.png',
+    title +
+    '.png',
     {
       method: 'DELETE',
       headers: {
