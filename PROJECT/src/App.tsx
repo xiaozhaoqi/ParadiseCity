@@ -18,8 +18,12 @@ export default class Layout extends React.Component {
     article: {},
   }
 
+  constructor(props) {
+    super(props)
+    window.PARADISE_CITY_Loading = this.loading
+  }
+
   componentDidMount() {
-    this.loading()
     this.initData()
   }
 
@@ -29,7 +33,6 @@ export default class Layout extends React.Component {
         const sha = document.location.hash.split('#')[1]
         const target = articleList.filter((v) => sha.indexOf(v.sha) > -1)
         if (target.length) {
-          this.loading()
           getArticle(target[0].name).then((v) => {
             if (v) {
               this.setState({
@@ -42,7 +45,7 @@ export default class Layout extends React.Component {
                 }
               })
             }
-          }).finally(() => { this.loading() })
+          })
         } else {
           location.href = location.origin
         }
@@ -57,16 +60,11 @@ export default class Layout extends React.Component {
             item.day = date.getDate()
             item.date = date.toLocaleDateString()
             item.catagory = item.name.slice(0, -17).split('-')[1] || '技术'
-          } else {
-            item.year = 0
-            item.month = 0
-            item.day = 0
-            item.date = '0000/00/00'
           }
           return item
         }).sort((a, b) => (a.date < b.date ? 1 : -1)) || []
       })
-    }).finally(() => { this.loading() })
+    })
   }
 
   loading = () => {
@@ -91,13 +89,13 @@ export default class Layout extends React.Component {
         <div className={ styles['content'] }>
           <Switch>
             <Route exact path='/'>
-              <Main loading={ this.loading } articleList={ this.state.articleList } />
+              <Main articleList={ this.state.articleList } />
             </Route>
             <Route exact path='/article'>
-              <Article loading={ this.loading } article={ this.state.article } />
+              <Article article={ this.state.article } />
             </Route>
             <Route exact path='/write'>
-              <Write loading={ this.loading } />
+              <Write />
             </Route>
             <Route exact path='/about'>
               <About />
@@ -106,9 +104,7 @@ export default class Layout extends React.Component {
         </div>
         { this.state.loading ? (
           <div className={ styles['loading'] }></div>
-        ) : (
-            <div className={ styles['loaded'] }></div>
-          ) }
+        ) : null }
       </Router>
     )
   }

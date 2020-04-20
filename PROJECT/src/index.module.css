@@ -28,18 +28,7 @@ input[type="color"] {
   height: 1px;
   text-align: center;
   background-color: var(--mainColor, #e2e2e2);
-  animation: load 3s ease forwards;
-}
-
-.loaded {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: 1px;
-  text-align: center;
-  background-color: var(--mainColor, #e2e2e2);
+  animation: load 1s ease forwards;
 }
 
 @keyframes load {
@@ -48,7 +37,7 @@ input[type="color"] {
   }
 
   to {
-    right: 1vw;
+    right: 5vw;
   }
 }
 

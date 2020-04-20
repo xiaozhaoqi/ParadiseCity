@@ -1,6 +1,15 @@
+// 此Token拥有读写存储库的权限，但无法用于GitHub账户设置
 const leftToken = '61e06fdec3996fbda3c'
 const rightToken = 'eb8094d137bf927e7e5b2'
-// 文字
+
+// 扩展fetch方法，任意AJAX调用都会展示进度条
+window.PARADISE_CITY_Fetch = window.fetch
+window.fetch = async (...args) => {
+  window.PARADISE_CITY_Loading()
+  return await window.PARADISE_CITY_Fetch(...args).finally(() => { window.PARADISE_CITY_Loading() })
+}
+
+// 增删改查存储库文件
 async function getArticleList() {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article',
@@ -75,15 +84,29 @@ async function sendNewArticle(title, content, catagory) {
       return false
     })
 }
-async function removeArticle(title, sha) {
-  const token = prompt('输入Token:')
+async function updateArticle(sha, oldTitle, newTitle, oldCatagory, newCatagory, createTime, content) {
+  // 私有库仅以文件名作为标识，使用先删除再新增的方式，可以满足对文件名进行变更的需要。
+  const removeRes = await removeArticle({ sha, title: oldTitle, catagory: oldCatagory, time: createTime })
+    .then((e) => { return e })
+    .catch((e) => { return e })
+  if (removeRes === 'remove failed') {
+    return Promise.reject('update failed')
+  }
+  return await sendNewArticle(newTitle, content, newCatagory)
+}
+async function removeArticle(article) {
+  const token = prompt('你正在变更私有库的文件存储，输入Token:')
   if (token !== 'rm') {
     alert(token + ' 不是有效的 Token')
-    return Promise.reject();
+    return Promise.reject('remove failed');
   }
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
-    title +
+    article.title +
+    '-' +
+    article.catagory +
+    '-' +
+    article.time +
     '.md',
     {
       method: 'DELETE',
@@ -91,9 +114,9 @@ async function removeArticle(title, sha) {
         Authorization: 'token ' + leftToken + rightToken,
       },
       body: JSON.stringify({
-        message: 'AutoDelete article: ' + title,
+        message: 'AutoDelete article: ' + article.title,
         // @ts-ignore
-        sha: sha,
+        sha: article.sha,
       }),
     }
   )
@@ -105,7 +128,6 @@ async function removeArticle(title, sha) {
       console.log(err)
     })
 }
-// 图片
 async function getPhotoList() {
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/photo',
@@ -220,6 +242,7 @@ export {
   getArticleList,
   getArticle,
   sendNewArticle,
+  updateArticle,
   sendNewPhoto,
   getPhotoList,
   getPhoto,

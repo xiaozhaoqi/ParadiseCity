@@ -16,19 +16,21 @@ export default withRouter((props) => {
         className={ styles['back'] }
         onClick={ () => { props.history.push('/') } }
       >返回</span>
-      { document.querySelector(':root').getAttribute('style') ===
-        '--mainColor: #f0f0f0' ? (
-          <span
-            className={ styles['back'] }
-            style={ { color: 'red' } }
-            onClick={ () => {
-              removeArticle(article.title + '-' + article.time, article.sha)
-                .then(() => {
-                  location.href = location.origin
-                })
-            } }
-          >删除</span>
-        ) : null }
+      <span
+        className={ styles['back'] }
+        onClick={ () => { props.history.push('/write', { article: article, isEdit: true }) } }
+      >编辑</span>
+      <span
+        className={ styles['back'] }
+        style={ { color: 'red' } }
+        onClick={ () => {
+          removeArticle(article)
+            .then(() => {
+              location.href = location.origin
+            })
+            .catch(() => { })
+        } }
+      >删除</span>
       <div className={ styles['article-container'] }>
         <p className={ styles['article-title'] }>{ article.title }</p>
         <p className={ styles['article-props'] }>
