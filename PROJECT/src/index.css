@@ -15,9 +15,8 @@ code {
 }
 
 body {
-
   font-size: 1em;
-  font-weight: 100;
+  font-weight: 300;
   overflow-x: hidden;
   word-wrap: break-word;
   color: var(--mainColor, #222);

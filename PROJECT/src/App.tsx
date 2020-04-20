@@ -37,7 +37,7 @@ export default class Layout extends React.Component {
                   title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
                   content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
                   time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,
-                  category: JSON.parse(decodeURIComponent(escape(atob(v.content)))).category,
+                  catagory: JSON.parse(decodeURIComponent(escape(atob(v.content)))).catagory,
                   sha: v.sha,
                 }
               })
@@ -83,9 +83,9 @@ export default class Layout extends React.Component {
       <Router history={ history }>
         <nav className={ styles['sider-menu'] }>
           <label htmlFor='color' title="点击更换文字颜色">👫</label>
-          <Link to='/about'>我</Link>
-          <Link to='/write'>创作</Link>
-          <Link to='/' onClick={ this.initData }>首页</Link>
+          <Link to='/about'>统计</Link>
+          <Link to='/write'>记录</Link>
+          <Link to='/' onClick={ this.initData }>回顾</Link>
           <input type='color' id='color' onChange={ this.coloring } />
         </nav>
         <div className={ styles['content'] }>

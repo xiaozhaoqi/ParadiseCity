@@ -11,7 +11,7 @@ export default (props) => {
         {
           props.articleList.map((item) => {
             return item.catagory || '技术'
-          }).filter((v, i, arr) => arr.indexOf(v, 0) === i).map((item, index, list) => (
+          }).filter((v, i, arr) => arr.indexOf(v, 0) === i).reverse().map((item, index, list) => (
             <a
               onClick={ (e) => { setCatagory(e.target.innerText) } }
               className={ catagory === item ? styles['catagory-item-active'] : styles['catagory-item'] }
@@ -35,7 +35,7 @@ export default (props) => {
                     title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
                     content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
                     time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,
-                    category: JSON.parse(decodeURIComponent(escape(atob(v.content)))).category,
+                    catagory: JSON.parse(decodeURIComponent(escape(atob(v.content)))).catagory,
                     sha: v.sha,
                   })
                   document.location.hash = v.sha

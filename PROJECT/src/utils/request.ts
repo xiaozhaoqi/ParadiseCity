@@ -34,13 +34,13 @@ async function getArticle(name) {
       return res
     })
 }
-async function sendNewArticle(title, content, category) {
+async function sendNewArticle(title, content, catagory) {
   const time = Date.now()
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
     title +
     '-' +
-    category +
+    catagory +
     '-' +
     time +
     '.md',
@@ -59,7 +59,7 @@ async function sendNewArticle(title, content, category) {
                 title: title,
                 content: content,
                 time: time,
-                category: category,
+                catagory: catagory,
               })
             )
           )
@@ -77,8 +77,10 @@ async function sendNewArticle(title, content, category) {
 }
 async function removeArticle(title, sha) {
   const token = prompt('输入Token:')
-  alert(token + ' 不是有效的 Token')
-  return Promise.reject();
+  if (token !== 'rm') {
+    alert(token + ' 不是有效的 Token')
+    return Promise.reject();
+  }
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
     title +

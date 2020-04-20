@@ -32,6 +32,7 @@ export default withRouter((props) => {
       <div className={ styles['article-container'] }>
         <p className={ styles['article-title'] }>{ article.title }</p>
         <p className={ styles['article-props'] }>
+          <span>{ article.catagory || '技术' }</span>
           { article.time && <span>最后编辑于 { (new Date(article.time)).toLocaleDateString() }</span> }
           { article.content && <span>预计阅读时间 { (article.content.length / 200 + 1).toFixed(0) } 分钟</span> }
         </p>

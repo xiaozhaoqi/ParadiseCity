@@ -11,7 +11,7 @@ class Push extends React.Component<
   {
     text: string
     title: string
-    category: string
+    catagory: string
     help: string
   }
   > {
@@ -20,7 +20,7 @@ class Push extends React.Component<
     this.state = {
       text: localStorage.getItem('writing-text') || '',
       title: localStorage.getItem('writing-title') || '',
-      category: '',
+      catagory: '',
       help: '',
     }
   }
@@ -55,7 +55,7 @@ class Push extends React.Component<
   push = () => {
     if (this.state.title) {
       this.props.loading()
-      sendNewArticle(this.state.title, this.state.text, this.state.category || '技术').then(() => {
+      sendNewArticle(this.state.title, this.state.text, this.state.catagory || '技术').then(() => {
         this.props.loading()
         this.setState({ text: '', title: '', help: '😊publish success!' })
       })
@@ -93,9 +93,9 @@ class Push extends React.Component<
         <input
           className={ styles['write-catagory'] }
           placeholder="自定义分类，默认为[技术]"
-          value={ this.state.category }
+          value={ this.state.catagory }
           onChange={ (e) => {
-            this.setState({ category: e.target.value })
+            this.setState({ catagory: e.target.value })
           } }
         />
         <div>
