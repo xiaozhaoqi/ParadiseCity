@@ -41,6 +41,7 @@ export default class Layout extends React.Component {
                   content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
                   time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,
                   catagory: JSON.parse(decodeURIComponent(escape(atob(v.content)))).catagory,
+                  author: JSON.parse(decodeURIComponent(escape(atob(v.content)))).author,
                   sha: v.sha,
                 }
               })
@@ -54,12 +55,14 @@ export default class Layout extends React.Component {
         articleList: articleList.map((item) => {
           const dateStr = item.name.slice(-16, -3).replace(/\D*/, '')
           if (dateStr.length === 13) {
+            const args = item.name.slice(0, -3).split('-')
             const date = new Date(parseInt(dateStr))
             item.year = date.getFullYear()
             item.month = date.getMonth() + 1
             item.day = date.getDate()
             item.date = date.toLocaleDateString()
-            item.catagory = item.name.slice(0, -17).split('-')[1] || '技术'
+            item.catagory = args[1]
+            item.author = args.length > 3 ? args[2] : 'zhaoqi.xiao'
           }
           return item
         }).sort((a, b) => (a.date < b.date ? 1 : -1)) || []

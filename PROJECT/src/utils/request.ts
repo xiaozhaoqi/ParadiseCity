@@ -43,13 +43,15 @@ async function getArticle(name) {
       return res
     })
 }
-async function sendNewArticle(title, content, catagory) {
+async function sendNewArticle(title, content, catagory, author) {
   const time = Date.now()
   return await fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' +
     title +
     '-' +
     catagory +
+    '-' +
+    author +
     '-' +
     time +
     '.md',
@@ -69,6 +71,7 @@ async function sendNewArticle(title, content, catagory) {
                 content: content,
                 time: time,
                 catagory: catagory,
+                author: author,
               })
             )
           )
@@ -84,15 +87,15 @@ async function sendNewArticle(title, content, catagory) {
       return false
     })
 }
-async function updateArticle(sha, oldTitle, newTitle, oldCatagory, newCatagory, createTime, content) {
+async function updateArticle(sha, oldTitle, newTitle, oldCatagory, newCatagory, createTime, content, author) {
   // 私有库仅以文件名作为标识，使用先删除再新增的方式，可以满足对文件名进行变更的需要。
-  const removeRes = await removeArticle({ sha, title: oldTitle, catagory: oldCatagory, time: createTime })
+  const removeRes = await removeArticle({ sha, title: oldTitle, catagory: oldCatagory, time: createTime, author })
     .then((e) => { return e })
     .catch((e) => { return e })
   if (removeRes === 'remove failed') {
     return Promise.reject('update failed')
   }
-  return await sendNewArticle(newTitle, content, newCatagory)
+  return await sendNewArticle(newTitle, content, newCatagory, author)
 }
 async function removeArticle(article) {
   const token = prompt('你正在变更私有库的文件存储，输入Token:')
@@ -105,6 +108,8 @@ async function removeArticle(article) {
     article.title +
     '-' +
     article.catagory +
+    '-' +
+    article.author +
     '-' +
     article.time +
     '.md',

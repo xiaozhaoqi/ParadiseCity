@@ -13,6 +13,7 @@ class Push extends React.Component<
     title: string
     catagory: string
     help: string
+    author: string
   }
   > {
   constructor(props) {
@@ -23,6 +24,7 @@ class Push extends React.Component<
       title: title || localStorage.getItem('writing-title') || '',
       catagory: catagory || '',
       help: '',
+      author: localStorage.getItem('author') || '',
     }
   }
 
@@ -43,9 +45,10 @@ class Push extends React.Component<
   recorder: any
 
   clearInput = () => {
-    this.setState({ text: '', title: '', help: '' })
+    this.setState({ text: '', title: '', help: '', author: '', catagory: '' })
     localStorage.removeItem('writing-title')
     localStorage.removeItem('writing-text')
+    localStorage.removeItem('author')
   }
 
   save = () => {
@@ -55,7 +58,8 @@ class Push extends React.Component<
 
   push = () => {
     const { state: { isEdit = false, article: { title = '', catagory = '', time = '', sha = '' } = {} } = {} } = this.props.location
-    if (this.state.title) {
+    localStorage.setItem('author', this.state.author)
+    if (this.state.title && this.state.title.match(/[\/-]/ig) === null) {
       if (isEdit) {
         updateArticle(
           sha,
@@ -65,64 +69,77 @@ class Push extends React.Component<
           this.state.catagory || '技术',
           time,
           this.state.text,
+          this.state.author,
         ).then(() => {
           this.setState({ text: '', title: '', help: '😊更新成功了，私有库存储的文件对你来说是不可见的，但在首页可以看到!' })
         })
       } else {
-        sendNewArticle(this.state.title, this.state.text, this.state.catagory || '技术').then(() => {
+        sendNewArticle(this.state.title, this.state.text, this.state.catagory || '技术', this.state.author).then(() => {
           this.setState({ text: '', title: '', help: '😊发布成功了，私有库存储的文件对你来说是不可见的，但在首页可以看到!' })
         })
       }
     } else {
-      this.setState({ help: '🤢你需要一个标题，"标题+分类+时间戳"将作为私有库存储文件的唯一标识!' })
+      this.setState({ help: '🤢你需要一个标题，且标题中不能含有保留字"/"和"-"，"标题+分类+时间戳"将作为私有库存储文件的唯一标识!' })
     }
   }
 
   render() {
     const { state: { isEdit = false } = {} } = this.props.location
     return (
-      <div className={ styles['write-container'] }      >
-        <input
-          className={ styles['write-title'] }
-          placeholder="标题"
-          value={ this.state.title }
-          onChange={ (e) => {
-            this.setState({ title: e.target.value })
-          } }
-        />
-        <div className={ styles['editor-container'] }>
-          <textarea
+      <>
+        <h2>{ isEdit ? '修改' : '创建' }文章</h2>
+        <div className={ styles['write-container'] }>
+          <input
+            className={ styles['write-title'] }
+            placeholder="标题"
+            value={ this.state.title }
             onChange={ (e) => {
-              this.setState({ text: e.target.value })
+              this.setState({ title: e.target.value })
             } }
-            placeholder="使用Markdown语法书写正文，右侧面板预览格式"
-            className={ styles['write-textarea'] }
-            value={ this.state.text }
           />
-          <Markdown
-            source={ this.state.text }
-            className={ styles['parseMarkdown'] }
-            escapeHtml={ false }
+          <div className={ styles['editor-container'] }>
+            <textarea
+              onChange={ (e) => {
+                this.setState({ text: e.target.value })
+              } }
+              placeholder="使用Markdown语法书写正文，右侧面板预览格式"
+              className={ styles['write-textarea'] }
+              value={ this.state.text }
+            />
+            <Markdown
+              source={ this.state.text }
+              className={ styles['parseMarkdown'] }
+              escapeHtml={ false }
+            />
+          </div>
+          <input
+            className={ styles['write-catagory'] }
+            placeholder="自定义分类，默认为[技术]"
+            value={ this.state.catagory }
+            onChange={ (e) => {
+              this.setState({ catagory: e.target.value })
+            } }
           />
-        </div>
-        <input
-          className={ styles['write-catagory'] }
-          placeholder="自定义分类，默认为[技术]"
-          value={ this.state.catagory }
-          onChange={ (e) => {
-            this.setState({ catagory: e.target.value })
-          } }
-        />
-        <div>
-          <button onClick={ this.push } className={ styles['submitButton'] }>
-            { isEdit ? '更新这篇文章到GitHub私有库' : '发布到GitHub私有库' }
+          <br />
+          <input
+            className={ styles['write-catagory'] }
+            placeholder="您的称呼"
+            value={ this.state.author }
+            onChange={ (e) => {
+              this.setState({ author: e.target.value })
+            } }
+          />
+          <div>
+            <button onClick={ this.push } className={ styles['submitButton'] }>
+              { isEdit ? '更新这篇文章到GitHub私有库' : '发布到GitHub私有库' }
+            </button>
+            <button className={ styles['submitButton'] } onClick={ this.clearInput }>
+              清空输入内容
           </button>
-          <button className={ styles['submitButton'] } onClick={ this.clearInput }>
-            清空输入内容
-          </button>
+          </div>
+          <p style={ { color: 'red', marginTop: '10px' } }>{ this.state.help }</p>
         </div>
-        <p style={ { color: 'red', marginTop: '10px' } }>{ this.state.help }</p>
-      </div>
+      </>
     )
   }
 }
