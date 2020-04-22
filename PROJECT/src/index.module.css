@@ -6,8 +6,8 @@ input[type="color"] {
 .sider-menu {
   height: 44px;
   line-height: 44px;
-  font-size: 1.4em;
-  font-weight: 500;
+  font-size: 1.2em;
+  font-weight: 600;
   border-bottom: 1px solid rgba(0, 0, 0, .22);
   padding: 0 100px;
   background-color: white;
@@ -27,8 +27,22 @@ input[type="color"] {
   bottom: 0;
   height: 1px;
   text-align: center;
-  background-color: var(--mainColor, #e2e2e2);
+  background-color: var(--mainColor, #234567);
   animation: load 1s ease forwards;
+}
+
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+:global(.hide) {
+  visibility: hidden;
 }
 
 @keyframes load {
@@ -45,7 +59,7 @@ input[type="color"] {
 
   .sider-menu,
   .content {
-    padding: 0 10px;
+    padding: 0 15px;
   }
 
 }
@@ -213,6 +227,7 @@ input[type="color"] {
 }
 
 .write-title {
+  box-shadow: 0 0 3px 3px #e2e2e2;
   font-size: 1.2em;
   width: 100%;
   padding: 8px;
@@ -222,6 +237,7 @@ input[type="color"] {
 }
 
 .write-catagory {
+  box-shadow: 0 0 3px 3px #e2e2e2;
   font-size: 0.8em;
   width: 200px;
   padding: 8px;
@@ -237,6 +253,7 @@ input[type="color"] {
 }
 
 .write-textarea {
+  box-shadow: -5px 5px 3px 1px #e2e2e2;
   font-size: 1.2em;
   line-height: 1.2em;
   resize: none;
@@ -248,6 +265,7 @@ input[type="color"] {
 }
 
 .parseMarkdown {
+  box-shadow: 5px 5px 3px 1px #e2e2e2;
   font-size: 1.2em;
   line-height: 1.2em;
   flex: 1;
@@ -261,6 +279,7 @@ input[type="color"] {
 }
 
 .submitButton {
+  box-shadow: 0 0 3px 3px #e2e2e2;
   height: 30px;
   outline: none;
   background-color: transparent;

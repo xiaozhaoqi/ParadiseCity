@@ -105,9 +105,8 @@ export default class Layout extends React.Component {
             </Route>
           </Switch>
         </div>
-        { this.state.loading ? (
-          <div className={ styles['loading'] }></div>
-        ) : null }
+        { this.state.loading && <div className={ styles['loading'] }></div> }
+        <div className={ styles['mask'] + (this.state.loading ? '' : ' hide') }></div>
       </Router>
     )
   }

@@ -103,12 +103,12 @@ class Push extends React.Component<
                 this.setState({ text: e.target.value })
               } }
               placeholder="使用Markdown语法书写正文，右侧面板预览格式"
-              className={ styles['write-textarea'] }
+              className={ styles['write-textarea'] + ' scrollbar' }
               value={ this.state.text }
             />
             <Markdown
               source={ this.state.text }
-              className={ styles['parseMarkdown'] }
+              className={ styles['parseMarkdown'] + ' scrollbar' }
               escapeHtml={ false }
             />
           </div>
