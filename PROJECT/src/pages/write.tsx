@@ -5,9 +5,7 @@ import styles from '../index.module.css'
 import { sendNewArticle, updateArticle } from '../utils/request'
 
 class Push extends React.Component<
-  {
-    loading: Function
-  },
+  {},
   {
     text: string
     title: string

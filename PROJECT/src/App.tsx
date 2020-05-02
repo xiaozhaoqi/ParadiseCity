@@ -28,7 +28,9 @@ export default class Layout extends React.Component {
   }
 
   initData = () => {
-    getArticleList().then((articleList = []) => {
+    getArticleList().then(articleList => {
+      return articleList.filter(v => v.type === 'file')
+    }).then((articleList = []) => {
       if (document.location.hash) {
         const sha = document.location.hash.split('#')[1]
         const target = articleList.filter((v) => sha.indexOf(v.sha) > -1)
