@@ -69,15 +69,15 @@ class Push extends React.Component<
           this.state.text,
           this.state.author,
         ).then(() => {
-          this.setState({ text: '', title: '', help: '😊更新成功了，私有库存储的文件对你来说是不可见的，但在首页可以看到!' })
+          this.setState({ text: '', title: '', help: '😊更新成功了' })
         })
       } else {
         sendNewArticle(this.state.title, this.state.text, this.state.catagory || '技术', this.state.author).then(() => {
-          this.setState({ text: '', title: '', help: '😊发布成功了，私有库存储的文件对你来说是不可见的，但在首页可以看到!' })
+          this.setState({ text: '', title: '', help: '😊发布成功了' })
         })
       }
     } else {
-      this.setState({ help: '🤢你需要一个标题，且标题中不能含有保留字"/"和"-"，"标题+分类+时间戳"将作为私有库存储文件的唯一标识!' })
+      this.setState({ help: '🤢你需要一个标题，且标题中不能含有保留字"/"和"-"，"标题+分类+时间戳"将作为存储文件的唯一标识!' })
     }
   }
 
@@ -100,7 +100,7 @@ class Push extends React.Component<
               onChange={ (e) => {
                 this.setState({ text: e.target.value })
               } }
-              placeholder="使用Markdown语法书写正文，右侧面板预览格式"
+              placeholder="Markdown Supported"
               className={ styles['write-textarea'] + ' scrollbar' }
               value={ this.state.text }
             />
@@ -121,7 +121,7 @@ class Push extends React.Component<
           <br />
           <input
             className={ styles['write-catagory'] }
-            placeholder="您的称呼"
+            placeholder="文章署名"
             value={ this.state.author }
             onChange={ (e) => {
               this.setState({ author: e.target.value })
@@ -129,10 +129,10 @@ class Push extends React.Component<
           />
           <div>
             <button onClick={ this.push } className={ styles['submitButton'] }>
-              { isEdit ? '更新这篇文章到GitHub私有库' : '发布到GitHub私有库' }
+              { isEdit ? '更新这篇文章' : '发布' }
             </button>
             <button className={ styles['submitButton'] } onClick={ this.clearInput }>
-              清空输入内容
+              清空内容
           </button>
           </div>
           <p style={ { color: 'red', marginTop: '10px' } }>{ this.state.help }</p>

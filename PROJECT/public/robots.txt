@@ -1,2 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
+# Good Night, Robots. This is a personal dynamic blog/website.
+# The author does not like to leave traces/snapshots on the Internet, thanks.
 User-agent: *
+Disallow: /
