@@ -2,6 +2,7 @@
   "name": "paradise-city-mini",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://xiaozhaoqi.github.io/ParadiseCity/",
   "dependencies": {
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",
