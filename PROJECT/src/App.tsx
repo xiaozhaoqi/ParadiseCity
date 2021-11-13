@@ -86,9 +86,9 @@ export default class Layout extends React.Component {
       <Router history={ history }>
         <nav className={ styles['sider-menu'] }>
           <label htmlFor='color' title="点击更换文字颜色">👫</label>
-          <Link to='/about'>更多了解</Link>
-          <Link to='/write'>记录</Link>
-          <Link to='/' onClick={ this.initData }>回顾</Link>
+          <Link to='/ParadiseCity/about'>更多了解</Link>
+          <Link to='/ParadiseCity/write'>记录</Link>
+          <Link to='/ParadiseCity/' onClick={ this.initData }>回顾</Link>
           <span className={ styles['scroll-tips'] }>
             <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>
@@ -100,16 +100,16 @@ export default class Layout extends React.Component {
         </nav>
         <div className={ styles['content'] }>
           <Switch>
-            <Route exact path='/'>
+            <Route exact path='/ParadiseCity/'>
               <Main articleList={ this.state.articleList } />
             </Route>
-            <Route exact path='/article'>
+            <Route exact path='/ParadiseCity/article'>
               <Article article={ this.state.article } />
             </Route>
-            <Route exact path='/write'>
+            <Route exact path='/ParadiseCity/write'>
               <Write />
             </Route>
-            <Route exact path='/about'>
+            <Route exact path='/ParadiseCity/about'>
               <About />
             </Route>
           </Switch>
