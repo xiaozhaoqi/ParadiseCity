@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ParadiseCity/static/css/main.63185078.chunk.css",
-    "main.js": "/ParadiseCity/static/js/main.f3dcc643.chunk.js",
-    "main.js.map": "/ParadiseCity/static/js/main.f3dcc643.chunk.js.map",
+    "main.css": "/ParadiseCity/static/css/main.472b8ea2.chunk.css",
+    "main.js": "/ParadiseCity/static/js/main.5295baaa.chunk.js",
+    "main.js.map": "/ParadiseCity/static/js/main.5295baaa.chunk.js.map",
     "runtime-main.js": "/ParadiseCity/static/js/runtime-main.644b1d9d.js",
     "runtime-main.js.map": "/ParadiseCity/static/js/runtime-main.644b1d9d.js.map",
     "static/js/2.183dfe24.chunk.js": "/ParadiseCity/static/js/2.183dfe24.chunk.js",
@@ -10,15 +10,15 @@
     "about.html": "/ParadiseCity/about.html",
     "article.html": "/ParadiseCity/article.html",
     "index.html": "/ParadiseCity/index.html",
-    "precache-manifest.6da8c233f54facf717b64636f8d4a910.js": "/ParadiseCity/precache-manifest.6da8c233f54facf717b64636f8d4a910.js",
+    "precache-manifest.120e65bbeee3562dfb56ef5d800d5036.js": "/ParadiseCity/precache-manifest.120e65bbeee3562dfb56ef5d800d5036.js",
     "service-worker.js": "/ParadiseCity/service-worker.js",
-    "static/css/main.63185078.chunk.css.map": "/ParadiseCity/static/css/main.63185078.chunk.css.map",
+    "static/css/main.472b8ea2.chunk.css.map": "/ParadiseCity/static/css/main.472b8ea2.chunk.css.map",
     "write.html": "/ParadiseCity/write.html"
   },
   "entrypoints": [
     "static/js/runtime-main.644b1d9d.js",
     "static/js/2.183dfe24.chunk.js",
-    "static/css/main.63185078.chunk.css",
-    "static/js/main.f3dcc643.chunk.js"
+    "static/css/main.472b8ea2.chunk.css",
+    "static/js/main.5295baaa.chunk.js"
   ]
 }
