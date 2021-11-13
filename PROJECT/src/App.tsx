@@ -86,15 +86,16 @@ export default class Layout extends React.Component {
       <Router history={ history }>
         <nav className={ styles['sider-menu'] }>
           <label htmlFor='color' title="点击更换文字颜色">👫</label>
-          <Link to='/ParadiseCity/about'>更多了解</Link>
-          <Link to='/ParadiseCity/write'>记录</Link>
-          <Link to='/ParadiseCity/' onClick={ this.initData }>回顾</Link>
+          <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link>
+          <Link to='/ParadiseCity/write' style={ { float: 'right' } }>写</Link>
+          <Link to='/ParadiseCity/' onClick={ this.initData } style={ { float: 'right' } }>读</Link>
           <span className={ styles['scroll-tips'] }>
-            <span style={ { letterSpacing: '-4px' } }>木</span>
+            <Link to='/ParadiseCity/' onClick={ this.initData }>为而不争</Link>
+            {/* <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>
             <span style={ { letterSpacing: '6px' } }>寸</span>
             <span style={ { letterSpacing: '-12px' } }>氵</span>
-            <span style={ { letterSpacing: '0px' } }>同</span>
+            <span style={ { letterSpacing: '0px' } }>同</span> */}
           </span>
           <input type='color' id='color' onChange={ this.coloring } />
         </nav>

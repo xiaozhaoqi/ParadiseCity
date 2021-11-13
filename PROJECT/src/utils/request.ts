@@ -17,6 +17,7 @@ async function getArticleList() {
       method: 'GET',
       headers: {
         Authorization: 'token ' + leftToken + rightToken,
+        'Content-Type': 'application/vnd.github.VERSION.object'
       },
     }
   )

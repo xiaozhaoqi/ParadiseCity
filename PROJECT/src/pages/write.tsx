@@ -85,7 +85,7 @@ class Push extends React.Component<
     const { state: { isEdit = false } = {} } = this.props.location
     return (
       <>
-        <h2>{ isEdit ? '修改' : '创建' }文章</h2>
+        <h2>{ isEdit ? '修改' : '创建' }文章 <span onClick={ () => { this.props.history.go(-1) } }>👈</span></h2>
         <div className={ styles['write-container'] }>
           <input
             className={ styles['write-title'] }

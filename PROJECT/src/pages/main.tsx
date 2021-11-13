@@ -61,7 +61,7 @@ export default (props) => {
               getArticle(item.name).then((v) => {
                 if (v) {
                   window.PARADISE_lastest_catagory = catagory
-                  window.PARADISE_history.push('/article', {
+                  window.PARADISE_history.push('/ParadiseCity/article', {
                     title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
                     content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
                     time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,

@@ -8,17 +8,14 @@ const { withRouter } = ReactRouterDOM
 export default withRouter((props) => {
   const article = window.PARADISE_history.location.state || props.article
   if (!document.location.hash) {
-    props.history.push('/')
+    props.history.push('/ParadiseCity/')
   }
   return (
     <>
+      <span style={ { 'margin-right': '10px' } } onClick={ () => { props.history.go(-1) } }>👈</span>
       <span
         className={ styles['back'] }
-        onClick={ () => { props.history.push('/') } }
-      >返回</span>
-      <span
-        className={ styles['back'] }
-        onClick={ () => { props.history.push('/write', { article: article, isEdit: true }) } }
+        onClick={ () => { props.history.push('/ParadiseCity/write', { article: article, isEdit: true }) } }
       >编辑</span>
       <span
         className={ styles['back'] }
