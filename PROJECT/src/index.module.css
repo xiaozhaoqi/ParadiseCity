@@ -222,6 +222,10 @@ input[type="color"] {
   width: auto;
 }
 
+.article-content p {
+  line-height: 2em;
+}
+
 /* markdown editor */
 .write-container {
   margin: 20px 0;

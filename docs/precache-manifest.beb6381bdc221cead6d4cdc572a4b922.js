@@ -1,26 +1,26 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6a5320116518e550d1b6c53b7187ef45",
+    "revision": "23db3c6a3628cb402a251a968f417d4b",
     "url": "/ParadiseCity/about.html"
   },
   {
-    "revision": "6a5320116518e550d1b6c53b7187ef45",
+    "revision": "23db3c6a3628cb402a251a968f417d4b",
     "url": "/ParadiseCity/article.html"
   },
   {
-    "revision": "6a5320116518e550d1b6c53b7187ef45",
+    "revision": "23db3c6a3628cb402a251a968f417d4b",
     "url": "/ParadiseCity/index.html"
   },
   {
-    "revision": "8168cc37e293bc3abf9a",
-    "url": "/ParadiseCity/static/css/main.368c78c2.chunk.css"
+    "revision": "3308c56b0041d54cc396",
+    "url": "/ParadiseCity/static/css/main.fce109f0.chunk.css"
   },
   {
     "revision": "80bd2b24600b21cd3cab",
     "url": "/ParadiseCity/static/js/2.183dfe24.chunk.js"
   },
   {
-    "revision": "8168cc37e293bc3abf9a",
+    "revision": "3308c56b0041d54cc396",
     "url": "/ParadiseCity/static/js/main.1b48e89b.chunk.js"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ParadiseCity/static/js/runtime-main.644b1d9d.js"
   },
   {
-    "revision": "6a5320116518e550d1b6c53b7187ef45",
+    "revision": "23db3c6a3628cb402a251a968f417d4b",
     "url": "/ParadiseCity/write.html"
   }
 ]);
