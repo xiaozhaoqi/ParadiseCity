@@ -12,22 +12,23 @@ export default withRouter((props) => {
   }
   return (
     <>
-      <span style={ { 'margin-right': '10px' } } onClick={ () => { props.history.go(-1) } }>👈</span>
-      <span
-        className={ styles['back'] }
-        onClick={ () => { props.history.push('/ParadiseCity/write', { article: article, isEdit: true }) } }
-      >编辑</span>
-      <span
-        className={ styles['back'] }
-        style={ { color: 'red' } }
-        onClick={ () => {
-          removeArticle(article)
-            .then(() => {
-              location.href = location.origin
-            })
-            .catch(() => { })
-        } }
-      >删除</span>
+      <h2><span style={ { 'margin-right': '10px' } } onClick={ () => { window.PARADISE_history.length > 2 ? props.history.go(-1) : props.history.push('/ParadiseCity/') } }>🔙</span>
+        { props.location.search.indexOf('isme') > -1 ? <><span
+          className={ styles['back'] }
+          onClick={ () => { props.history.push('/ParadiseCity/write', { article: article, isEdit: true }) } }
+        >编辑</span>
+          <span
+            className={ styles['back'] }
+            style={ { color: 'red' } }
+            onClick={ () => {
+              removeArticle(article)
+                .then(() => {
+                  location.href = location.origin
+                })
+                .catch(() => { })
+            } }
+          >删除</span></> : null }
+      </h2>
       <div className={ styles['article-container'] }>
         <p className={ styles['article-title'] }>{ article.title }</p>
         <p className={ styles['article-props'] }>

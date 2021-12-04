@@ -21,6 +21,9 @@ export default class Layout extends React.Component {
   constructor(props) {
     super(props)
     window.PARADISE_CITY_Loading = this.loading
+    if (localStorage.getItem('font')) {
+      document.querySelector(':root').setAttribute('style', '--mainFamily: ' + localStorage.getItem('font'))
+    }
   }
 
   componentDidMount() {
@@ -90,13 +93,25 @@ export default class Layout extends React.Component {
           <Link to='/ParadiseCity/write' style={ { float: 'right' } }>写</Link>
           <Link to='/ParadiseCity/' onClick={ this.initData } style={ { float: 'right' } }>读</Link>
           <span className={ styles['scroll-tips'] }>
-            <Link to='/ParadiseCity/' onClick={ this.initData }>为而不争</Link>
+            <Link to='/ParadiseCity/' onClick={ this.initData }>
+              <span>为</span>
+              <span className={ styles['hide-title'] }>而不争，和而不同</span>
+            </Link>
             {/* <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>
             <span style={ { letterSpacing: '6px' } }>寸</span>
             <span style={ { letterSpacing: '-12px' } }>氵</span>
             <span style={ { letterSpacing: '0px' } }>同</span> */}
           </span>
+          <label title="点击更换文字字体" onClick={ () => {
+            let font = prompt(`请输入你想要的且你的设备已安装的字体，例如楷体、宋体、黑体、"Segoe UI", "Roboto", "Oxygen","Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif 之类的font-family，输入reset恢复默认设定。`)
+            if (font) {
+              font = font === 'reset' ? undefined : font
+              localStorage.setItem('font', font)
+              document.querySelector(':root').setAttribute('style', '--mainFamily: ' + font)
+              this.forceUpdate()
+            }
+          } }>👣</label>
           <input type='color' id='color' onChange={ this.coloring } />
         </nav>
         <div className={ styles['content'] }>
