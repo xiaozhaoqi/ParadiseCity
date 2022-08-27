@@ -3,6 +3,10 @@ input[type="color"] {
   display: none;
 }
 
+input[type="file"] {
+  display: none;
+}
+
 .sider-menu {
   height: 44px;
   line-height: 44px;
@@ -226,6 +230,10 @@ input[type="color"] {
   line-height: 2em;
 }
 
+.article-content img {
+  width: 100%;
+}
+
 /* markdown editor */
 .write-container {
   margin: 20px 0;
@@ -286,6 +294,10 @@ input[type="color"] {
   overflow: auto;
   font-weight: 100;
   color: var(--mainColor, #222);
+}
+
+.parseMarkdown img{
+  width: 100%;
 }
 
 .submitButton {

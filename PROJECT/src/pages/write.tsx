@@ -13,7 +13,7 @@ class Push extends React.Component<
     help: string
     author: string
   }
-  > {
+> {
   constructor(props) {
     super(props)
     const { state: { article: { content = '', title = '', catagory = '' } = {} } = {} } = props.location
@@ -81,11 +81,30 @@ class Push extends React.Component<
     }
   }
 
+  onUpload = (e) => {
+    const filename = e.target.files[0].name
+    window.cosUploader.putObject({
+      Bucket: 'img-1258836748', /* 必须 */
+      Region: 'ap-beijing',     /* 存储桶所在地域，必须字段 */
+      Key: '图床/' + filename,              /* 必须 */
+      StorageClass: 'STANDARD',
+      Body: e.target.files[0], // 上传文件对象
+      onProgress: function (progressData) {
+        console.log(JSON.stringify(progressData));
+      }
+    }, (err, data) => {
+      this.setState({ text: this.state.text + `![${filename}](https://${data.Location})` })
+    });
+  }
+
   render() {
     const { state: { isEdit = false } = {} } = this.props.location
     return (
       <>
-        <h2>{ isEdit ? '修改' : '创建' }文章 <span onClick={ () => { this.props.history.go(-1) } }>🔙</span></h2>
+        <h2>{ isEdit ? '修改' : '创建' }文章 <span onClick={ () => { this.props.history.go(-1) } }>🔙</span>
+          <label htmlFor="imgUpload" title="上传图片"> 🌅</label>
+          <input type="file" id="imgUpload" onChange={ this.onUpload } />
+        </h2>
         <div className={ styles['write-container'] }>
           <input
             className={ styles['write-title'] }
@@ -133,7 +152,7 @@ class Push extends React.Component<
             </button>
             <button className={ styles['submitButton'] } onClick={ this.clearInput }>
               清空内容
-          </button>
+            </button>
           </div>
           <p style={ { color: 'red', marginTop: '10px' } }>{ this.state.help }</p>
         </div>

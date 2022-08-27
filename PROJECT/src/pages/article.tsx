@@ -13,7 +13,7 @@ export default withRouter((props) => {
   return (
     <>
       <h2><span style={ { 'margin-right': '10px' } } onClick={ () => { window.PARADISE_history.length > 2 ? props.history.go(-1) : props.history.push('/ParadiseCity/') } }>🔙</span>
-        { props.location.search.indexOf('isme') > -1 ? <><span
+        { props.location.search.indexOf('isme') > -1 || window.isme === true ? <><span
           className={ styles['back'] }
           onClick={ () => { props.history.push('/ParadiseCity/write', { article: article, isEdit: true }) } }
         >编辑</span>

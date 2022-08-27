@@ -28,6 +28,13 @@ export default class Layout extends React.Component {
 
   componentDidMount() {
     this.initData()
+    let vc = 0;
+    document.addEventListener('click', () => {
+      vc++;
+      if (vc > 5 && performance.now() < 3000) {
+        window.isme = true;
+      }
+    })
   }
 
   initData = () => {
@@ -94,8 +101,9 @@ export default class Layout extends React.Component {
           <Link to='/ParadiseCity/' onClick={ this.initData } style={ { float: 'right' } }>读</Link>
           <span className={ styles['scroll-tips'] }>
             <Link to='/ParadiseCity/' onClick={ this.initData }>
-              <span>为</span>
-              <span className={ styles['hide-title'] }>而不争，和而不同</span>
+              {/* <span>为</span>
+              <span className={ styles['hide-title'] }>而不争，和而不同</span> */}
+              <span>两个人写作的地方</span>
             </Link>
             {/* <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>

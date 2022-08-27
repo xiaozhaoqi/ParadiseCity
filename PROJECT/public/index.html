@@ -46,7 +46,15 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  <script src="/tingyun.js"></script>
+  <!-- <script src="/tingyun.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/cos-js-sdk-v5/dist/cos-js-sdk-v5.min.js"></script>
+  <script>
+    // SECRETID 和 SECRETKEY请登录 https://console.cloud.tencent.com/cam/capi 进行查看和管理
+    window.cosUploader = new COS({
+      SecretId: 'AKIDGMCm57sNaWBbkcDXaMr53kAJBm57sMaY',
+      SecretKey: 'i9KErDJ8gy0lFRN1OUJsABvOaV8UZNuA',
+    });
+  </script>
   <script src="https://cdn.bootcss.com/react/16.12.0/umd/react.production.min.js"></script>
   <script src="https://cdn.bootcss.com/react-dom/16.12.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdn.bootcss.com/react-router-dom/5.1.2/react-router-dom.min.js"></script>
