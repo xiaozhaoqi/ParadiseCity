@@ -8,7 +8,9 @@ const colors = [
   '#456789',
   '#567890'
 ]
-export default (props) => {
+const { withRouter } = ReactRouterDOM
+
+export default withRouter((props) => {
   const [catagory, setCatagory] = React.useState('')
   React.useEffect(() => {
     if (window.PARADISE_lastest_catagory) {
@@ -21,6 +23,11 @@ export default (props) => {
   }, [props.articleList])
   return (
     <div className={ styles['main-container'] }>
+      <a className={ styles['back-v2ex'] } onClick={ () => {
+        props.history.push('/ParadiseCity')
+      } }>
+        体验新版
+      </a>
       <div className={ styles['catagory'] }>
         {
           props.articleList.map((item) => {
@@ -92,8 +99,8 @@ export default (props) => {
               }
             </div>
             <p className={ styles['title-name'] }>{ item.name.slice(0, -3).split('-')[0] }</p>
-            <span className={ styles['title-props'] + ' ' + styles['title-props-catagory'] }>{ item.catagory }</span>
-            <span className={ styles['title-props'] }>{ item.author }</span>
+            {/* <span className={ styles['title-props'] + ' ' + styles['title-props-catagory'] }>{ item.catagory }</span> */ }
+            { item.author ? <span className={ styles['title-props'] }>{ item.author }</span> : null }
             <span className={ styles['title-props'] }>{ item.date }</span>
             <span className={ styles['title-props'] }>{ item.size + '字节' }</span>
           </p>
@@ -101,4 +108,4 @@ export default (props) => {
       }
     </div >
   )
-}
+})

@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/ParadiseCity/static/css/main.6c7daaaf.chunk.css",
-    "main.js": "/ParadiseCity/static/js/main.180199ef.chunk.js",
-    "main.js.map": "/ParadiseCity/static/js/main.180199ef.chunk.js.map",
+    "main.css": "/ParadiseCity/static/css/main.1910fab3.chunk.css",
+    "main.js": "/ParadiseCity/static/js/main.e8253b6c.chunk.js",
+    "main.js.map": "/ParadiseCity/static/js/main.e8253b6c.chunk.js.map",
     "runtime-main.js": "/ParadiseCity/static/js/runtime-main.644b1d9d.js",
     "runtime-main.js.map": "/ParadiseCity/static/js/runtime-main.644b1d9d.js.map",
-    "static/js/2.183dfe24.chunk.js": "/ParadiseCity/static/js/2.183dfe24.chunk.js",
-    "static/js/2.183dfe24.chunk.js.map": "/ParadiseCity/static/js/2.183dfe24.chunk.js.map",
+    "static/js/2.0f8ae1ce.chunk.js": "/ParadiseCity/static/js/2.0f8ae1ce.chunk.js",
+    "static/js/2.0f8ae1ce.chunk.js.map": "/ParadiseCity/static/js/2.0f8ae1ce.chunk.js.map",
     "about.html": "/ParadiseCity/about.html",
     "article.html": "/ParadiseCity/article.html",
     "index.html": "/ParadiseCity/index.html",
-    "precache-manifest.03c90e0f0fbc22b0dd5e4bb687ebfee7.js": "/ParadiseCity/precache-manifest.03c90e0f0fbc22b0dd5e4bb687ebfee7.js",
+    "precache-manifest.25c31a146ba02739e13ad3741721ec56.js": "/ParadiseCity/precache-manifest.25c31a146ba02739e13ad3741721ec56.js",
     "service-worker.js": "/ParadiseCity/service-worker.js",
-    "static/css/main.6c7daaaf.chunk.css.map": "/ParadiseCity/static/css/main.6c7daaaf.chunk.css.map",
+    "static/css/main.1910fab3.chunk.css.map": "/ParadiseCity/static/css/main.1910fab3.chunk.css.map",
     "write.html": "/ParadiseCity/write.html"
   },
   "entrypoints": [
     "static/js/runtime-main.644b1d9d.js",
-    "static/js/2.183dfe24.chunk.js",
-    "static/css/main.6c7daaaf.chunk.css",
-    "static/js/main.180199ef.chunk.js"
+    "static/js/2.0f8ae1ce.chunk.js",
+    "static/css/main.1910fab3.chunk.css",
+    "static/js/main.e8253b6c.chunk.js"
   ]
 }

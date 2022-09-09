@@ -1,6 +1,7 @@
 // @ts-nocheck
 import Article from './pages/article'
 import Main from './pages/main'
+import FlowHome from './pages/flowhome'
 import Write from './pages/write'
 import About from './pages/about'
 import styles from './index.module.css'
@@ -77,7 +78,7 @@ export default class Layout extends React.Component {
             item.author = args.length > 3 ? args[2] : 'zhaoqi.xiao'
           }
           return item
-        }).sort((a, b) => (a.date < b.date ? 1 : -1)) || []
+        }).sort((a, b) => (a.date < b.date ? 1 : -1)).map((v, i) => ({ ...v, sort: i })) || []
       })
     })
   }
@@ -103,7 +104,7 @@ export default class Layout extends React.Component {
             <Link to='/ParadiseCity/' onClick={ this.initData }>
               {/* <span>为</span>
               <span className={ styles['hide-title'] }>而不争，和而不同</span> */}
-              <span>两个人写作的地方</span>
+              <span>心灵空间</span>
             </Link>
             {/* <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>
@@ -124,8 +125,11 @@ export default class Layout extends React.Component {
         </nav>
         <div className={ styles['content'] }>
           <Switch>
-            <Route exact path='/ParadiseCity/'>
+            <Route exact path='/ParadiseCity/way2explore'>
               <Main articleList={ this.state.articleList } />
+            </Route>
+            <Route exact path='/ParadiseCity/'>
+              <FlowHome articleList={ this.state.articleList } />
             </Route>
             <Route exact path='/ParadiseCity/article'>
               <Article article={ this.state.article } />

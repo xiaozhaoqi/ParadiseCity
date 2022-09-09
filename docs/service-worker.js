@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/ParadiseCity/precache-manifest.03c90e0f0fbc22b0dd5e4bb687ebfee7.js"
+  "/ParadiseCity/precache-manifest.25c31a146ba02739e13ad3741721ec56.js"
 );
 
 self.addEventListener('message', (event) => {

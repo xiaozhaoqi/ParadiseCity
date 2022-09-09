@@ -21,7 +21,7 @@ input[type="file"] {
 
 /* content */
 .content {
-  min-height: 60vh;
+  height: 100%;
   padding: 0 100px;
 }
 
@@ -65,7 +65,7 @@ input[type="file"] {
 
   .sider-menu,
   .content {
-    padding: 0 15px;
+    padding: 0 3px;
   }
 
 }
@@ -77,10 +77,10 @@ input[type="file"] {
 
 /* article list */
 .main-container {
-  margin: 20px 0;
+  margin: 10px 0 60px;
   padding: 10px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #f9f9f9;
   background-color: white;
   border-radius: 5px;
 }
@@ -91,6 +91,8 @@ input[type="file"] {
 
 .catagory-item {
   margin: 5px;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 
 .catagory-item-active {
@@ -99,10 +101,45 @@ input[type="file"] {
   color: white;
   padding: 2px 4px;
   border-radius: 5px;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 
 .catagory-item-active:hover {
   color: #999;
+}
+
+.back-v2ex {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -50px;
+  font-size: 12px;
+}
+
+.flow-container {
+  margin: 3px 0 60px;
+  column-count: 2;
+  column-gap: 3px;
+}
+
+.flow-card {
+  page-break-inside: avoid;
+  position: relative;
+  padding: 0px;
+  cursor: pointer;
+  /* border: 1px solid var(--mainColor, #222); */
+  background: #fff;
+  margin: 3px 0;
+  color: var(--mainColor, #222);
+}
+
+.flow-card .detail {
+  padding: 10px;
+}
+
+.flow-card img {
+  width: 100%;
 }
 
 .title {
@@ -116,7 +153,7 @@ input[type="file"] {
 }
 
 .title+.title {
-  border-top: 1px solid #e2e2e2;
+  border-top: 1px solid #f9f9f9;
 }
 
 .title:hover {
@@ -126,6 +163,7 @@ input[type="file"] {
 .title-name {
   font-size: 1.1em;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .title-props {
@@ -141,6 +179,7 @@ input[type="file"] {
   color: #222;
   padding: 2px 4px;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 .title-props:not(:last-child)::after {
@@ -168,11 +207,11 @@ input[type="file"] {
   display: inline-block;
   height: 10px;
   width: 10px;
-  background: #e2e2e2;
+  background: #f9f9f9;
 }
 
 :global(.avatar[data="0"]) {
-  background: #e2e2e2 !important;
+  background: #f9f9f9 !important;
 }
 
 /* article detail */
@@ -180,7 +219,7 @@ input[type="file"] {
   margin: 10px 0 20px;
   padding: 10px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #f9f9f9;
   background-color: white;
   border-radius: 5px;
 }
@@ -207,7 +246,7 @@ input[type="file"] {
 .article-props>span {
   display: inline-block;
   margin: 10px 10px 0 0;
-  background-color: #e2e2e2;
+  background-color: #f9f9f9;
   color: #222;
   font-size: 0.8em;
   padding: 2px 8px;
@@ -236,16 +275,16 @@ input[type="file"] {
 
 /* markdown editor */
 .write-container {
-  margin: 20px 0;
+  margin: 10px 0;
   padding: 10px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #f9f9f9;
   background-color: white;
   border-radius: 5px;
 }
 
 .write-title {
-  box-shadow: 0 0 3px 3px #e2e2e2;
+  box-shadow: 0 0 3px 3px #f9f9f9;
   font-size: 1.2em;
   width: 100%;
   padding: 8px;
@@ -271,7 +310,7 @@ input[type="file"] {
 }
 
 .write-textarea {
-  box-shadow: -5px 5px 3px 1px #e2e2e2;
+  box-shadow: -5px 5px 3px 1px #f9f9f9;
   font-size: 1.2em;
   line-height: 1.2em;
   resize: none;
@@ -283,7 +322,7 @@ input[type="file"] {
 }
 
 .parseMarkdown {
-  box-shadow: 5px 5px 3px 1px #e2e2e2;
+  box-shadow: 5px 5px 3px 1px #f9f9f9;
   font-size: 1.2em;
   line-height: 1.2em;
   flex: 1;
@@ -296,12 +335,12 @@ input[type="file"] {
   color: var(--mainColor, #222);
 }
 
-.parseMarkdown img{
+.parseMarkdown img {
   width: 100%;
 }
 
 .submitButton {
-  box-shadow: 0 0 3px 3px #e2e2e2;
+  box-shadow: 0 0 3px 3px #f9f9f9;
   height: 30px;
   outline: none;
   background-color: transparent;
@@ -320,10 +359,10 @@ input[type="file"] {
 
 /* about */
 .about-container {
-  margin: 20px 0;
+  margin: 10px 0;
   padding: 10px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #f9f9f9;
   background-color: white;
   border-radius: 5px;
 }
@@ -345,5 +384,33 @@ input[type="file"] {
 
   to {
     transform: rotate(0deg);
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .flow-container {
+    column-count: 2;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .flow-container {
+    column-count: 2;
+    column-gap: 7px;
+  }
+
+  .flow-card {
+    margin: 7px 0;
+  }
+}
+
+@media only screen and (min-width: 1300px) {
+  .flow-container {
+    column-count: 2;
+    column-gap: 10px;
+  }
+
+  .flow-card {
+    margin: 10px 0;
   }
 }

@@ -56,7 +56,7 @@ async function getArticleList() {
     })
 }
 async function getArticle(name) {
-  return await fetch(
+  return await window.PARADISE_CITY_Fetch(
     'https://api.github.com/repos/xiaozhaoqi/privateRepository/contents/files/article/' + name,
     {
       method: 'GET',
