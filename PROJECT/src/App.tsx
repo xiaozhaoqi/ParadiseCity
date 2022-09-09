@@ -17,6 +17,7 @@ export default class Layout extends React.Component {
     loading: false,
     articleList: [],
     article: {},
+    flow: true,
   }
 
   constructor(props) {
@@ -96,15 +97,15 @@ export default class Layout extends React.Component {
     return (
       <Router history={ history }>
         <nav className={ styles['sider-menu'] }>
-          <label htmlFor='color' title="点击更换文字颜色">👫</label>
-          <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link>
-          <Link to='/ParadiseCity/write' style={ { float: 'right' } }>写</Link>
-          <Link to='/ParadiseCity/' onClick={ this.initData } style={ { float: 'right' } }>读</Link>
+          {/* <label htmlFor='color' title="点击更换文字颜色">👫</label> */ }
+          {/* <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link> */ }
+          <Link to='/ParadiseCity/write' style={ { float: 'right', 'line-height': '2em' } }>✍</Link>
+          <Link to='/ParadiseCity/way2explore' onClick={ this.initData } style={ { float: 'right' } }>📂</Link>
           <span className={ styles['scroll-tips'] }>
             <Link to='/ParadiseCity/' onClick={ this.initData }>
               {/* <span>为</span>
               <span className={ styles['hide-title'] }>而不争，和而不同</span> */}
-              <span>心灵空间</span>
+              <span>👫</span>
             </Link>
             {/* <span style={ { letterSpacing: '-4px' } }>木</span>
             <span style={ { letterSpacing: '-5px', fontSize: '0.7em' } }>又</span>
@@ -112,7 +113,7 @@ export default class Layout extends React.Component {
             <span style={ { letterSpacing: '-12px' } }>氵</span>
             <span style={ { letterSpacing: '0px' } }>同</span> */}
           </span>
-          <label title="点击更换文字字体" onClick={ () => {
+          {/* <label title="点击更换文字字体" onClick={ () => {
             let font = prompt(`请输入你想要的且你的设备已安装的字体，例如楷体、宋体、黑体、"Segoe UI", "Roboto", "Oxygen","Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif 之类的font-family，输入reset恢复默认设定。`)
             if (font) {
               font = font === 'reset' ? undefined : font
@@ -120,7 +121,7 @@ export default class Layout extends React.Component {
               document.querySelector(':root').setAttribute('style', '--mainFamily: ' + font)
               this.forceUpdate()
             }
-          } }>👣</label>
+          } }>👣</label> */}
           <input type='color' id='color' onChange={ this.coloring } />
         </nav>
         <div className={ styles['content'] }>

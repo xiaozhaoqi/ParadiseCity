@@ -61,17 +61,17 @@ export default withRouter((props) => {
   }, [props.articleList, index])
   return (
     <div className={ styles['flow-container'] }>
-      { cardList.length < props.articleList.length ? <a className={ styles['back-v2ex'] } style={ { bottom: '-30px' } } onClick={ () => {
+      { cardList.length < props.articleList.length ? <a className={ styles['back-v2ex'] } style={ { bottom: '-40px' } } onClick={ () => {
         setY(window.scrollY)
         setIndex(i => i + 1)
       } }>
-        再看10条
+        再看 10 条
       </a> : null }
-      <a className={ styles['back-v2ex'] } onClick={ () => {
+      {/* <a className={ styles['back-v2ex'] } onClick={ () => {
         props.history.push('/ParadiseCity/way2explore')
       } }>
-        返回旧版
-      </a>
+        归档
+      </a> */}
       {
         cardList.map((item) => (
           <p
