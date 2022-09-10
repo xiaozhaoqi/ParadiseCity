@@ -10,9 +10,12 @@ export default withRouter((props) => {
   if (!document.location.hash) {
     props.history.push('/ParadiseCity/')
   }
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <>
-      <h2><span style={ { 'margin-right': '10px' } } onClick={ () => { window.PARADISE_history.length > 2 ? props.history.go(-1) : props.history.push('/ParadiseCity/') } }>🔙</span>
+      <h2><span style={ { 'margin-right': '10px' } } onClick={ () => { window.PARADISE_history.length > 2 ? props.history.replace(`/ParadiseCity/${article.from || ''}`) : props.history.push('/ParadiseCity/') } }>🔙</span>
         { props.location.search.indexOf('isme') > -1 || window.isme === true ? <><span
           className={ styles['back'] }
           onClick={ () => { props.history.push('/ParadiseCity/write', { article: article, isEdit: true }) } }

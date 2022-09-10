@@ -43,6 +43,42 @@ export default class Layout extends React.Component {
     getArticleList().then(articleList => {
       return articleList.filter(v => v.type === 'file')
     }).then((articleList = []) => {
+      articleList = articleList.map((item) => {
+        const dateStr = item.name.slice(-16, -3).replace(/\D*/, '')
+        if (dateStr.length === 13) {
+          const args = item.name.slice(0, -3).split('-')
+          const date = new Date(parseInt(dateStr))
+          item.year = date.getFullYear()
+          item.month = date.getMonth() + 1
+          item.day = date.getDate()
+          item.date = date.toLocaleDateString()
+          item.catagory = args[1]
+          item.author = args.length > 3 ? args[2] : 'zhaoqi.xiao'
+        }
+        return item
+      }).sort((a, b) => (a.date < b.date ? 1 : -1)).map((v, i) => ({ ...v, sort: i })) || []
+      articleList.forEach(item => {
+        getArticle(item.name).then((v) => {
+          if (v) {
+            let content = JSON.parse(decodeURIComponent(escape(atob(v.content)))).content
+            let imgs = []
+            for (let c of content.matchAll(/\!\[.*\]\((.*)\)/g)) {
+              if (c[1]) {
+                imgs.push(c[1])
+              }
+            }
+            let summary = content.replace(/[\#\+\-\`]|\s*[#+]*<[^>]*>|<\/[^>]*>|\!\[.*\]\(.*\)/g, '').slice(0, 63)
+            item.time = JSON.parse(decodeURIComponent(escape(atob(v.content)))).time
+            item.title = JSON.parse(decodeURIComponent(escape(atob(v.content)))).title
+            item.content = content
+            item.summary = summary
+            item.imgs = imgs
+            this.setState({
+              articleList
+            })
+          }
+        })
+      })
       if (document.location.hash) {
         const sha = document.location.hash.split('#')[1]
         const target = articleList.filter((v) => sha.indexOf(v.sha) > -1)
@@ -65,22 +101,6 @@ export default class Layout extends React.Component {
           location.href = location.origin
         }
       }
-      this.setState({
-        articleList: articleList.map((item) => {
-          const dateStr = item.name.slice(-16, -3).replace(/\D*/, '')
-          if (dateStr.length === 13) {
-            const args = item.name.slice(0, -3).split('-')
-            const date = new Date(parseInt(dateStr))
-            item.year = date.getFullYear()
-            item.month = date.getMonth() + 1
-            item.day = date.getDate()
-            item.date = date.toLocaleDateString()
-            item.catagory = args[1]
-            item.author = args.length > 3 ? args[2] : 'zhaoqi.xiao'
-          }
-          return item
-        }).sort((a, b) => (a.date < b.date ? 1 : -1)).map((v, i) => ({ ...v, sort: i })) || []
-      })
     })
   }
 
@@ -100,9 +120,9 @@ export default class Layout extends React.Component {
           {/* <label htmlFor='color' title="点击更换文字颜色">👫</label> */ }
           {/* <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link> */ }
           <Link to='/ParadiseCity/write' style={ { float: 'right', 'line-height': '2em' } }>✍</Link>
-          <Link to='/ParadiseCity/way2explore' onClick={ this.initData } style={ { float: 'right' } }>📂</Link>
+          <Link to='/ParadiseCity/way2explore' style={ { float: 'right' } }>📂</Link>
           <span className={ styles['scroll-tips'] }>
-            <Link to='/ParadiseCity/' onClick={ this.initData }>
+            <Link to='/ParadiseCity/'>
               {/* <span>为</span>
               <span className={ styles['hide-title'] }>而不争，和而不同</span> */}
               <span>👫</span>

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import styles from '../index.module.css'
-import { getArticle } from '../utils/request'
 const colors = [
   '#123456',
   '#234567',
@@ -65,20 +64,12 @@ export default withRouter((props) => {
             className={ styles['title'] }
             key={ item.name }
             onClick={ () => {
-              getArticle(item.name).then((v) => {
-                if (v) {
-                  window.PARADISE_lastest_catagory = catagory
-                  window.PARADISE_history.push('/ParadiseCity/article', {
-                    title: JSON.parse(decodeURIComponent(escape(atob(v.content)))).title,
-                    content: JSON.parse(decodeURIComponent(escape(atob(v.content)))).content,
-                    time: JSON.parse(decodeURIComponent(escape(atob(v.content)))).time,
-                    catagory: JSON.parse(decodeURIComponent(escape(atob(v.content)))).catagory,
-                    author: JSON.parse(decodeURIComponent(escape(atob(v.content)))).author,
-                    sha: v.sha,
-                  })
-                  document.location.hash = v.sha
-                }
+              window.PARADISE_lastest_catagory = catagory
+              window.PARADISE_history.push('/ParadiseCity/article', {
+                ...item,
+                from: 'way2explore'
               })
+              document.location.hash = item.sha
             } }
           >
             <div

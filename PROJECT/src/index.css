@@ -20,7 +20,7 @@ body {
   overflow-x: hidden;
   word-wrap: break-word;
   color: var(--mainColor, #222);
-  background-color: #f9f9f9;
+  background-color: #e2e2e2;
 }
 
 .scrollbar::-webkit-scrollbar,
