@@ -1,587 +1,706 @@
-!(function (e) {
+!(function (a) {
   'use strict'
-  var a,
-    u,
-    f = SFAPI,
-    g = SFLOG,
-    l = 'business:init',
-    d = SFConfig,
-    h = SFCommon
-  function initSDK (s, e) {
-    var i = PORTAL_MAP,
-      o = !SFCommon.isWeb(),
-      r = !1,
-      c = s.onStartAuth || function () {}
-    function initECAgentAndStartAuth () {
-      var t = (function checkAndInitECAgent () {
-          return (
-            g.info(l, 'start init ecagent'),
-            new Promise(function (r, c) {
-              g.debug(l, 'checkECAgent() enter'),
-                is.WebClient
-                  ? f.checkECAgent({
-                      success: function () {
-                        initECAgent(r, c)
-                      },
-                      error: function () {
-                        var e = SF.setting.getGlobal(
-                          KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA,
-                          null
-                        )
-                        if (null !== e) {
-                          var n = is.System().isMobile,
-                            t = 1 !== e.unforceInstallClient && !n,
-                            i = e.enableSecurityCheck && !n && !is.Linux
-                          ;(!t && !i) || h.isFreeMode()
-                            ? r()
-                            : s.onMustInstallClient(
-                                'config forceInstall or enableSecurityCheck when check ecagent failed'
-                              )
-                        } else {
-                          var o = h.formatString(
-                            'get getGlobal KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA fail'
-                          )
-                          c(o)
-                        }
-                      }
-                    })
-                  : ((d.isExistEC = !0), initECAgent(r, c))
-            })
-          )
-        })(),
-        i = (function initStartAuthDelay () {
-          return new Promise(function (e, n) {
-            setTimeout(function () {
-              e()
-            }, 1e3)
-          })
-        })()
-      return (
-        new Promise(function (e, n) {
-          Promise.race([t, i])
-            .then(setInitLang)
-            .then(function () {
-              g.debug(l, 'init first auth or ecagent OK'),
-                is.WebClient && initStartAuth(),
-                e()
-            })
-            ['catch'](function (e) {
-              n(e)
-            })
-        }),
-        t
-      )
-    }
-    function setInitLang () {
-      return (
-        g.info(l, 'start set language'),
-        new Promise(function (e, n) {
-          f.setLang({
-            lang: s.lang,
-            success: function () {
-              g.debug(l, 'set init lang success'), e()
-            },
-            error: function () {
-              g.info(l, 'set init lang error'), e()
-            }
-          })
-        })
-      )
-    }
-    function initStartAuth () {
-      !(function commonAuth () {
-        g.info(l, 'start auth')
-        var e,
-          n,
-          t = SF.vpnInfo.createInstance()
-        if (
-          ((n = t.getFirstAuth()),
-          g.debug(l, 'startAuth() enter'),
-          (e = (function getFirstAuth () {
-            var e = SF.setting.getGlobal(
-              KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA,
-              null
-            ).startAuth
-            g.assert(void 0 !== e, 'server auth type is undefined')
-            var n = i[e]
-            return (
-              is.Win() ||
-                n !== PORTAL_MAP['auth/_key'] ||
-                (n = PORTAL_MAP['auth/logincert']),
-              n
-            )
-          })()),
-          g.info('wechat:qrcode', 'get firstAuth:authType ' + n + ':' + e),
-          r && is.Win())
-        )
-          return (e = i['auth/psw']), void c(e, !0)
-        if (n && 'auth/wechat' === n) return (e = i[n]), void c(e, !0)
-        o && n && i[n] && (e = i[n])
-        c(e, !1)
-      })()
-    }
-    function initECAgent (e, t) {
-      f.initECAgent({
-        success: function () {
-          e()
+  var i = SFCommon,
+    u = SFConfig,
+    E = SFLOG,
+    d = 'api:init',
+    n = 500,
+    g = SFDTO,
+    l = SF.ecConfig
+  function queryResult (n, r) {
+    var o,
+      e = i.getECCommand('Q_UPDATE'),
+      c = u.UPDATE_STATE
+    ;(r = r || function () {}),
+      SFRequest.createRequest({
+        type: 'ECAgent',
+        path: 'DoQueryService',
+        method: 'get',
+        data: [e],
+        conCount: n.conCount,
+        compat: !0,
+        preventOnError: n.preventOnError,
+        success: function (e) {
+          var t = parseInt(e.result, 10)
+          switch (
+            ((o = i.handleData(e)),
+            n.count++,
+            n.count > n.queryMax && (n.error(o), r()),
+            t)
+          ) {
+            case c.INPROCESS:
+              queryResultLater(n), r()
+              break
+            case c.GETCONFFAILD:
+            case c.UPDATE_REQTIMOUT:
+            case c.SETUPSUCESS:
+            case c.ISUPTODATE:
+              ;(o.code = c.SETUPSUCESS), n.success(o), r()
+              break
+            default:
+              E.info(d, 'ECAgent: check update failed,status is ' + t),
+                n.error(o),
+                r()
+          }
         },
         error: function (e) {
-          var n
-          e.code === ERROR_INIT_ECAGENT_FAILED
-            ? s.onMustInstallClient('init ecagent failed,need install client')
-            : ((n = h.formatString(
-                'init ecagent failed, code:{0}, msg:{1}',
-                e.code,
-                e.msg
-              )),
-              t(n))
+          E.info(d, 'request querying status api for updating failed'),
+            n.isReDetectEC
+              ? (function handleECRestart (t, e) {
+                  E.info(
+                    d,
+                    'update failed, maybe ecagent switch local port, atemp to re-detect ecagent '
+                  ),
+                    a.checkECAgent({
+                      success: function () {
+                        var e = SF.setting.getGlobal(
+                          KEY_GLOBAL_EC_PORT,
+                          u.DEFAULT_PORT
+                        )
+                        E.info(
+                          d,
+                          're-detect ecagent success,current port:' +
+                            e +
+                            ',continue querying update status'
+                        ),
+                          (t.count = 0),
+                          queryResultLater(t)
+                      },
+                      error: function () {
+                        E.info(d, 're-detect ecagent failed '), t.error(e)
+                      }
+                    })
+                })(n, e)
+              : n.error(e),
+            r()
         }
       })
-    }
-    function checkRelogin () {
-      return (
-        g.info(l, 'start check relogin'),
-        new Promise(function (t, i) {
-          var o = s.onReLogin,
-            r = s.onOtherLogin
-          g.debug(l, 'checkReLogin() enter'),
-            f.checkReLogin({
+  }
+  function queryResultLater (e, t) {
+    setTimeout(function () {
+      queryResult(e, t)
+    }, n)
+  }
+  ;(a.init = function init (e, t) {
+    new SFCommon.BaseAPI(e, t, function excuting (e, t) {
+      var n,
+        r = i.getResult(),
+        o = SF.vpnInfo.createInstance()
+      ;(e.url = e.url || location.href),
+        (n = i.URLParse(e.url))
+          ? ((r.code = u.SUCCESS_CODE),
+            SF.setting.setGlobal(
+              [
+                { key: KEY_GLOBAL_VPN_PORT, value: n.port },
+                { key: KEY_GLOBAL_VPN_URL, value: n.origin },
+                { key: KEY_GLOBAL_VPN_IP, value: n.hostname },
+                { key: KEY_GLOBAL_VPN_PROTOCOL, value: n.protocol }
+              ],
+              0
+            ),
+            (function handleFromURL () {
+              e.from
+                ? SF.setting.setGlobal(
+                    { key: KEY_GLOBAL_FROM_URL, value: e.from },
+                    0
+                  )
+                : i.isWeb()
+                ? SF.setting.setGlobal(
+                    { key: KEY_GLOBAL_FROM_URL, value: n.origin },
+                    0
+                  )
+                : SF.setting.setGlobal(
+                    { key: KEY_GLOBAL_FROM_URL, value: o.getLastVPNURL() },
+                    0
+                  ),
+                e.success(r)
+            })())
+          : ((r.code = ERROR_ADDR_INVALID), e.error(r))
+    }).invoke()
+  }),
+    (a.initECAgent = function initECAgent (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (n, r) {
+          var e,
+            t,
+            o = SF.setting.getGlobal(KEY_GLOBAL_VPN_IP, ''),
+            c = SF.setting.getGlobal(KEY_GLOBAL_VPN_PORT, 0),
+            a = [o + ' ' + c]
+          o ||
+            ((t = n.url || location.href),
+            (e = i.URLParse(t)),
+            (a = [e.hostname + ' ' + e.port])),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'InitEcAgent',
+              data: a,
+              method: 'get',
+              compat: !0,
               success: function (e) {
-                var n = e.code
-                1 === n
-                  ? (g.info(l, ' current user login '), o && o())
-                  : 2 === n || 3 === n || 4 === n
-                  ? (g.info(l, ' other user login '), r && r())
-                  : 0 === n
-                  ? (g.debug(l, ' no user login '), t())
-                  : (g.error(
-                      l,
-                      ' check relogin error ',
-                      ' unknown status ,status is %',
-                      n
-                    ),
-                    i('check reloin error , unknown status:' + n))
+                var t = i.handleData(e)
+                1 === t.code
+                  ? n.success(t)
+                  : ((t.code =
+                      -1 === t.code || -2 === t.code
+                        ? ERROR_INIT_ECAGENT_FAILED
+                        : t.code),
+                    n.error(t)),
+                  r()
               },
               error: function (e) {
-                var n = h.formatString(
-                  'api init fail, code:{0}, msg:{1}',
-                  e.code,
-                  e.msg
-                )
-                i(n)
+                n.error(e), r()
               }
             })
-        })
-      )
-    }
-    function checkProxy () {
-      return (
-        g.info(l, 'start check proxy'),
-        new Promise(function (t, e) {
-          f.checkProxy({
-            success: function (e) {
-              var n = is.fn(s.onErrorTip) ? s.onErrorTip : function () {}
-              0 !== e.code
-                ? (g.info(l, 'check proxy success.  No proxy. '), (u = !1), t())
-                : (is.fn(s.onExistProxy) && s.onExistProxy(),
-                  (u = !0),
-                  a ? n(ERROR_EC_BOTH_MIDATTACK_AND_PROXY, t) : t())
+        },
+        'initECAgent'
+      ).invoke()
+    }),
+    (a.checkReLogin = function checkReLogin (e, t) {
+      new i.BaseAPI(
+        e,
+        t,
+        function excuting (n, r) {
+          var e = SF.setting.getGlobal(KEY_GLOBAL_TWFID, '')
+          SFAPI.getEncryptKey({
+            preventOnError: n.preventOnError,
+            success: function () {
+              !(function createRequest (e) {
+                SFRequest.createRequest({
+                  type: 'ECAgent',
+                  path: 'CheckReLogin',
+                  data: [e],
+                  method: 'get',
+                  compat: !0,
+                  preventOnError: n.preventOnError,
+                  success: function (e) {
+                    var t = i.handleData(e)
+                    ;-1 === t.code
+                      ? (t.code = 1)
+                      : 0 === t.code
+                      ? (t.code = 2)
+                      : 3 === t.code
+                      ? (t.code = 3)
+                      : 4 === t.code
+                      ? (t.code = 4)
+                      : (t.code = 0),
+                      SF.setting.setGlobal(
+                        { key: KEY_GLOBAL_RELOGIN_STATUS, value: t.code },
+                        !1
+                      ),
+                      n.success(t),
+                      r()
+                  },
+                  error: function (e) {
+                    n.error(e), r()
+                  }
+                })
+              })(i.encryptID({ id: e }, 0))
             },
             error: function (e) {
-              g.error(l, 'check proxy fail', 'error code is ' + e.code),
-                s.onProxyError(e)
+              E.error(d, ' get encrypt key error ', ' error is  %s', e.msg),
+                n.error(e)
             }
           })
-        })
-      )
-    }
-    function testProxy () {
-      return new Promise(function (n, e) {
-        u
-          ? (g.info(l, 'check proxy success.  Have proxy. '),
-            f.testProxy({
+        },
+        'checkReLogin'
+      ).invoke()
+    }),
+    (a.setLang = function setLang (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (t, e) {
+          var n,
+            r = t.lang || 'zh_CN'
+          ;(n = i.getECCommand('S_LANG', { lang: r })),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'DoConfigure',
+              data: [n],
+              compat: !0,
               success: function (e) {
-                g.info(l, 'test proxy success!'), n()
-              },
-              error: function (e) {
-                g.error(l, 'test proxy fail', 'error code is ' + e.code),
-                  s.onProxyError(e)
-              }
-            }))
-          : n()
-      })
-    }
-    function checkMidAttack () {
-      return new Promise(function (n, t) {
-        var i = is.fn(s.onErrorTip) ? s.onErrorTip : function () {}
-        a
-          ? (g.info(l, 'check midattack enabled'),
-            is.Win() &&
-              SFFilter.setFilterCallBack('checkMidAttack', function () {
-                h.isFreeMode() ? n() : SFCommon.installClient()
-              }),
-            f.checkMidAttack({
-              success: function (e) {
-                g.info(l, 'check midattack success, data.code:' + e.code),
-                  1 === e.code ? i(ERROR_EC_MIDATTACK, n) : n()
+                '1' === e.result
+                  ? (E.debug(d, 'set lang success'), t.success())
+                  : (E.debug(d, 'set lang error'), t.error())
               },
               error: function () {
-                var e = h.formatString('check middle attack failed')
-                t(e)
+                E.debug(d, 'set lang error'), t.error()
               }
-            }))
-          : n()
-      })
-    }
-    function checkIsUpdate () {
-      return new Promise(function (n, e) {
-        if (!d.isExistEC || !is.Win())
-          return g.debug(l, 'EC not need check update in login page '), void n()
-        f.checkIsUpdate({
+            })
+        },
+        'setLang'
+      ).invoke()
+    }),
+    (a.getLang = function getLang (e, t) {
+      function getEnvLang (e, t) {
+        var n = String(
+          window.navigator.language ||
+            window.navigator.systemLanguage ||
+            window.navigator.userLanguage ||
+            window.navigator.browserLanguage
+        ).toLowerCase()
+        E.debug(d, 'get lang from env '),
+          (e.lang = n),
+          SF.setting.setGlobal({ key: KEY_GLOBAL_LANG, value: n }, 1),
+          t(e)
+      }
+      new SFCommon.BaseAPI(e, t, function excuting (t, n) {
+        var e = i.getECCommand('Q_LANG'),
+          r = i.getResult(1)
+        SFRequest.createRequest({
+          type: 'ECAgent',
+          path: 'DoQueryService',
+          data: [e],
           success: function (e) {
-            e.code !== d.IS_UPDATE.NOT_UPDATE
-              ? (g.debug(
-                  l,
-                  'currnet version need update,version data:',
-                  JSON.stringify(e)
-                ),
-                is.fn(s.onUpdating) && s.onUpdating(e, n))
-              : (g.debug(l, 'currnet version do not update'), n())
+            e.result
+              ? (E.debug(d, 'get lang from ECAgent'),
+                (r.data.lang = e.data),
+                t.success(r),
+                n())
+              : getEnvLang(r, t.success)
           },
-          error: function (e) {
-            g.info(
-              l,
-              'detect whether update failed, may be is not inistall, error code:%d',
-              e.code
-            ),
-              e.code === ERROR_EC_NETWORK
-                ? is.fn(s.onErrorTip) && s.onErrorTip(ERROR_EC_NETWORK)
-                : s.onMustInstallClient('check update status failed')
+          error: function () {
+            getEnvLang(r, t.success)
           }
         })
-      })
-    }
-    function checkUpdate () {
-      return (
-        g.info(l, 'start check update'),
-        new Promise(function (n, e) {
-          if (!is.WebClient && !is.WinClient)
-            return (
-              g.debug(l, 'EC not need check update in login page '), void n()
-            )
-          f.checkUpdate({
-            preventOnError: !0,
-            conCount: 5,
+      }).invoke()
+    }),
+    (a.checkECAgent = function checkECAgent (e, t) {
+      new SFCommon.BaseAPI(e, t, function excuting (n, e) {
+        var r,
+          o,
+          c = !1,
+          t = is.System().isMobile,
+          a = 0,
+          s = {
+            ALL_START_TIME: 500,
+            ALL_FOREACH_TIMEOUT: 1e3,
+            ALL_TIMEOUT: 1e3
+          }
+        function checkECAgentByHttp () {
+          var t = i.getResult(ERROR_CHECK_ENV_FAILED)
+          r = setTimeout(function () {
+            var e = u.USEABLE_PORTS
+            E.debug(
+              d,
+              'detect EC ,enter timer time span :' +
+                new Date().getTime() +
+                ',times:' +
+                a
+            ),
+              (o = setTimeout(function () {
+                c ||
+                  (E.info(d, 'EcAgent request Failed On All Port!'),
+                  (u.isExistEC = !1),
+                  n.error(t))
+              }, s.ALL_TIMEOUT)),
+              E.info(d, 'EcAgent request Failed on last port: timeout!'),
+              e.forEach(function (e) {
+                E.info(d, 'this request port is ' + e),
+                  checkECRequest(e, s.ALL_FOREACH_TIMEOUT)
+              })
+          }, s.ALL_START_TIME)
+        }
+        function checkECRequest (t, e) {
+          a++,
+            E.debug(
+              d,
+              'detect EC ,request time span :' +
+                new Date().getTime() +
+                ',times:' +
+                a
+            ),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'DetectECAgent',
+              compat: !0,
+              port: t,
+              timeout: e,
+              conCount: -1,
+              preventOnError: !0,
+              resultFilter: function (e) {
+                return !!e.hasOwnProperty('result')
+              },
+              success: function (e) {
+                r && clearTimeout(r),
+                  o && clearTimeout(o),
+                  c ||
+                    ((u.isExistEC = !0),
+                    (c = !0),
+                    (u.cache.ecPort = t),
+                    SF.setting.setGlobal(
+                      { key: KEY_GLOBAL_EC_PORT, value: t },
+                      1
+                    ),
+                    E.info(d, 'Ecagent connect OK. port is' + u.cache.ecPort),
+                    n.success(e))
+              },
+              error: function () {
+                E.info(d, 'request error on port:' + t)
+              }
+            })
+        }
+        n.longTimeout &&
+          (s = {
+            ALL_START_TIME: 1e3,
+            ALL_FOREACH_TIMEOUT: 3e4,
+            ALL_TIMEOUT: 4e4
+          }),
+          t || (is.Linux && i.isWeb()) || i.isFreeMode()
+            ? (E.debug(d, 'Mobile is not support Ecagent'), n.error())
+            : i.isWeb() || n.ifOnlyHttp
+            ? (checkECRequest(u.DEFAULT_PORT, s.ALL_START_TIME + s.ALL_TIMEOUT),
+              checkECAgentByHttp())
+            : l.read(l.key.EC_PORT, '', function (e) {
+                ;(e = parseInt(e, 10)),
+                  (u.isExistEC = !0),
+                  is.numeric(e) || 0 === e
+                    ? (SF.setting.setGlobal(
+                        { key: KEY_GLOBAL_EC_PORT, value: e },
+                        1
+                      ),
+                      E.info(d, 'Ecagent connect OK by container. port is' + e),
+                      n.success())
+                    : (checkECRequest(
+                        u.DEFAULT_PORT,
+                        s.ALL_START_TIME + s.ALL_TIMEOUT
+                      ),
+                      checkECAgentByHttp())
+              })
+      }).invoke()
+    }),
+    (a.checkMidAttack = function checkMidAttack (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (n, r) {
+          SFRequest.createRequest({
+            type: 'ECAgent',
+            path: 'CheckMITMAttack',
+            method: 'get',
+            compat: !0,
             success: function (e) {
-              g.debug(l, 'checkUpdate success'), s.onCompleteUpdate(n)
+              var t = i.handleData(e)
+              n.success(t), r()
             },
             error: function (e) {
-              g.info(
-                l,
-                'check update error, may be is not inistall, error code:%d',
-                e.code
-              ),
-                s.onMustInstallClient('query update status failed', {
-                  process: 'update'
-                })
+              n.error(e), r()
             }
           })
-        })
-      )
-    }
-    function getMacAddress () {
-      return (
-        g.info(l, 'start get MacAddress'),
-        new Promise(function (i, n) {
-          SFConfig.isExistEC
-            ? f.getHid({
-                success: function (e) {
-                  g.debug(l, 'get MacAddress success')
-                  var n =
-                      'undefined' == typeof e.data.macAddress
-                        ? ''
-                        : e.data.macAddress,
-                    t =
-                      'undefined' == typeof e.data.hostName
-                        ? ''
-                        : e.data.hostName
-                  SFCommon.setCookie('SSL_REMOTE_MAC', n),
-                    SFCommon.setCookie('SSL_REMOTE_HOST', t),
-                    i()
-                },
-                error: function (e) {
-                  g.info(l, 'get MacAddress error'), n()
-                }
-              })
-            : (g.debug(l, 'get MacAddress failed, ECAgent not Exist'), i())
-        })
-      )
-    }
-    function checkSecurity () {
-      return (
-        g.info(l, 'start check security'),
-        new Promise(function (n, e) {
-          var t,
-            i,
-            o = SF.setting.getGlobal(KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA, null)
-          if (
-            (g.assert(null !== o), !o.enableSecurityCheck || is.Mac || is.Linux)
-          )
-            return g.info(l, 'enableSecurityCheck is false'), void n()
-          ;(t = s.onCheckSecurityDeny || function () {}),
-            (i = s.onCheckSecurityPass || function () {}),
-            (function _checkSecurity () {
-              f.checkSecurity({
-                type: 'before',
-                success: function (e) {
-                  alert(11111)
-                  i()
-                  // h.checkObjAttrExits(e, 'data.strategies') &&
-                  // !is.empty(e.data.strategies)
-                  //   ? (g.info(l, 'check security failed before login'),
-                  //     t(e.data.strategies, n))
-                  //   : (g.info(l, 'check security success before login'),
-                  //     i(),
-                  //     n())
-                },
-                error: function () {
-                  SFLOG.info(
-                    l,
-                    'check Security error',
-                    'context or IP restrict'
-                  )
-                }
-              })
-            })()
-        })
-      )
-    }
-    function initDomainEnv () {
-      return (
-        g.info(l, 'init domain env'),
-        new Promise(function (n, t) {
-          SF.setting.getGlobal(KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA, null)
-            .domainSSOEnable &&
-          o &&
-          is.Win()
-            ? f.checkDomain({
-                success: function (e) {
-                  ;(r = 1 === e.data.inDomain), n()
-                },
-                error: function (e) {
-                  var n = h.formatString(
-                    'api init fail, code:{0}, msg:{1}',
-                    e.code,
-                    e.msg
-                  )
-                  t(n)
-                }
-              })
-            : n()
-        })
-      )
-    }
-    is.fn(s.onMustInstallClient) && (h.installClient = s.onMustInstallClient),
-      (function main () {
-        ;(function init () {
-          return new Promise(function (e, n) {
-            ;(function initBase () {
-              return new Promise(function (n, t) {
-                var e,
-                  i,
-                  o,
-                  r = s.url
-                ;(i = window.name || ''),
-                  (o = i.substr(0, 10)),
-                  SFLOG.debug(l, 'init() enter'),
-                  'sf_ssl_ms_' === o &&
-                    ((e = decodeURIComponent(i.substr(10))),
-                    (window.name = '')),
-                  f.init({
-                    url: r,
-                    from: e,
-                    success: function () {
-                      f.getInitConfig({
-                        preventOnError: s.preventOnError,
-                        success: function (e) {
-                          g.assert(
-                            'undefined' != typeof e.data,
-                            'getInitConfig api error, result.data is not object, is undefined'
-                          ),
-                            (a = 1 === e.data.enableMidAtkCheck),
-                            is.fn(s.onGetInitConfig) &&
-                              s.onGetInitConfig(e.data),
-                            n()
-                        },
-                        error: function (e) {
-                          t(e.msg)
-                        }
-                      })
-                    },
-                    error: function (e) {
-                      var n = h.formatString('init failed,exist error params')
-                      t(n)
-                    }
-                  })
-              })
-            })()
-              .then(function () {
-                is.WebClient || initStartAuth()
-              })
-              .then(initECAgentAndStartAuth)
-              .then(checkRelogin)
-              .then(initDomainEnv)
-              .then(checkProxy)
-              .then(testProxy)
-              .then(checkMidAttack)
-              .then(checkIsUpdate)
-              .then(checkUpdate)
-              .then(getMacAddress)
-              .then(checkSecurity)
-              .then(function () {
-                e()
-              })
-              ['catch'](function (e) {
-                n(e)
-              })
-          })
-        })()
-          .then(function () {
-            s.success && s.success()
-          })
-          ['catch'](function (e) {
-            e &&
-              (e.stack
-                ? g.error(l, 'init on error', 'data:%s %s', e.message, e.stack)
-                : g.error(
-                    l,
-                    'init on error',
-                    'data:%s',
-                    (is.object(e) && e.msg) || e
-                  ),
-              s.error && s.error(e))
-          })
-      })()
-  }
-  function getManifest (t, i) {
-    g.debug(l, 'getManifest() enter'),
-      SFRequest.createRequest({
-        type: 'Server',
-        path: './theme/manifest.json?_r=' + Math.random(),
-        success: function (e) {
-          var n
-          e
-            ? ((n = JSON.parse(e)), t.success(n))
-            : (t.error(),
-              g.error(
-                l,
-                'request success. but data is empty ',
-                'manifest file is empty!'
-              )),
-            i()
         },
-        error: function () {
-          g.error(l, 'request error', 'Get manifest error!'), t.error(), i()
-        }
-      })
-  }
-  function getLanguageFile (e, n) {
-    var t,
-      i = e.lang
-    ;(t = SFConfig.LANGUAGE_LIST[i]),
-      is.empty(t)
-        ? ((window.LANG = {}), e.success())
-        : require([
-            '/portal/i18n/' + t + '?cache=' + new Date().getTime()
-          ], function () {
-            e.success()
+        'checkMidAttack'
+      ).invoke()
+    }),
+    (a.selectLines = function selectLines (e, t) {
+      new SFCommon.BaseAPI(e, t, function excuting (n, r) {
+        var e
+        n.url || E.warn(d, 'param error', 'url is empty on selecting lines'),
+          (e = [n.url]),
+          SFRequest.createRequest({
+            type: 'ECAgent',
+            path: 'SelectLines',
+            data: e,
+            conCount: n.conCount || -1,
+            timeout: n.timeout || 3e4,
+            method: 'get',
+            success: function (e) {
+              var t = i.handleData(e)
+              1 === t.code ? n.success(t) : n.error(t), r()
+            },
+            error: function (e) {
+              n.error(e), r()
+            }
           })
-  }
-  function getLang (n, t) {
-    var i,
-      o = h.getResult(1)
-    if (((i = h.checkLang(window.language)), is.WebClient)) {
-      var e = SF.setting.getGlobal(KEY_GLOBAL_LANG, '')
-      if (d.LANGUAGE_LIST.hasOwnProperty(e))
-        return (
-          g.info(l, 'get lang from local cache,lang:' + e),
-          (o.data = e),
-          void n.success(o)
-        )
-      if (((e = h.getCookie('language')), d.LANGUAGE_LIST.hasOwnProperty(e)))
-        return (
-          g.info(l, 'get lang from cookie,lang:' + e),
-          (o.data = e),
-          void n.success(o)
-        )
-      g.info(l, 'get lang from default,lang:' + i),
-        (o.data = i),
-        n.success(o),
-        t()
-    } else
-      SF.ecConfig.read(SF.ecConfig.key.LANG, '', function (e) {
-        if (d.LANGUAGE_LIST.hasOwnProperty(e))
-          return (
-            g.info(l, 'get lang from container,lang:' + e),
-            (o.data = e),
-            void n.success(o)
-          )
-        g.info(l, 'get lang from default,lang:' + i),
-          (o.data = i),
-          n.success(o),
-          t()
-      })
-  }
-  function setLangToEC (n, t) {
-    f.setLang({
-      lang: n.lang,
-      success: function () {
-        g.info(l, 'set lang ot ecagent is success'), n.success(), t()
-      },
-      error: function (e) {
-        g.info(
-          l,
-          'set lang to ecagent is fail, error message is ' + JSON.stringify(e)
-        ),
-          n.error(),
-          t()
-      }
+      }).invoke()
+    }),
+    (a.getInitConfig = function getInitConfig (e, t) {
+      var n = new i.BaseAPI(e, t, function excuting (a, s) {
+          var e = a.isRefreshLogin,
+            t = '/por/login_auth.csp'
+          e && (t += '?newauth=1'),
+            SFRequest.createRequest({
+              type: 'Server',
+              path: t,
+              method: 'get',
+              preventOnError: a.preventOnError,
+              success: function (e) {
+                var t,
+                  n = e || {},
+                  r = xmlToJSON.parseString(n),
+                  o = r.Auth || r,
+                  c = {}
+                ;(c.code = parseInt(o.ErrorCode, 10)),
+                  (t = g.getInitConfigDTO(o)),
+                  (c.data = t || {}),
+                  SF.setting.setGlobal(
+                    {
+                      key: KEY_GLOBAL_CLIENT_RUN_MODE,
+                      value: c.data.clientRunMode
+                    },
+                    !1
+                  ),
+                  SF.setting.setGlobal(
+                    {
+                      key: KEY_GLOBAL_ENCRYPT_EXP,
+                      value: c.data.rsaEncryptExp
+                    },
+                    !1
+                  ),
+                  SF.setting.setGlobal(
+                    {
+                      key: KEY_GLOBAL_ENCRYPT_KEY,
+                      value: c.data.rsaEncrtptKey
+                    },
+                    !1
+                  ),
+                  SF.setting.setGlobal(
+                    {
+                      key: KEY_GLOBAL_CSRF_RAND_CODE,
+                      value: c.data.csrfRandCode
+                    },
+                    !1
+                  ),
+                  u.setGUID(c.data.multClientguid),
+                  u.setTWFID(c.data.twfID),
+                  1 === c.code
+                    ? (SF.setting.setGlobal({
+                        key: KEY_GLOBAL_INIT_GET_INIT_CONFIG_DATA,
+                        value: c.data
+                      }),
+                      a.success(c))
+                    : a.error(c),
+                  s()
+              },
+              error: function (e) {
+                a.error(e), s()
+              }
+            })
+        }),
+        u = SF.session.createInstance()
+      n.invoke()
+    }),
+    (a.checkUpdate = function checkUpdate (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (t, n) {
+          var e, r
+          ;(t.count = 0),
+            (t.queryMax = t.queryMax || 360),
+            (t.preventOnError =
+              !!is.bool(t.preventOnError) && t.preventOnError),
+            (t.isReDetectEC = !is.bool(t.isReDetectEC) || t.isReDetectEC),
+            (e = ['BEFORELOGIN']),
+            u.container && is.Win() && (e[1] = 'ECLOGIN'),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'UpdateControls',
+              data: e,
+              conCount: t.conCount,
+              preventOnError: t.preventOnError,
+              method: 'get',
+              compat: !0,
+              success: function (e) {
+                '1' === e.result
+                  ? queryResultLater(t, n)
+                  : (E.error(
+                      d,
+                      'request update command failed',
+                      'data:' + JSON.stringify(e)
+                    ),
+                    (r = i.handleData(e)),
+                    t.error(r),
+                    n())
+              },
+              error: function (e) {
+                E.error(
+                  d,
+                  'check update failed',
+                  'send command(UpdateControls) failed'
+                ),
+                  t.error(e),
+                  n()
+              }
+            })
+        },
+        'checkUpdate'
+      ).invoke()
+    }),
+    (a.checkIsUpdate = function checkIsUpdate (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (t, n) {
+          var r,
+            e = i.getECCommand('Q_ISUPDATE')
+          u.UPDATE_STATE,
+            (n = n || new Function()),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'DoQueryService',
+              method: 'get',
+              data: [e],
+              compat: !0,
+              success: function (e) {
+                if (
+                  (parseInt(e.result, 10),
+                  (r = i.handleData(e)).code === ERROR_EC_NETWORK)
+                )
+                  return (
+                    E.error(
+                      d,
+                      ' detect whether update failed ',
+                      'ecagent request server error,code:' + ERROR_EC_NETWORK
+                    ),
+                    void t.error(r)
+                  )
+                is.object(r.data) && i.checkObjAttrExits(r.data, 'local')
+                  ? ((r.data.local = r.data.local ? r.data.local : ''),
+                    (r.data.remote = r.data.remote ? r.data.remote : ''),
+                    (r.code = i.checkVersion(r.data)),
+                    E.info(d, 'check version state' + r.code))
+                  : ((r.data = {}),
+                    (r.code = u.IS_UPDATE.NEED_UPDATE),
+                    E.info(d, 'current version is old , need update' + r.code)),
+                  t.success(r)
+              },
+              error: function (e) {
+                e.code !== ERROR_SERVER_DATA_FORMAT_INVALID
+                  ? (t.error(e), n())
+                  : (E.info(d, 'get error format data from checkIsUpdate'),
+                    (e.code = u.IS_UPDATE.NEED_UPDATE),
+                    (e.data = { local: '', remote: '' }),
+                    (e.msg = ''),
+                    t.success(e))
+              }
+            })
+        },
+        'checkIsUpdate'
+      ).invoke()
+    }),
+    (a.checkSecurity = function checkSecurity (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (n, r) {
+          var e,
+            t = 'after' === n.type ? 'Q_AFTER_SEC' : 'Q_BEFORE_SEC'
+          ;(e = i.getECCommand(t)),
+            SFRequest.createRequest({
+              type: 'ECAgent',
+              path: 'DoQueryService',
+              data: [e],
+              method: 'get',
+              success: function (e) {
+                alert(2222)
+                n.success(t)
+                // var t = i.handleData(e)
+                // 1 === t.code ? n.success(t) : n.error(t), r()
+              },
+              error: function (e) {
+                E.error(d, 'check security error,', e.msg), n.error(e), r()
+              }
+            })
+        },
+        'checkSecurity'
+      ).invoke()
+    }),
+    (a.checkProxy = function checkProxy (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (r, o) {
+          SFRequest.createRequest({
+            type: 'ECAgent',
+            path: 'CheckProxySetting',
+            method: 'get',
+            compat: !0,
+            success: function (e) {
+              var t = i.handleData(e),
+                n = [
+                  null,
+                  ERROR_EC_TPS_AGRUMENTS_ERR,
+                  ERROR_EC_IEOPTION_USE_AUTO_DETECT,
+                  ERROR_EC_IEOPTION_USE_AUTO_CONFIG,
+                  ERROR_EC_IEOPTION_NO_SPECIFY_PROXY,
+                  ERROR_EC_IEOPTION_IN_PASSBY,
+                  ERROR_EC_IEOPTION_DIFFERENT_PROXY
+                ]
+              ;(t.code = parseInt(t.code, 10)),
+                0 < t.code && t.code === [null, 1, 2, 3, 4, 5, 6][t.code]
+                  ? r.error({ code: n[t.code] || 0, data: t.data })
+                  : (-1 !== t.code &&
+                      0 !== t.code &&
+                      E.debug(
+                        d,
+                        'params error',
+                        'code not -1(no proxy) and not 0(have proxy),result:' +
+                          t.code
+                      ),
+                    (t.code = 0 === t.code ? 0 : 1),
+                    r.success(t),
+                    o())
+            },
+            error: function (e) {
+              r.error(e), o()
+            }
+          })
+        },
+        'checkProxy'
+      ).invoke()
+    }),
+    (a.testProxy = function testProxy (e, t) {
+      new SFCommon.BaseAPI(
+        e,
+        t,
+        function excuting (n, r) {
+          SFRequest.createRequest({
+            type: 'ECAgent',
+            path: 'TestProxyServer',
+            method: 'get',
+            compat: !0,
+            success: function (e) {
+              var t = i.handleData(e)
+              1 === t.code
+                ? n.success(t)
+                : n.error({ code: t.code, data: t.data }),
+                r()
+            },
+            error: function (e) {
+              n.error(e), r()
+            }
+          })
+        },
+        'testProxy'
+      ).invoke()
+    }),
+    (a.getMidAttackResult = function getMidAttackResult (e, t) {
+      new SFCommon.BaseAPI(e, t, function excuting (n, r) {
+        var e = [n.userName, n.password, n.randCode]
+        ;(n.userName && n.password && n.randCode) ||
+          E.warn(
+            d,
+            'param error',
+            'get middle attack result interface parameter is not full'
+          ),
+          SFRequest.createRequest({
+            type: 'ECAgent',
+            path: 'GetMITEMAttackResult',
+            data: e,
+            method: 'get',
+            success: function (e) {
+              var t = i.getResult()
+              '1' === e.result
+                ? ((t.data.key = e.data), n.success(t))
+                : n.error(t),
+                r()
+            },
+            error: function (e) {
+              n.error(e), r()
+            }
+          })
+      }).invoke()
     })
-  }
-  function setLang (e, n) {
-    is.WebClient
-      ? (h.setCookie('language', e.lang),
-        SF.setting.setGlobal({ key: KEY_GLOBAL_LANG, value: e.lang }, 1),
-        d.isExistEC && e.switchLang && setLangToEC(e, n))
-      : (h.setCookie('language', e.lang),
-        SF.setting.setGlobal({ key: KEY_GLOBAL_LANG, value: e.lang }, 1),
-        SF.ecConfig.write(
-          { key: SF.ecConfig.key.LANG, value: e.lang },
-          function () {
-            is.fn(e.onSetedECLang) &&
-              (g.info(
-                l,
-                'set language to container success,language : ' + e.lang
-              ),
-              e.onSetedECLang())
-          }
-        ),
-        setLangToEC(e, n))
-  }
-  ;(e.init = {}),
-    (e.init.initSDK = function (e, n) {
-      new SFCommon.BaseAPI(e, n, initSDK).invoke()
-    }),
-    (e.init.getManifest = function (e, n) {
-      new SFCommon.BaseAPI(e, n, getManifest).invoke()
-    }),
-    (e.init.getLanguageFile = function (e, n) {
-      new SFCommon.BaseAPI(e, n, getLanguageFile).invoke()
-    }),
-    (e.init.getLang = function (e, n) {
-      new SFCommon.BaseAPI(e, n, getLang).invoke()
-    }),
-    (e.init.setLang = function (e, n) {
-      new SFCommon.BaseAPI(e, n, setLang).invoke()
-    })
-})(SF)
+})(SFAPI)
