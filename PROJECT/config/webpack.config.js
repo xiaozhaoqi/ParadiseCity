@@ -400,6 +400,8 @@ module.exports = function (webpackEnv) {
                       },
                     },
                   ],
+                  [require.resolve('@babel/plugin-transform-export-namespace-from'),],
+                  [require.resolve("@babel/plugin-proposal-private-methods"), { loose: true }]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -425,6 +427,7 @@ module.exports = function (webpackEnv) {
                     require.resolve('babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
+                  [require.resolve("@babel/preset-env"),]
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled

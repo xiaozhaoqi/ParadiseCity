@@ -22,11 +22,11 @@ export default withRouter((props) => {
   }, [props.articleList])
   return (
     <div className={ styles['main-container'] }>
-      <a className={ styles['back-v2ex'] } onClick={ () => {
+      {/* <a className={ styles['back-v2ex'] } onClick={ () => {
         props.history.push('/ParadiseCity')
       } }>
         体验新版
-      </a>
+      </a> */}
       <div className={ styles['catagory'] }>
         {
           props.articleList.map((item) => {

@@ -115,13 +115,13 @@ export default class Layout extends React.Component {
 
   render() {
     return (
-      <Router history={ history }>
-        <nav className={ styles['sider-menu'] }>
-          {/* <label htmlFor='color' title="点击更换文字颜色">👫</label> */ }
-          {/* <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link> */ }
-          <Link to='/ParadiseCity/write' style={ { float: 'right', 'line-height': '2em' } }>✍</Link>
-          <Link to='/ParadiseCity/way2explore' style={ { float: 'right' } }>📂</Link>
-          <span className={ styles['scroll-tips'] }>
+      <Router history={history}>
+        <nav className={styles['sider-menu']}>
+          {/* <label htmlFor='color' title="点击更换文字颜色">👫</label> */}
+          {/* <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link> */}
+          <Link to='/ParadiseCity/write' style={{ float: 'right', 'line-height': '2em' }}>✍</Link>
+          <a href='./calendar' style={{ float: 'right' }}>📅</a>
+          <span className={styles['scroll-tips']}>
             <Link to='/ParadiseCity/'>
               {/* <span>为</span>
               <span className={ styles['hide-title'] }>而不争，和而不同</span> */}
@@ -142,18 +142,18 @@ export default class Layout extends React.Component {
               this.forceUpdate()
             }
           } }>👣</label> */}
-          <input type='color' id='color' onChange={ this.coloring } />
+          <input type='color' id='color' onChange={this.coloring} />
         </nav>
-        <div className={ styles['content'] }>
+        <div className={styles['content']}>
           <Switch>
-            <Route exact path='/ParadiseCity/way2explore'>
-              <Main articleList={ this.state.articleList } />
-            </Route>
             <Route exact path='/ParadiseCity/'>
-              <FlowHome articleList={ this.state.articleList } />
+              <Main articleList={this.state.articleList} />
             </Route>
+            {/* <Route exact path='/ParadiseCity/'>
+              <FlowHome articleList={ this.state.articleList } />
+            </Route> */}
             <Route exact path='/ParadiseCity/article'>
-              <Article article={ this.state.article } />
+              <Article article={this.state.article} />
             </Route>
             <Route exact path='/ParadiseCity/write'>
               <Write />
@@ -163,8 +163,8 @@ export default class Layout extends React.Component {
             </Route>
           </Switch>
         </div>
-        { this.state.loading && <div className={ styles['loading'] }></div> }
-        <div className={ styles['mask'] + (this.state.loading ? '' : ' hide') }></div>
+        {this.state.loading && <div className={styles['loading']}></div>}
+        <div className={styles['mask'] + (this.state.loading ? '' : ' hide')}></div>
       </Router>
     )
   }

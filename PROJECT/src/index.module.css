@@ -90,6 +90,7 @@ input[type="file"] {
 }
 
 .catagory-item {
+  display: inline-block;
   margin: 5px;
   word-break: keep-all;
   white-space: nowrap;
