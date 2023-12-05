@@ -25,16 +25,16 @@
       <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
     </div>
     <div style="margin: 10px; display: flex; justify-content: space-between; align-items: center">
-      <span style="font-weight: bold; font-size: 16px" v-show="isEdit">{{ dateString }}</span>
-      <input type="date" v-model="dateString" @change="changeInputDate" v-show="!isEdit" />
+      <!-- <span style="font-weight: bold; font-size: 16px" v-show="isEdit">{{ dateString }}</span> -->
+      <input type="date" v-model="dateString" @change="changeInputDate" />
       <div>
-        <input type="checkbox" v-model="isEdit" id="edit-btn" style="vertical-align: -2px" />
-        <label for="edit-btn">edit</label>
+        <!-- <input type="checkbox" v-model="isEdit" id="edit-btn" style="vertical-align: -2px" /> -->
+        <!-- <label for="edit-btn">edit</label> -->
       </div>
     </div>
-    <div class="date-content" v-show="!isEdit">{{ dateContent }}</div>
-    <textarea class="date-content" style="height: 50vh; width: 100%" v-show="isEdit" v-model="dateContent" />
-    <button @click="updateDateContent" v-show="isEdit" class="update-btn">update</button>
+    <!-- <div class="date-content" v-show="!isEdit">{{ dateContent }}</div> -->
+    <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" />
+    <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status }}</span></button>
   </div>
 </template>
 
@@ -56,14 +56,29 @@ export default {
       itemList: [],
       selected: [],
       events: [],
+      status: '',
       dateString: '',
       dateContent: '',
       isEdit: false,
-      curSha: ''
+      curSha: '',
+      temp: `
+      运动：
+      饮食：
+      其他：
+      `
     }
   },
-  mounted() {
-    this.init()
+  async mounted() {
+    // this.calendar()
+    this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
+      }-${this.day < 10 ? '0' + this.day : this.day}`
+    try {
+      const item = await req.getArticle('1996-10-13')
+      this.events = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
+      this.calendar()
+    } catch (error) {
+    }
+    this.clickItem(this.dateString)
   },
   methods: {
     changeInputDate(e) {
@@ -73,14 +88,17 @@ export default {
     },
     async updateDateContent() {
       // update
-      req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
-      this.isEdit = false
-    },
-    async init(group3) {
-      this.calendar()
-      this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
-        }-${this.day < 10 ? '0' + this.day : this.day}`
-      this.clickItem(this.dateString)
+      try {
+        await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
+        // this.isEdit = false
+        this.status = 'success!'
+        setTimeout(() => {
+          this.status = ''
+        }, 1000);
+      } catch (error) {
+        this.status = '没存上，再来！'
+      }
+
     },
     clickDate() {
       this.date = new Date()
@@ -93,13 +111,17 @@ export default {
       this.$emit('clickDay', dateString)
       this.dateString = dateString
       // query day event
+      this.calendar()
+      this.dateContent = ''
       try {
         const item = await req.getArticle(dateString)
         this.dateContent = decodeURIComponent(atob(item.content))
         this.curSha = item.sha
       } catch (error) {
-        this.dateContent = ''
-        this.curSha = ''
+        if (this.dateString == dateString) {
+          this.dateContent = this.temp
+          this.curSha = ''
+        }
       }
     },
     prev(type) {
@@ -134,13 +156,7 @@ export default {
       this.day = this.date.getDate() // 取当前日
 
       // query month event list
-      req.getArticleList()
-      this.events = [
-        { dateString: '2023-12-04', desc: 'test1' },
-        { dateString: '2023-12-11', desc: 'test2' },
-        { dateString: '2023-12-25', desc: 'test3', emojimark: '❤' },
-        { dateString: '2023-12-30', desc: 'test4', emojimark: 'emoji' }
-      ]
+      // req.getArticleList()
       this.firstDay =
         (new Date(this.year, this.month, 1).getDay() == 0
           ? 7
@@ -167,6 +183,7 @@ export default {
             j == new Date().getDate(),
           dateString,
           key: dateString,
+          selected: this.dateString == dateString,
           marked: !!markDate,
           desc: markDate ? markDate.desc : '',
           events: this.events.filter((v) => v.dateString == dateString)

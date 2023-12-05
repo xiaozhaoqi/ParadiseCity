@@ -3,7 +3,7 @@
     <div :class="{ day: true, actived, weekend: !!isWeekend }">
       {{ value ? value : '' }}
     </div>
-    <!-- <div class="marked" v-if="marked"></div> -->
+    <div class="selected" v-if="selected"></div>
     <div class="xiu" v-if="emojimark">{{ emojimark }}</div>
     <!-- <div class="bottom">
       <div class="yingji" v-if="yingji"></div>
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  props: ['value', 'actived', 'dateString', 'marked', 'isWeekend', 'events'],
+  props: ['value', 'actived', 'dateString', 'selected', 'marked', 'isWeekend', 'events'],
   data: function () {
     let events = this.events || []
     return {
@@ -42,6 +42,7 @@ export default {
   &.banbenri {
     background: #ecf1fe;
   }
+
   /* border: 1px solid #999; */
   margin-top: 4px;
   cursor: pointer;
@@ -53,6 +54,7 @@ export default {
   text-align: center;
   line-height: 32px;
   font-size: 16px;
+
   .actived {
     margin: 3px auto;
     width: 24px;
@@ -62,44 +64,52 @@ export default {
     border-radius: 50%;
     color: #fff;
   }
+
   .weekend {
     color: #b7bcc0;
   }
-  .day {
-  }
-  .marked {
+
+  .day {}
+
+  .selected {
     position: absolute;
-    top: 7px;
-    right: 5px;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background-color: #02a7f0;
   }
+
   .xiu,
   .ban {
     position: absolute;
-    top: 0;
+    top: -5px;
     right: 0;
     font-size: 8px;
     color: #0a8750;
     font-weight: 400;
     line-height: 1em;
   }
+
   .ban {
     color: #c30000;
   }
+
   .yingji {
     background: #c30000;
     margin-right: 1px;
     height: 3px;
     width: 40%;
   }
+
   .kuaisujinji {
     background: #f4b346;
     height: 3px;
     width: 40%;
   }
+
   .bottom {
     position: absolute;
     bottom: 0;
