@@ -3,12 +3,12 @@
     <div :class="{ day: true, actived, weekend: !!isWeekend }">
       {{ value ? value : '' }}
     </div>
-    <div class="selected" v-if="selected"></div>
+    <!-- <div class="selected" v-if="selected"></div> -->
     <div class="xiu" v-if="emojimark">{{ emojimark }}</div>
-    <!-- <div class="bottom">
-      <div class="yingji" v-if="yingji"></div>
-      <div class="kuaisujinji" v-if="kuaisujinji"></div>
-    </div> -->
+    <div class="bottom">
+      <div class="kuaisujinji" v-if="marked && !selected"></div>
+      <div class="yingji" v-if="selected"></div>
+    </div>
   </div>
 </template>
 
@@ -98,16 +98,16 @@ export default {
   }
 
   .yingji {
-    background: #c30000;
+    background: #f4b346;
     margin-right: 1px;
     height: 3px;
-    width: 40%;
+    width: 50%;
   }
 
   .kuaisujinji {
-    background: #f4b346;
+    background: #0a8750;
     height: 3px;
-    width: 40%;
+    width: 50%;
   }
 
   .bottom {

@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- <div class="date-content" v-show="!isEdit">{{ dateContent }}</div> -->
-    <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" />
+    <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" placeholder="今天你运动了吗？" />
     <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status }}</span></button>
   </div>
 </template>
@@ -56,31 +56,37 @@ export default {
       itemList: [],
       selected: [],
       events: [],
+      markList: [],
       status: '',
       dateString: '',
       dateContent: '',
       isEdit: false,
       curSha: '',
-      temp: `
-      运动：
-      饮食：
-      其他：
-      `
+      temp: ``
     }
   },
   async mounted() {
-    // this.calendar()
     this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
       }-${this.day < 10 ? '0' + this.day : this.day}`
-    try {
-      const item = await req.getArticle('1996-10-13')
-      this.events = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
-      this.calendar()
-    } catch (error) {
-    }
+    await this.init()
     this.clickItem(this.dateString)
   },
   methods: {
+    async init() {
+      try {
+        const item = await req.getArticle('1996-10-13')
+        this.events = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
+        this.calendar()
+      } catch (error) {
+      }
+      try {
+        let markList = await req.getArticleList()
+        this.markList = markList.filter(v => v.size > 1).map(v => v.name.slice(0, -3))
+        this.calendar()
+      } catch (error) {
+      }
+
+    },
     changeInputDate(e) {
       this.date = new Date(this.dateString)
       this.clickItem(this.dateString)
@@ -92,6 +98,7 @@ export default {
         await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
         // this.isEdit = false
         this.status = 'success!'
+        this.init()
         setTimeout(() => {
           this.status = ''
         }, 1000);
@@ -110,9 +117,10 @@ export default {
       }
       this.$emit('clickDay', dateString)
       this.dateString = dateString
+
       // query day event
       this.calendar()
-      this.dateContent = ''
+      this.dateContent = 'loading...'
       try {
         const item = await req.getArticle(dateString)
         this.dateContent = decodeURIComponent(atob(item.content))
@@ -156,7 +164,6 @@ export default {
       this.day = this.date.getDate() // 取当前日
 
       // query month event list
-      // req.getArticleList()
       this.firstDay =
         (new Date(this.year, this.month, 1).getDay() == 0
           ? 7
@@ -184,7 +191,7 @@ export default {
           dateString,
           key: dateString,
           selected: this.dateString == dateString,
-          marked: !!markDate,
+          marked: this.markList.findIndex(v => v.indexOf(dateString) > -1) > -1,
           desc: markDate ? markDate.desc : '',
           events: this.events.filter((v) => v.dateString == dateString)
         })
@@ -201,7 +208,6 @@ export default {
   bottom: 0;
   height: 50px;
   width: 100%;
-  background: #076cfa;
 }
 
 .date-content {
@@ -256,7 +262,6 @@ export default {
     align-items: center;
     flex-wrap: nowrap;
     font-size: 15px;
-    color: #1e3a8e;
     letter-spacing: 0;
     line-height: 24px;
     font-weight: 700;
@@ -277,7 +282,6 @@ export default {
   .calendar-month {
     text-align: center;
     margin: 10px 0;
-    color: #222;
   }
 
   .calendar-day {
@@ -286,7 +290,6 @@ export default {
 
     span {
       display: inline-block;
-      color: #222;
       text-align: center;
       height: 32px;
       width: 34px;
