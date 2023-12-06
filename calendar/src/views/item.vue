@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     clickItem() {
-      this.$emit('clickItem', this.dateString)
+      this.value && this.$emit('clickItem', this.dateString)
     }
   }
 }
@@ -85,7 +85,7 @@ export default {
   .xiu,
   .ban {
     position: absolute;
-    top: -5px;
+    top: -2px;
     right: 0;
     font-size: 8px;
     color: #0a8750;

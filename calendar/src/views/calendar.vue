@@ -1,14 +1,10 @@
 <template>
-  <div class="calendar">
+  <div class="calendar" @touchmove="touchmove" @touchstart="touchstart" v-if="pwd == '1225'">
     <div><a href="../">🔙</a></div>
     <div class="calendar-tip">
-      <span class="prev-year" @click="prev('year')" title="前一年">{{ '<<' }}</span>
-          <span class="prev-month" @click="prev('month')" title="前一月">{{ '<' }}</span>
-              <span class="date-desc" title="当前日期" @click="clickDate">
-                {{ `${year}-${month + 1}` }}
-              </span>
-              <span class="next-month" @click="next('month')" title="后一月">{{ '>' }}</span>
-              <span class="next-year" @click="next('year')" title="后一年">{{ '>>' }}</span>
+      <span class="date-desc" title="当前日期" @click="clickDate">
+        {{ `${year}-${month + 1}` }}
+      </span>
     </div>
     <div class="calendar-day">
       <Item v-for="(item, index) in [
@@ -24,17 +20,40 @@
     <div class="calendar-day">
       <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
     </div>
-    <div style="margin: 10px; display: flex; justify-content: space-between; align-items: center">
-      <!-- <span style="font-weight: bold; font-size: 16px" v-show="isEdit">{{ dateString }}</span> -->
+    <div style="margin: 10px 0;">
       <input type="date" v-model="dateString" @change="changeInputDate" />
-      <div>
-        <!-- <input type="checkbox" v-model="isEdit" id="edit-btn" style="vertical-align: -2px" /> -->
-        <!-- <label for="edit-btn">edit</label> -->
-      </div>
+      <!-- <span style="font-size: 13px;">待办事项</span> -->
+      <!-- <span class="prev-year" @click="prev('year')">前一年</span>
+      <span class="prev-month" @click="prev('month')">前一月</span>
+      <span class="next-month" @click="next('month')">后一月</span>
+      <span class="next-year" @click="next('year')">后一年</span> -->
     </div>
-    <!-- <div class="date-content" v-show="!isEdit">{{ dateContent }}</div> -->
+
     <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" placeholder="今天你运动了吗？" />
-    <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status }}</span></button>
+    <div style="display: flex;">
+      <div>
+        <p style="font-size: 13px;font-weight: bold;">往年今日</p>
+        <div v-for="item in history" :key="item.key">
+          <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+          <p style="font-size: 12px;">{{ item.content }}</p>
+        </div>
+      </div>
+      <!-- <div style="flex: 0 0 50%;">
+        <p style="font-size: 13px;font-weight: bold;">待办事项</p>
+        <div v-for="item in todoList" :key="item.key">
+          <p style="font-size: 13px;font-weight: bold;">{{ item.dateString }}</p>
+          <p style="font-size: 12px;">
+            <input style="vertical-align: -2px;" type="checkbox" v-model="item.state">
+            {{ item.content }}
+          </p>
+        </div>
+      </div> -->
+    </div>
+    <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status
+    }}</span></button>
+  </div>
+  <div v-else>
+    <input type="password" v-model="pwd" placeholder="输入密码" @change="changepwd">
   </div>
 </template>
 
@@ -48,6 +67,8 @@ export default {
     const date = new Date()
     return {
       date,
+      todoList: [],
+      pwd: localStorage.getItem('pwd'),
       year: date.getFullYear(),
       month: date.getMonth(),
       day: date.getDate(),
@@ -62,7 +83,12 @@ export default {
       dateContent: '',
       isEdit: false,
       curSha: '',
-      temp: ``
+      history: [],
+      temp: ``,
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
     }
   },
   async mounted() {
@@ -72,10 +98,48 @@ export default {
     this.clickItem(this.dateString)
   },
   methods: {
+    changepwd() {
+      if (this.pwd == '1225') {
+        localStorage.setItem('pwd', '1225')
+      }
+    },
+    touchstart(e) {
+      this.startX = e.targetTouches[0].pageX;
+      this.startY = e.targetTouches[0].pageY;
+    },
+    touchmove(e) {
+      this.endX = e.targetTouches[0].pageX;
+      this.endY = e.targetTouches[0].pageY;
+      let dValueX = Math.abs(this.startX - this.endX);
+      let dValueY = Math.abs(this.startY - this.endY);
+      const stopRange = window.screen.width / 3;
+      // 水平滑动长度大于纵向滑动长度，选择水平滑动
+      if (dValueX > dValueY) {
+        if (dValueX > stopRange) {
+          if (this.startX <= this.endX) {
+            this.prev('month')
+          } else {
+            this.next('month')
+          }
+          this.startX = 0;
+          this.startY = 0
+        }
+        e.preventDefault();
+      } else {
+        e.preventDefault();
+      }
+
+    },
     async init() {
       try {
-        const item = await req.getArticle('1996-10-13')
+        const item = await req.getArticle('1996-10-13') // 标记
         this.events = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
+        this.calendar()
+      } catch (error) {
+      }
+      try {
+        const item = await req.getArticle('1995-12-25') // 待办
+        this.todoList = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], content: v.split(' ')[1], state: false }))
         this.calendar()
       } catch (error) {
       }
@@ -129,6 +193,17 @@ export default {
         if (this.dateString == dateString) {
           this.dateContent = this.temp
           this.curSha = ''
+        }
+      }
+      this.history = []
+      for (let i = Number(dateString.slice(0, 4)) - 1; i > 2011; i--) {
+        try {
+          const item = await req.getArticle(`${i}${dateString.slice(4)}`)
+          this.history.push({
+            date: `${i}${dateString.slice(4)}`,
+            content: decodeURIComponent(atob(item.content))
+          })
+        } catch (error) {
         }
       }
     },
@@ -211,7 +286,6 @@ export default {
 }
 
 .date-content {
-  margin: 10px;
   font-size: 14px;
   line-height: 1.5em;
   font-weight: normal;
@@ -258,7 +332,7 @@ export default {
     cursor: pointer;
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
     font-size: 15px;

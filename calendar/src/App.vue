@@ -1,6 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import Calendar from './views/calendar.vue'
+import Calendar from './views/calendar.vue' 
 </script>
 
 <template>
