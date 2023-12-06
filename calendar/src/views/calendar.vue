@@ -2,9 +2,13 @@
   <div class="calendar" @touchmove="touchmove" @touchstart="touchstart" v-if="pwd == '1225'">
     <div><a href="../">🔙</a></div>
     <div class="calendar-tip">
-      <span class="date-desc" title="当前日期" @click="clickDate">
+      <span class="prev-year" @click="prev('year')">上年</span>
+      <span class="prev-month" @click="prev('month')">上月</span>
+      <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickDate">
         {{ `${year}-${month + 1}` }}
       </span>
+      <span class="next-month" @click="next('month')">下月</span>
+      <span class="next-year" @click="next('year')">下年</span>
     </div>
     <div class="calendar-day">
       <Item v-for="(item, index) in [
@@ -20,13 +24,8 @@
     <div class="calendar-day">
       <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
     </div>
-    <div style="margin: 10px 0;">
+    <div style="margin: 10px 0;font-size: 14px;">
       <input type="date" v-model="dateString" @change="changeInputDate" />
-      <!-- <span style="font-size: 13px;">待办事项</span> -->
-      <!-- <span class="prev-year" @click="prev('year')">前一年</span>
-      <span class="prev-month" @click="prev('month')">前一月</span>
-      <span class="next-month" @click="next('month')">后一月</span>
-      <span class="next-year" @click="next('year')">后一年</span> -->
     </div>
 
     <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" placeholder="今天你运动了吗？" />
@@ -332,10 +331,10 @@ export default {
     cursor: pointer;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex-wrap: nowrap;
-    font-size: 15px;
+    font-size: 12px;
     letter-spacing: 0;
     line-height: 24px;
     font-weight: 700;
