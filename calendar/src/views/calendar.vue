@@ -126,7 +126,7 @@ export default {
         }
         e.preventDefault();
       } else {
-        e.preventDefault();
+        // e.preventDefault();
       }
 
     },
