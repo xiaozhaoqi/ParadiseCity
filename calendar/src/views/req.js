@@ -69,9 +69,6 @@ async function sendNewArticle({ title, content, sha }) {
         .then((res) => {
             return true
         })
-        .catch((err) => {
-            return false
-        })
 }
 async function updateArticle(sha, oldTitle, newTitle, oldCatagory, newCatagory, createTime, content, author) {
     // 私有库仅以文件名作为标识，使用先删除再新增的方式，可以满足对文件名进行变更的需要。

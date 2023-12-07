@@ -51,7 +51,7 @@
         </div>
       </div> -->
       </div>
-      <button @click="updateDateContent" class="update-btn">Save <span>{{ status
+      <button @click="updateDateContent" class="update-btn">😆 <br><span style="color:red;font-size: 20px;">{{ status
       }}</span></button>
     </div>
     <div v-else>
@@ -193,7 +193,7 @@ export default {
         this.init()
         setTimeout(() => {
           this.status = ''
-        }, 1000);
+        }, 2000);
       } catch (error) {
         this.status = '没存上，再来！'
       }
@@ -314,16 +314,7 @@ export default {
   opacity: 0;
 }
 </style>
-<style lang="postcss" > body {
-   background:
-     linear-gradient(135deg, #ECEDDC 25%, transparent 10%) -50px 0,
-     linear-gradient(225deg, #ECEDDC 25%, transparent 10%) -50px 0,
-     linear-gradient(315deg, #ECEDDC 25%, transparent 10%),
-     linear-gradient(45deg, #ECEDDC 25%, transparent 10%);
-   background-size: 100px 100px;
- }
-
- .typed-out {
+<style lang="postcss" > .typed-out {
    overflow: hidden;
    animation:
      typing 2s steps(20, end) forwards;
@@ -349,19 +340,17 @@ export default {
  }
 
  .update-btn {
-   color: #333;
-   font-size: 20px;
+   font-size: 32px;
    font-weight: bold;
-   background-color: white;
-   background-image: linear-gradient(90deg, rgba(200, 0, 0, .5) 50%, transparent 50%),
-     linear-gradient(rgba(200, 0, 0, .5) 50%, transparent 50%);
-   background-size: 50px 50px;
    position: fixed;
    left: 0;
    right: 0;
-   bottom: 0;
-   height: 50px;
+   bottom: 30px;
+   background: transparent;
+   margin: auto;
+   border: none;
    width: 100%;
+   border-radius: 100px;
  }
 
  .date-content {
