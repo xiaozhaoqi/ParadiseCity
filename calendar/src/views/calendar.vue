@@ -51,19 +51,31 @@
     <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status
     }}</span></button>
   </div>
-  <div v-else class="bg" style="float: right;">
-    <img :src="bg" alt="">
-    <span style="width: 50px;
+  <div v-else class="bg">
+    <img :src="bg" alt="" style="position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    margin: auto;
+    z-index: -1;">
+    <span style="position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    margin: auto;width: 50px;
     font-size: 10px;
     height: 50px;border: none;
-    box-shadow: rgba(0, 0, 0, 0.3) 4px -4px 10px 1px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 2px;
     border-radius: 50%;display: block;
     background: #fff;
     line-height: 50px;
     text-align: center;" @click="pwd = '1225'">
       芝麻开门
     </span>
-    <!-- <input type="password" v-model="pwd" placeholder="" @change="changepwd"> -->
   </div>
 </template>
 
@@ -286,112 +298,101 @@ export default {
   }
 }
 </script>
-<style lang="postcss" scoped>
-.bg>img {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: -1;
-}
+<style lang="postcss" scoped> .update-btn {
+   position: fixed;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   height: 50px;
+   width: 100%;
+ }
 
-.update-btn {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 50px;
-  width: 100%;
-}
+ .date-content {
+   font-size: 14px;
+   line-height: 1.5em;
+   font-weight: normal;
+ }
 
-.date-content {
-  font-size: 14px;
-  line-height: 1.5em;
-  font-weight: normal;
-}
+ .gray {
+   color: rgba(51, 51, 51, 0.5) !important;
+ }
 
-.gray {
-  color: rgba(51, 51, 51, 0.5) !important;
-}
+ .calrow:last-child .oldline {
+   display: none;
+ }
 
-.calrow:last-child .oldline {
-  display: none;
-}
+ .oldline {
+   position: absolute;
+   border-radius: 4px;
+   left: 95px;
+   top: 15px;
+   width: 14px;
+   height: 80px;
+   background: #ecf1fe;
+ }
 
-.oldline {
-  position: absolute;
-  border-radius: 4px;
-  left: 95px;
-  top: 15px;
-  width: 14px;
-  height: 80px;
-  background: #ecf1fe;
-}
+ .calline {
+   width: 14px;
+   background-image: linear-gradient(180deg, #076cfa 0%, #a0bffd 100%);
+   position: absolute;
+   top: 30px;
+   bottom: 70px;
+   left: 115px;
+   border-radius: 8px;
 
-.calline {
-  width: 14px;
-  background-image: linear-gradient(180deg, #076cfa 0%, #a0bffd 100%);
-  position: absolute;
-  top: 30px;
-  bottom: 70px;
-  left: 115px;
-  border-radius: 8px;
+   &.orange {
+     background-image: linear-gradient(180deg, #fa7a0d 0%, #fef1ec 100%);
+   }
+ }
 
-  &.orange {
-    background-image: linear-gradient(180deg, #fa7a0d 0%, #fef1ec 100%);
-  }
-}
+ .calendar {
+   /* width: 260px; */
+   padding-bottom: 100px;
+   margin: auto;
 
-.calendar {
-  /* width: 260px; */
-  padding-bottom: 100px;
-  margin: auto;
+   .calendar-tip {
+     cursor: pointer;
+     position: relative;
+     display: flex;
+     justify-content: space-around;
+     align-items: center;
+     flex-wrap: nowrap;
+     font-size: 12px;
+     letter-spacing: 0;
+     line-height: 24px;
+     font-weight: 700;
+     text-align: center;
+     margin: 10px 0;
 
-  .calendar-tip {
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: nowrap;
-    font-size: 12px;
-    letter-spacing: 0;
-    line-height: 24px;
-    font-weight: 700;
-    text-align: center;
-    margin: 10px 0;
+     .gotoday {
+       position: absolute;
+       right: 0;
+       font-size: 11px;
+       color: #999999;
+       letter-spacing: 0;
+       line-height: 22px;
+       font-weight: 400;
+     }
+   }
 
-    .gotoday {
-      position: absolute;
-      right: 0;
-      font-size: 11px;
-      color: #999999;
-      letter-spacing: 0;
-      line-height: 22px;
-      font-weight: 400;
-    }
-  }
+   .calendar-month {
+     text-align: center;
+     margin: 10px 0;
+   }
 
-  .calendar-month {
-    text-align: center;
-    margin: 10px 0;
-  }
+   .calendar-day {
+     /* padding: 0 15%; */
+     font-size: 12px;
 
-  .calendar-day {
-    /* padding: 0 15%; */
-    font-size: 12px;
-
-    span {
-      display: inline-block;
-      text-align: center;
-      height: 32px;
-      width: 34px;
-      line-height: 32px;
-    }
-  }
-}
+     span {
+       display: inline-block;
+       text-align: center;
+       height: 32px;
+       width: 34px;
+       line-height: 32px;
+     }
+   }
+ }
 </style>
 <style lang="postcss" scoped>
 .tabs {
