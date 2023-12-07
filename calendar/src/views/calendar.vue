@@ -51,8 +51,19 @@
     <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status
     }}</span></button>
   </div>
-  <div v-else>
-    <input type="password" v-model="pwd" placeholder="输入密码" @change="changepwd">
+  <div v-else class="bg" style="float: right;">
+    <img :src="bg" alt="">
+    <span style="width: 50px;
+    font-size: 10px;
+    height: 50px;border: none;
+    box-shadow: rgba(0, 0, 0, 0.3) 4px -4px 10px 1px;
+    border-radius: 50%;display: block;
+    background: #fff;
+    line-height: 50px;
+    text-align: center;" @click="pwd = '1225'">
+      芝麻开门
+    </span>
+    <!-- <input type="password" v-model="pwd" placeholder="" @change="changepwd"> -->
   </div>
 </template>
 
@@ -65,6 +76,7 @@ export default {
   data: function () {
     const date = new Date()
     return {
+      bg: `bg (${String(Date.now()).slice(-1)}).jpg`,
       date,
       todoList: [],
       pwd: localStorage.getItem('pwd'),
@@ -275,6 +287,16 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+.bg>img {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+}
+
 .update-btn {
   position: fixed;
   left: 0;

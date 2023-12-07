@@ -23,29 +23,7 @@ async function getArticleList() {
             return res
         })
         .catch(() => {
-            alert(`你的网络环境很可能受到了网络运营商的DNS污染，导致你无法与GitHub服务器通信。\n每次污染可能持续几小时，你可以尝试更换DNS服务或绑定Host地址。`)
-            const pre = document.createElement('pre')
-            pre.append(`Host地址表：
-      151.101.44.249 github.global.ssl.fastly.net
-      192.30.253.113 github.com
-      103.245.222.133 assets-cdn.github.com
-      23.235.47.133 assets-cdn.github.com
-      203.208.39.104 assets-cdn.github.com
-      204.232.175.78 documentcloud.github.com
-      204.232.175.94 gist.github.com
-      107.21.116.220 help.github.com
-      207.97.227.252 nodeload.github.com
-      199.27.76.130 raw.github.com
-      107.22.3.110 status.github.com
-      204.232.175.78 training.github.com
-      207.97.227.243 www.github.com
-      185.31.16.184 github.global.ssl.fastly.net
-      151.101.0.0/22 avatars0.githubusercontent.com
-      151.101.0.0/22 avatars1.githubusercontent.com
-      151.101.0.0/22 avatars2.githubusercontent.com
-      151.101.0.0/22 avatars3.githubusercontent.com
-      199.232.28.133 cloud.githubusercontent.com`)
-            document.querySelector('nav').appendChild(pre)
+
             return []
         })
 }
