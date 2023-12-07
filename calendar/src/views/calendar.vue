@@ -361,10 +361,6 @@ export default {
    font-weight: normal;
  }
 
- .gray {
-   color: rgba(51, 51, 51, 0.5) !important;
- }
-
  .calrow:last-child .oldline {
    display: none;
  }
