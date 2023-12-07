@@ -1,43 +1,46 @@
 <template>
-  <div class="calendar" @touchmove="touchmove" @touchstart="touchstart" v-if="pwd == '1225'">
-    <div><a href="../">🔙</a></div>
-    <div class="calendar-tip">
-      <span class="prev-year" @click="prev('year')">上年</span>
-      <span class="prev-month" @click="prev('month')">上月</span>
-      <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickDate">
-        {{ `${year}-${month + 1}` }}
-      </span>
-      <span class="next-month" @click="next('month')">下月</span>
-      <span class="next-year" @click="next('year')">下年</span>
-    </div>
-    <div class="calendar-day">
-      <Item v-for="(item, index) in [
-        { value: '一' },
-        { value: '二' },
-        { value: '三' },
-        { value: '四' },
-        { value: '五' },
-        { value: '六' },
-        { value: '日' }
-      ]" :key="item.key" v-bind="item" />
-    </div>
-    <div class="calendar-day">
-      <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
-    </div>
-    <div style="margin: 10px 0;font-size: 14px;">
-      <input type="date" v-model="dateString" @change="changeInputDate" />
-    </div>
+  <Transition>
 
-    <textarea class="date-content" style="height: 50vh; width: 100%" v-model="dateContent" placeholder="今天你运动了吗？" />
-    <div style="display: flex;">
-      <div>
-        <p style="font-size: 13px;font-weight: bold;">往年今日</p>
-        <div v-for="item in history" :key="item.key">
-          <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
-          <p style="font-size: 12px;">{{ item.content }}</p>
-        </div>
+    <div class="calendar bg" @touchmove="touchmove" @touchstart="touchstart" v-if="pwd == '1225'">
+      <div><a href="../">🔙</a></div>
+      <div class="calendar-tip">
+        <span class="prev-year" @click="prev('year')">上年</span>
+        <span class="prev-month" @click="prev('month')">上月</span>
+        <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickDate">
+          {{ `${year}-${month + 1}` }}
+        </span>
+        <span class="next-month" @click="next('month')">下月</span>
+        <span class="next-year" @click="next('year')">下年</span>
       </div>
-      <!-- <div style="flex: 0 0 50%;">
+      <div class="calendar-day">
+        <Item v-for="(item, index) in [
+          { value: '一' },
+          { value: '二' },
+          { value: '三' },
+          { value: '四' },
+          { value: '五' },
+          { value: '六' },
+          { value: '日' }
+        ]" :key="item.key" v-bind="item" />
+      </div>
+      <div class="calendar-day">
+        <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
+      </div>
+      <div style="margin: 10px 0;font-size: 14px;">
+        <input type="date" v-model="dateString" @change="changeInputDate" />
+      </div>
+
+      <textarea class="date-content" style="height: 50vh;width: 100%" v-model="dateContent"
+        placeholder="今天你运动了吗？点我记录一下吧" />
+      <div style="display: flex;">
+        <div>
+          <p style="font-size: 13px;font-weight: bold;">往年今日</p>
+          <div v-for="item in history" :key="item.key">
+            <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+            <p style="font-size: 12px;">{{ item.content }}</p>
+          </div>
+        </div>
+        <!-- <div style="flex: 0 0 50%;">
         <p style="font-size: 13px;font-weight: bold;">待办事项</p>
         <div v-for="item in todoList" :key="item.key">
           <p style="font-size: 13px;font-weight: bold;">{{ item.dateString }}</p>
@@ -47,12 +50,12 @@
           </p>
         </div>
       </div> -->
+      </div>
+      <button @click="updateDateContent" class="update-btn">Save <span>{{ status
+      }}</span></button>
     </div>
-    <button @click="updateDateContent" class="update-btn">update <span style="color:red">{{ status
-    }}</span></button>
-  </div>
-  <div v-else class="bg">
-    <img :src="bg" alt="" style="position: fixed;
+    <div v-else>
+      <img :src="bg" alt="" style="position: fixed;
     left: 0;
     right: 0;
     top: 0;
@@ -60,23 +63,25 @@
     width: 100%;
     margin: auto;
     z-index: -1;">
-    <span style="position: fixed;
+      <span style="position: fixed;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     width: 100%;
+    font-weight: bold;
     margin: auto;width: 50px;
     font-size: 10px;
     height: 50px;border: none;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 2px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;
     border-radius: 50%;display: block;
     background: #fff;
     line-height: 50px;
     text-align: center;" @click="pwd = '1225'">
-      芝麻开门
-    </span>
-  </div>
+        芝麻开门
+      </span>
+    </div>
+  </Transition>
 </template>
 
 <script>
@@ -135,7 +140,7 @@ export default {
       this.endY = e.targetTouches[0].pageY;
       let dValueX = Math.abs(this.startX - this.endX);
       let dValueY = Math.abs(this.startY - this.endY);
-      const stopRange = window.screen.width / 3;
+      const stopRange = window.screen.width / 5;
       // 水平滑动长度大于纵向滑动长度，选择水平滑动
       if (dValueX > dValueY) {
         if (dValueX > stopRange) {
@@ -298,7 +303,59 @@ export default {
   }
 }
 </script>
-<style lang="postcss" scoped> .update-btn {
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
+<style lang="postcss" > body {
+   background:
+     linear-gradient(135deg, #ECEDDC 25%, transparent 10%) -50px 0,
+     linear-gradient(225deg, #ECEDDC 25%, transparent 10%) -50px 0,
+     linear-gradient(315deg, #ECEDDC 25%, transparent 10%),
+     linear-gradient(45deg, #ECEDDC 25%, transparent 10%);
+   background-size: 100px 100px;
+ }
+
+ .typed-out {
+   overflow: hidden;
+   animation:
+     typing 2s steps(20, end) forwards;
+   width: 0;
+ }
+
+ @keyframes typing {
+   from {
+     white-space: nowrap;
+     width: 0
+   }
+
+   to {
+     white-space: wrap;
+     width: 100%
+   }
+ }
+
+ .bg {
+   padding: 1rem;
+   height: 100%;
+   background: #fff;
+ }
+
+ .update-btn {
+   color: #333;
+   font-size: 20px;
+   font-weight: bold;
+   background-color: white;
+   background-image: linear-gradient(90deg, rgba(200, 0, 0, .5) 50%, transparent 50%),
+     linear-gradient(rgba(200, 0, 0, .5) 50%, transparent 50%);
+   background-size: 50px 50px;
    position: fixed;
    left: 0;
    right: 0;
@@ -308,6 +365,8 @@ export default {
  }
 
  .date-content {
+   border: none;
+   outline: none;
    font-size: 14px;
    line-height: 1.5em;
    font-weight: normal;
@@ -346,7 +405,7 @@ export default {
  }
 
  .calendar {
-   /* width: 260px; */
+   min-height: 150vh;
    padding-bottom: 100px;
    margin: auto;
 
@@ -421,4 +480,4 @@ export default {
     }
   }
 }
-</style>
+</style> 
