@@ -1,6 +1,6 @@
 // 此Token拥有读写存储库的权限，但无法用于GitHub账户设置
-const leftToken = '61e06fdec3996fbda3c'
-const rightToken = 'eb8094d137bf927e7e5b2'
+const leftToken = 'github_pat_11AFKPCHY0jV4MXPuE7x1s_7oq6f1q7v6N4'
+const rightToken = 'OKkpvrlYIvKpjAiWtKDJ7W4WdLiZRBgT4JGYGJR0DJf9Yny'
 
 
 // 增删改查存储库文件

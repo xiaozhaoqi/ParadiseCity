@@ -30,8 +30,7 @@
         <input type="date" v-model="dateString" @change="changeInputDate" />
       </div>
 
-      <textarea class="date-content" style="height: 50vh;width: 100%" v-model="dateContent"
-        placeholder="今天你运动了吗？点我记录一下吧" />
+      <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent" placeholder="今天你运动了吗？点我记录一下吧" />
       <div style="display: flex;">
         <div>
           <p style="font-size: 13px;font-weight: bold;">往年今日</p>
@@ -50,6 +49,41 @@
           </p>
         </div>
       </div> -->
+      </div>
+      <div>
+        <div>
+          <p style="font-size: 13px;font-weight: bold;margin-top: 20px;">历史搜索
+            <span v-show="!isSearchAll" style="font-size: 12px;">
+              <input style="margin-right: 4px;" @change="(e) => {
+                if (e.target.value >= 2095) {
+                  searchYear = 2095
+                } if (e.target.value <= 1995) {
+                  searchYear = 1995
+                }
+              }" type="number" v-model="searchYear" min="1995" max="2095">
+              <span style="margin-right: 4px;">年</span>
+              <input style="margin-right: 4px;" @change="(e) => {
+                if (e.target.value >= 12) {
+                  searchMonth = 12
+                } if (e.target.value <= 1) {
+                  searchMonth = 1
+                }
+              }" type="number" v-model="searchMonth" min="1" max="12">
+              <span style="margin-right: 4px;">月</span>
+            </span>
+            <button @click="isSearchAll = !isSearchAll">{{ !isSearchAll ? '全部' : '按月' }}</button>
+          </p>
+
+          <input type="text" v-model="query" :disabled="allowSearch" style="margin-right: 4px;width: 120px;">
+          <button @click="search" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
+          <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
+          <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
+          <div v-for="item in searchResult" :key="item.key">
+            <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+            <p style="font-size: 12px;" v-html="item.content"></p>
+          </div>
+          <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
+        </div>
       </div>
       <button @click="updateDateContent" class="update-btn">😆 <br><span style="color:red;font-size: 20px;">{{ status
       }}</span></button>
@@ -79,6 +113,22 @@
     line-height: 50px;
     text-align: center;" @click="pwd = '1225'">
         芝麻开门
+      </span>
+      <span style="position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0; 
+    font-weight: bold;
+    margin: auto;width: 50px;
+    font-size: 10px;
+    height: 50px;border: none;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;
+    border-radius: 50%;display: block;
+    background: #fff;
+    opacity: 0;
+    line-height: 50px;
+    text-align: center;" @click="savepwd">
+        芝麻开门，别关门了
       </span>
     </div>
   </Transition>
@@ -112,11 +162,19 @@ export default {
       isEdit: false,
       curSha: '',
       history: [],
+      isSearchAll: false,
+      searchResult: [],
+      searchYear: new Date().getFullYear(),
+      searchMonth: new Date().getMonth() + 1,
+      query: '',
       temp: ``,
       startX: 0,
       startY: 0,
       endX: 0,
       endY: 0,
+      allowSearch: false,
+      searchNum: 0,
+      searchNumAll: 0
     }
   },
   async mounted() {
@@ -126,10 +184,9 @@ export default {
     this.clickItem(this.dateString)
   },
   methods: {
-    changepwd() {
-      if (this.pwd == '1225') {
-        localStorage.setItem('pwd', '1225')
-      }
+    savepwd() {
+      localStorage.setItem('pwd', '1225');
+      this.pwd = '1225'
     },
     touchstart(e) {
       this.startX = e.targetTouches[0].pageX;
@@ -203,6 +260,52 @@ export default {
       this.date = new Date()
       this.calendar()
     },
+    async search(e) {
+      this.searchNum = 0
+      this.searchNumAll = 0
+      this.allowSearch = true
+      this.searchResult = []
+      for (let i = 0; i <= this.markList.length - 1; i++) {
+        try {
+          if (this.isSearchAll || String(this.markList[this.markList.length - i]).indexOf(`${this.searchYear}-${String(this.searchMonth).padStart(2, '0')}`) > -1) {
+            this.searchNumAll++
+            setTimeout(() => {
+              if (this.allowSearch) {
+                req.getArticle(this.markList[this.markList.length - i]).then(item => {
+                  this.searchNum++;
+                  let content = decodeURIComponent(atob(item.content))
+                  if (content.indexOf(this.query) > -1) {
+                    content = content.replace(this.query, `<span style="background: yellow;">${this.query}</span>`)
+                    this.searchResult.push({
+                      date: this.markList[this.markList.length - i],
+                      content: content
+                    })
+                  }
+                  if (/[1-9]0+/.test(String(this.searchNum)) || this.searchNum > this.searchNumAll - 3) {
+                    setTimeout(() => {
+                      this.searchResult.sort((a, b) => {
+                        return a.date < b.date ? 1 : -1
+                      })
+                    }, 100);
+                  }
+
+                }).catch(err => {
+
+                }).finally(() => {
+                  if (i == this.markList.length - 1 || this.searchNum == this.searchNumAll) {
+                    this.allowSearch = false;
+                  }
+                })
+              }
+            }, 100 * this.searchNumAll);
+          }
+        } catch (error) {
+
+        }
+
+      }
+
+    },
     async clickItem(dateString) {
       if (this.isEdit) {
         return
@@ -226,11 +329,15 @@ export default {
       this.history = []
       for (let i = Number(dateString.slice(0, 4)) - 1; i > 2011; i--) {
         try {
-          const item = await req.getArticle(`${i}${dateString.slice(4)}`)
-          this.history.push({
-            date: `${i}${dateString.slice(4)}`,
-            content: decodeURIComponent(atob(item.content))
-          })
+          if (this.markList.find(v => v == `${i}${dateString.slice(4)}`)) {
+            const item = await req.getArticle(`${i}${dateString.slice(4)}`)
+            if (this.dateString == dateString) {
+              this.history.push({
+                date: `${i}${dateString.slice(4)}`,
+                content: decodeURIComponent(atob(item.content))
+              })
+            }
+          }
         } catch (error) {
         }
       }
