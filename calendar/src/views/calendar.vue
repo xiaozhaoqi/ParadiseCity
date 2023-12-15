@@ -182,8 +182,7 @@ export default {
       searchNumAll: 0,
       option: {
         grid: {
-          left: 0,
-          right: 0,
+          right: 40,
         },
         tooltip: {
           trigger: 'axis',
