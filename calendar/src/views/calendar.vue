@@ -85,6 +85,9 @@
           <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
         </div>
       </div>
+      <div style="margin: 30px 0 0;overflow: hidden;">
+        <div id="chart" style="width: 100%;height:400px;"></div>
+      </div>
       <button @click="updateDateContent" class="update-btn">😆 <br><span style="color:red;font-size: 20px;">{{ status
       }}</span></button>
     </div>
@@ -137,6 +140,8 @@
 <script>
 import Item from './item.vue'
 import * as req from './req.js'
+import zjnbody from './zjnbody.json'
+import * as echarts from 'echarts'
 export default {
   props: [],
   components: { Item },
@@ -174,7 +179,78 @@ export default {
       endY: 0,
       allowSearch: false,
       searchNum: 0,
-      searchNumAll: 0
+      searchNumAll: 0,
+      option: {
+        grid: {
+          left: 0,
+          right: 0,
+        },
+        tooltip: {
+          trigger: 'axis',
+        },
+        title: {
+          left: 'center',
+          text: '楠楠体重趋势图'
+        },
+        xAxis: {
+          type: 'time',
+          boundaryGap: false
+        },
+        yAxis: {
+          min: 50,
+          max: 80,
+          interval: 2,
+          type: 'value',
+          boundaryGap: [0, '100%']
+        },
+        dataZoom: [
+          {
+            start: 70,
+            end: 100,
+            brushSelect: false
+          }
+        ],
+        series: [
+          {
+            markPoint: {
+              // 设置最大值和最小值
+              data: [
+                {
+                  type: 'max',
+                  name: '我是最大值'
+                },
+                {
+                  type: 'min',
+                  name: '我是最小值'
+                }
+              ]
+            },
+            markLine: {
+              // 设置平均线
+              data: [
+                {
+                  type: 'average',
+                  name: '我是平均值',
+                  color: 'red'
+                }
+              ]
+            },
+            label: {
+              show: true,
+              position: 'top'
+            },
+            itemStyle: {
+              color: 'green'
+            },
+            name: '体重',
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            data: zjnbody
+          }
+        ]
+      }
+
     }
   },
   async mounted() {
@@ -182,6 +258,7 @@ export default {
       }-${this.day < 10 ? '0' + this.day : this.day}`
     await this.init()
     this.clickItem(this.dateString)
+    echarts.init(document.getElementById('chart'), null, { locale: "ZH" }).setOption(this.option);
   },
   methods: {
     savepwd() {
@@ -450,13 +527,12 @@ export default {
    font-size: 32px;
    font-weight: bold;
    position: fixed;
-   left: 0;
-   right: 0;
+   left: 50%;
+   transform: translateX(-50%);
    bottom: 30px;
    background: transparent;
    margin: auto;
    border: none;
-   width: 100%;
    border-radius: 100px;
  }
 
