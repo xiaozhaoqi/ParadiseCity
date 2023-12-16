@@ -101,14 +101,12 @@ export default {
 
   .actived {
     background: #02a7f0;
-    margin-right: 1px;
     height: 3px;
     width: 50%;
   }
 
   .selected {
     background: #f4b346;
-    margin-right: 1px;
     height: 3px;
     width: 50%;
   }

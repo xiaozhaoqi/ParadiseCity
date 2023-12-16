@@ -37,13 +37,14 @@
       <div style="color:red;font-size: 14px; ">{{ status }}</div>
 
       <div>
-        <p style="font-size: 13px;font-weight: bold;">消费</p>
-        <div style="display: flex;justify-content: space-between;">
-          <span style="font-size: 12px;margin-right: 4px; ">今日 {{ money }} 元</span>
-          <span style="font-size: 12px;margin-right: 4px; ">{{ month + 1 }}月 {{ moneyMonth }} 元</span>
-          <span style="font-size: 12px; ">{{ year }}年 {{ moneyYear }} 元</span>
-        </div>
-
+        <p style="font-size: 13px;font-weight: bold;">消费
+          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ year }}年 {{ moneyYear }}
+            元，</span>
+          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ month + 1 }}月 {{
+            moneyMonth }} 元，</span>
+          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ day }}日 {{ money }}
+            元</span>
+        </p>
       </div>
       <div style="display: flex;">
         <div>
@@ -66,8 +67,8 @@
       </div>
 
       <div style="margin: 30px 0 0;overflow: hidden;">
-        <div id="weightChart" style="width: 100%;height:400px;"></div>
-        <div id="moneyChart" style="width: 100%;height:400px;"></div>
+        <div id="weightChart" style="width:100%;height:400px;"></div>
+        <div id="moneyChart" style="width:100%;height:400px;"></div>
       </div>
 
       <div v-show="searchModal" style="
@@ -212,6 +213,7 @@ export default {
       searchNumAll: 0,
       weightOption: {
         grid: {
+          left: 40,
           right: 40,
         },
         tooltip: {
@@ -277,7 +279,7 @@ export default {
               ]
             },
             itemStyle: {
-              color: 'green'
+              color: '#0a8750'
             },
             name: '楠',
             type: 'line',
@@ -307,7 +309,7 @@ export default {
               ]
             },
             itemStyle: {
-              color: 'blue'
+              color: '#02a7f0'
             },
             name: '琦',
             type: 'line',
@@ -385,7 +387,7 @@ export default {
               ]
             },
             itemStyle: {
-              color: 'red'
+              color: '#f4b346'
             },
             name: '消费',
             type: 'line',
@@ -967,6 +969,7 @@ class DB {
 
  .bg {
    padding: 1rem;
+   width: 100%;
    height: 100%;
    background: #fff;
  }
@@ -1035,9 +1038,13 @@ class DB {
      font-size: 12px;
      letter-spacing: 0;
      line-height: 24px;
-     font-weight: 700;
+
      text-align: center;
      margin: 10px 0;
+
+     span {
+       font-weight: bold;
+     }
 
      .gotoday {
        position: absolute;
