@@ -1,7 +1,6 @@
 <template>
   <Transition>
-
-    <div class="calendar bg" @touchmove="touchmove" @touchstart="touchstart" v-if="pwd == '1225'">
+    <div class="calendar bg" v-if="pwd == '1225'">
       <div><a href="../">🔙</a></div>
       <div class="calendar-tip">
         <span class="prev-year" @click="prev('year')">上年</span>
@@ -26,8 +25,10 @@
       <div class="calendar-day">
         <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
       </div>
-      <div style="margin: 10px 0;font-size: 14px;">
+      <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
         <input type="date" v-model="dateString" @change="changeInputDate" />
+        <button @click="clickDate" style="font-size: 12px;margin-left: 10px;">今天</button>
+        <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
       </div>
 
       <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent" placeholder="今天你运动了吗？点我记录一下吧" />
@@ -50,46 +51,59 @@
         </div>
       </div> -->
       </div>
-      <div>
-        <div>
-          <p style="font-size: 13px;font-weight: bold;margin-top: 20px;">历史搜索
-            <span v-show="!isSearchAll" style="font-size: 12px;">
-              <input style="margin-right: 4px;" @change="(e) => {
-                if (e.target.value >= 2095) {
-                  searchYear = 2095
-                } if (e.target.value <= 1995) {
-                  searchYear = 1995
-                }
-              }" type="number" v-model="searchYear" min="1995" max="2095">
-              <span style="margin-right: 4px;">年</span>
-              <input style="margin-right: 4px;" @change="(e) => {
-                if (e.target.value >= 12) {
-                  searchMonth = 12
-                } if (e.target.value <= 1) {
-                  searchMonth = 1
-                }
-              }" type="number" v-model="searchMonth" min="1" max="12">
-              <span style="margin-right: 4px;">月</span>
-            </span>
-            <button @click="isSearchAll = !isSearchAll">{{ !isSearchAll ? '全部' : '按月' }}</button>
-          </p>
 
-          <input type="text" v-model="query" :disabled="allowSearch" style="margin-right: 4px;width: 120px;">
-          <button @click="search" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
-          <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
-          <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
-          <div v-for="item in searchResult" :key="item.key">
-            <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
-            <p style="font-size: 12px;" v-html="item.content"></p>
-          </div>
-          <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
-        </div>
-      </div>
       <div style="margin: 30px 0 0;overflow: hidden;">
         <div id="chart" style="width: 100%;height:400px;"></div>
       </div>
       <button @click="updateDateContent" class="update-btn">😆 <br><span style="color:red;font-size: 20px;">{{ status
       }}</span></button>
+
+      <div v-show="searchModal" style="
+      position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 20px;
+    background: #fff;">
+        <div>
+          <div>
+            <p style="font-size: 13px;font-weight: bold; ">历史搜索
+              <span v-show="!isSearchAll" style="font-size: 12px;">
+                <input style="margin-right: 4px;" @change="(e) => {
+                  if (e.target.value >= 2095) {
+                    searchYear = 2095
+                  } if (e.target.value <= 1995) {
+                    searchYear = 1995
+                  }
+                }" type="number" v-model="searchYear" min="1995" max="2095">
+                <span style="margin-right: 4px;">年</span>
+                <input style="margin-right: 4px;" @change="(e) => {
+                  if (e.target.value >= 12) {
+                    searchMonth = 12
+                  } if (e.target.value <= 1) {
+                    searchMonth = 1
+                  }
+                }" type="number" v-model="searchMonth" min="1" max="12">
+                <span style="margin-right: 4px;">月</span>
+              </span>
+              <button @click="isSearchAll = !isSearchAll">{{ !isSearchAll ? '全部' : '按月' }}</button>
+              <button @click="searchModal = false">关闭</button>
+            </p>
+
+            <input type="text" v-model="query" :disabled="allowSearch" style="margin-right: 4px;width: 120px;">
+            <button @click="search" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
+            <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
+            <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
+            <div v-for="item in searchResult" :key="item.key">
+              <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+              <p style="font-size: 12px;" v-html="item.content"></p>
+            </div>
+            <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-else>
       <img :src="bg" alt="" style="position: fixed;
@@ -150,6 +164,7 @@ export default {
     return {
       bg: `bg (${String(Date.now()).slice(-1)}).jpg`,
       date,
+      searchModal: false,
       todoList: [],
       pwd: localStorage.getItem('pwd'),
       year: date.getFullYear(),
@@ -253,44 +268,24 @@ export default {
     }
   },
   async mounted() {
-    this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
-      }-${this.day < 10 ? '0' + this.day : this.day}`
+    this.datetostr();
     await this.init()
     this.clickItem(this.dateString)
     echarts.init(document.getElementById('chart'), null, { locale: "ZH" }).setOption(this.option);
   },
   methods: {
+    datetostr() {
+      this.year = this.date.getFullYear()
+      this.month = this.date.getMonth() // 取当前月，此数字是实际月份减一
+      this.day = this.date.getDate()
+      this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
+        }-${this.day < 10 ? '0' + this.day : this.day}`
+    },
     savepwd() {
       localStorage.setItem('pwd', '1225');
       this.pwd = '1225'
     },
-    touchstart(e) {
-      this.startX = e.targetTouches[0].pageX;
-      this.startY = e.targetTouches[0].pageY;
-    },
-    touchmove(e) {
-      this.endX = e.targetTouches[0].pageX;
-      this.endY = e.targetTouches[0].pageY;
-      let dValueX = Math.abs(this.startX - this.endX);
-      let dValueY = Math.abs(this.startY - this.endY);
-      const stopRange = window.screen.width / 5;
-      // 水平滑动长度大于纵向滑动长度，选择水平滑动
-      if (dValueX > dValueY) {
-        if (dValueX > stopRange) {
-          if (this.startX <= this.endX) {
-            this.prev('month')
-          } else {
-            this.next('month')
-          }
-          this.startX = 0;
-          this.startY = 0
-        }
-        e.preventDefault();
-      } else {
-        // e.preventDefault();
-      }
 
-    },
     async init() {
       try {
         const item = await req.getArticle('1996-10-13') // 标记
@@ -298,12 +293,12 @@ export default {
         this.calendar()
       } catch (error) {
       }
-      try {
-        const item = await req.getArticle('1995-12-25') // 待办
-        this.todoList = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], content: v.split(' ')[1], state: false }))
-        this.calendar()
-      } catch (error) {
-      }
+      // try {
+      //   const item = await req.getArticle('1995-12-25') // 待办
+      //   this.todoList = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], content: v.split(' ')[1], state: false }))
+      //   this.calendar()
+      // } catch (error) {
+      // }
       try {
         let markList = await req.getArticleList()
         this.markList = markList.filter(v => v.size > 1).map(v => v.name.slice(0, -3))
@@ -334,7 +329,9 @@ export default {
     },
     clickDate() {
       this.date = new Date()
-      this.calendar()
+      this.datetostr();
+      this.calendar();
+      this.clickItem(this.dateString)
     },
     async search(e) {
       this.searchNum = 0
@@ -445,9 +442,9 @@ export default {
       this.calendar()
     },
     async calendar() {
-      this.year = this.date.getFullYear() // 取当前年
+      this.year = this.date.getFullYear()
       this.month = this.date.getMonth() // 取当前月，此数字是实际月份减一
-      this.day = this.date.getDate() // 取当前日
+      this.day = this.date.getDate()
 
       // query month event list
       this.firstDay =
@@ -482,7 +479,34 @@ export default {
           events: this.events.filter((v) => v.dateString == dateString)
         })
       }
-    }
+    },
+    touchstart(e) {
+      this.startX = e.targetTouches[0].pageX;
+      this.startY = e.targetTouches[0].pageY;
+    },
+    touchmove(e) {
+      this.endX = e.targetTouches[0].pageX;
+      this.endY = e.targetTouches[0].pageY;
+      let dValueX = Math.abs(this.startX - this.endX);
+      let dValueY = Math.abs(this.startY - this.endY);
+      const stopRange = window.screen.width / 5;
+      // 水平滑动长度大于纵向滑动长度，选择水平滑动
+      if (dValueX > dValueY) {
+        if (dValueX > stopRange) {
+          if (this.startX <= this.endX) {
+            this.prev('month')
+          } else {
+            this.next('month')
+          }
+          this.startX = 0;
+          this.startY = 0
+        }
+        e.preventDefault();
+      } else {
+        // e.preventDefault();
+      }
+
+    },
   }
 }
 </script>
@@ -536,7 +560,7 @@ export default {
  }
 
  .date-content {
-   border: none;
+   border: 1px solid #c0c0c0;
    outline: none;
    font-size: 14px;
    line-height: 1.5em;
