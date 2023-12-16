@@ -2,10 +2,10 @@
   <Transition>
     <div class="calendar bg" v-if="pwd == '1225'">
       <div><a href="../">🔙</a></div>
-      <div class="calendar-tip">
+      <div class="calendar-tip" v-show="dateString">
         <span class="prev-year" @click="prev('year')">上年</span>
         <span class="prev-month" @click="prev('month')">上月</span>
-        <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickDate">
+        <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickItem('')">
           {{ `${year}-${month + 1}` }}
         </span>
         <span class="next-month" @click="next('month')">下月</span>
@@ -26,12 +26,25 @@
         <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
       </div>
       <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
-        <input type="date" v-model="dateString" @change="changeInputDate" />
-        <button @click="clickDate" style="font-size: 12px;margin-left: 10px;">今天</button>
+        <input type="date" v-model="dateString" @change="clickItem(dateString)" />
+        <button @click="clickItem('')" style="font-size: 12px;margin-left: 10px;">今天</button>
         <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
+        <button @click="clickItem('1995-12-25')" style="font-size: 12px;margin-left: 10px;">体重</button>
+        <button @click="updateDateContent" style="font-size: 12px;margin-left: 10px;">保存</button>
       </div>
 
       <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent" placeholder="今天你运动了吗？点我记录一下吧" />
+      <div style="color:red;font-size: 14px; ">{{ status }}</div>
+
+      <div>
+        <p style="font-size: 13px;font-weight: bold;">消费</p>
+        <div style="display: flex;justify-content: space-between;">
+          <span style="font-size: 12px;margin-right: 4px; ">今日 {{ money }} 元</span>
+          <span style="font-size: 12px;margin-right: 4px; ">{{ month + 1 }}月 {{ moneyMonth }} 元</span>
+          <span style="font-size: 12px; ">{{ year }}年 {{ moneyYear }} 元</span>
+        </div>
+
+      </div>
       <div style="display: flex;">
         <div>
           <p style="font-size: 13px;font-weight: bold;">往年今日</p>
@@ -53,10 +66,9 @@
       </div>
 
       <div style="margin: 30px 0 0;overflow: hidden;">
-        <div id="chart" style="width: 100%;height:400px;"></div>
+        <div id="weightChart" style="width: 100%;height:400px;"></div>
+        <div id="moneyChart" style="width: 100%;height:400px;"></div>
       </div>
-      <button @click="updateDateContent" class="update-btn">😆 <br><span style="color:red;font-size: 20px;">{{ status
-      }}</span></button>
 
       <div v-show="searchModal" style="
       position: fixed;
@@ -69,7 +81,8 @@
     background: #fff;">
         <div>
           <div>
-            <p style="font-size: 13px;font-weight: bold; ">历史搜索
+            <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
+              历史搜索
               <span v-show="!isSearchAll" style="font-size: 12px;">
                 <input style="margin-right: 4px;" @change="(e) => {
                   if (e.target.value >= 2095) {
@@ -88,11 +101,12 @@
                 }" type="number" v-model="searchMonth" min="1" max="12">
                 <span style="margin-right: 4px;">月</span>
               </span>
-              <button @click="isSearchAll = !isSearchAll">{{ !isSearchAll ? '全部' : '按月' }}</button>
+              <button @click="isSearchAll = !isSearchAll" style="margin-right: 4px;">{{ !isSearchAll ? '全部' : '按月'
+              }}</button>
               <button @click="searchModal = false">关闭</button>
             </p>
-
-            <input type="text" v-model="query" :disabled="allowSearch" style="margin-right: 4px;width: 120px;">
+            <input placeholder="输入关键字" type="text" v-model="query" :disabled="allowSearch"
+              style="margin-right: 4px;width: 120px;">
             <button @click="search" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
             <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
             <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
@@ -154,8 +168,9 @@
 <script>
 import Item from './item.vue'
 import * as req from './req.js'
-import zjnbody from './zjnbody.json'
 import * as echarts from 'echarts'
+let weightChart = null
+let moneyChart = null
 export default {
   props: [],
   components: { Item },
@@ -164,12 +179,13 @@ export default {
     return {
       bg: `bg (${String(Date.now()).slice(-1)}).jpg`,
       date,
+      db: new DB(),
       searchModal: false,
       todoList: [],
       pwd: localStorage.getItem('pwd'),
-      year: date.getFullYear(),
-      month: date.getMonth(),
-      day: date.getDate(),
+      year: '',
+      month: '',
+      day: '',
       firstDay: null,
       monthDayLength: null,
       itemList: [],
@@ -179,7 +195,6 @@ export default {
       status: '',
       dateString: '',
       dateContent: '',
-      isEdit: false,
       curSha: '',
       history: [],
       isSearchAll: false,
@@ -195,24 +210,39 @@ export default {
       allowSearch: false,
       searchNum: 0,
       searchNumAll: 0,
-      option: {
+      weightOption: {
         grid: {
           right: 40,
         },
         tooltip: {
-          trigger: 'axis',
-        },
-        title: {
-          left: 'center',
-          text: '楠楠体重趋势图'
+          trigger: 'item',
+          formatter: (a) => {
+            if (a.componentType == 'markLine' || a.componentType == 'markPoint') {
+              return `${a.name}${a.value}`
+            }
+            return `${a[0].data[0]}<br>${a
+              .map((v) => `<span style="color:${v.color}">${v.seriesName}${v.data[1]}</span><br>`)
+              .join('')}`;
+          }
         },
         xAxis: {
+          axisPointer: {
+            show: true,
+            type: 'line',
+            label: {
+              show: false
+            },
+            lineStyle: {
+              width: 0.5
+            }
+          },
           type: 'time',
           boundaryGap: false
         },
+        legend: {},
         yAxis: {
           min: 50,
-          max: 80,
+          max: 90,
           interval: 2,
           type: 'value',
           boundaryGap: [0, '100%']
@@ -227,172 +257,413 @@ export default {
         series: [
           {
             markPoint: {
-              // 设置最大值和最小值
               data: [
                 {
                   type: 'max',
-                  name: '我是最大值'
+                  name: '最大值'
                 },
                 {
                   type: 'min',
-                  name: '我是最小值'
+                  name: '最小值'
                 }
               ]
             },
             markLine: {
-              // 设置平均线
               data: [
                 {
                   type: 'average',
-                  name: '我是平均值',
-                  color: 'red'
+                  name: '平均值',
                 }
               ]
-            },
-            label: {
-              show: true,
-              position: 'top'
             },
             itemStyle: {
               color: 'green'
             },
-            name: '体重',
+            name: '楠',
             type: 'line',
             smooth: true,
             symbol: 'none',
-            data: zjnbody
+            data: []
+          },
+          {
+            markPoint: {
+              data: [
+                {
+                  type: 'max',
+                  name: '最大值'
+                },
+                {
+                  type: 'min',
+                  name: '最小值'
+                }
+              ]
+            },
+            markLine: {
+              data: [
+                {
+                  type: 'average',
+                  name: '平均值',
+                }
+              ]
+            },
+            itemStyle: {
+              color: 'blue'
+            },
+            name: '琦',
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            data: []
           }
         ]
-      }
-
+      },
+      moneyOption: {
+        grid: {
+          left: 40,
+          right: 40,
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: (a) => {
+            if (a.componentType == 'markLine' || a.componentType == 'markPoint') {
+              return `${a.name}${a.value}`
+            }
+            return `${a[0].data[0]}<br>${a
+              .map((v) => `<span style="color:${v.color}">${v.seriesName}${v.data[1]}</span><br>`)
+              .join('')}`;
+          }
+        },
+        xAxis: {
+          axisPointer: {
+            show: true,
+            type: 'line',
+            label: {
+              show: false
+            },
+            lineStyle: {
+              width: 0.5
+            }
+          },
+          type: 'time',
+          boundaryGap: false
+        },
+        legend: {},
+        yAxis: {
+          // min: 50,
+          // max: 90,
+          // interval: 2,
+          type: 'value',
+          boundaryGap: [0, '100%']
+        },
+        dataZoom: [
+          {
+            start: 70,
+            end: 100,
+            brushSelect: false
+          }
+        ],
+        series: [
+          {
+            markPoint: {
+              data: [
+                {
+                  type: 'max',
+                  name: '最大值'
+                },
+                {
+                  type: 'min',
+                  name: '最小值'
+                }
+              ]
+            },
+            markLine: {
+              data: [
+                {
+                  type: 'average',
+                  name: '平均值',
+                }
+              ]
+            },
+            itemStyle: {
+              color: 'red'
+            },
+            name: '消费',
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            data: []
+          },
+        ]
+      },
+      money: 0,
+      moneyMonth: 0,
+      moneyYear: 0,
+      allDayList: [],
+      sportList: []
     }
   },
   async mounted() {
-    this.datetostr();
-    await this.init()
-    this.clickItem(this.dateString)
-    echarts.init(document.getElementById('chart'), null, { locale: "ZH" }).setOption(this.option);
+    moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
+    weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
+    await this.init();
   },
   methods: {
-    datetostr() {
-      this.year = this.date.getFullYear()
-      this.month = this.date.getMonth() // 取当前月，此数字是实际月份减一
-      this.day = this.date.getDate()
-      this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
-        }-${this.day < 10 ? '0' + this.day : this.day}`
-    },
     savepwd() {
       localStorage.setItem('pwd', '1225');
       this.pwd = '1225'
     },
-
-    async init() {
-      try {
-        const item = await req.getArticle('1996-10-13') // 标记
-        this.events = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
-        this.calendar()
-      } catch (error) {
-      }
-      // try {
-      //   const item = await req.getArticle('1995-12-25') // 待办
-      //   this.todoList = (decodeURIComponent(atob(item.content))).split('\n').map(v => ({ dateString: v.split(' ')[0], content: v.split(' ')[1], state: false }))
-      //   this.calendar()
-      // } catch (error) {
-      // }
-      try {
-        let markList = await req.getArticleList()
-        this.markList = markList.filter(v => v.size > 1).map(v => v.name.slice(0, -3))
-        this.calendar()
-      } catch (error) {
-      }
-
+    getDayCache(dateString) {
+      return this.db.read({
+        dbName: "calendar",
+        objName: "dayCache",
+        param: dateString,
+      }).then(res => {
+        if (res && this.allDayList.find(v => v.sha == res.sha)) {
+          // 命中缓存 
+          return res
+        } else {
+          // 内容不一致，重新查
+          console.log('内容不一致，重新查' + dateString)
+          return req.getArticle(dateString).then(res => {
+            if (res.content) {
+              let cache = {
+                date: dateString,
+                content: decodeURIComponent(atob(res.content)),
+                sha: res.sha
+              }
+              this.db.update({
+                dbName: "calendar",
+                objName: "dayCache",
+                param: dateString,
+                response: cache
+              })
+              return cache;
+            }
+          }).catch((err) => {
+          })
+        }
+      }).catch((err) => {
+        console.error(err);
+        return req.getArticle(dateString).then(res => {
+          let cache = {
+            date: dateString,
+            content: decodeURIComponent(atob(res.content)),
+            sha: res.sha
+          }
+          return cache;
+        })
+      })
     },
-    changeInputDate(e) {
-      this.date = new Date(this.dateString)
-      this.clickItem(this.dateString)
-      this.calendar()
+    async init() {
+      req.getArticleList().then(res => {
+        this.markList = res.filter(v => v.size > 1).map(v => v.name.slice(0, -3))
+        this.allDayList = res;
+      }).finally(() => {
+        this.getDayCache('1996-10-13').then(res => {
+          this.events = (res.content).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
+          this.clickItem('')
+        })
+        this.getDayCache('1995-12-25').then(res => {
+          // 楠体重
+          this.weightOption.series[0].data = res.content.split('\n').map(v => ([v.split(' ')[0], v.split(' ')[1]]))
+          weightChart.setOption(this.weightOption)
+        })
+        this.getDayCache('1995-12-26').then(res => {
+          // 琦体重
+          this.weightOption.series[1].data = res.content.split('\n').map(v => ([v.split(' ')[0], v.split(' ')[1]]))
+          weightChart.setOption(this.weightOption)
+        })
+        this.search('sport')
+      })
     },
     async updateDateContent() {
       // update
       try {
-        await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
-        // this.isEdit = false
-        this.status = 'success!'
-        this.init()
-        setTimeout(() => {
-          this.status = ''
-        }, 2000);
+        let remoteCur = await req.getArticle(this.dateString)
+        if (remoteCur.sha == this.curSha) {
+          let res = await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
+          this.status = 'success!';
+          this.db.update({
+            dbName: "calendar",
+            objName: "dayCache",
+            param: this.dateString,
+            response: {
+              date: this.dateString,
+              content: this.dateContent,
+              sha: res.content.sha
+            },
+          })
+          req.getArticleList().then(res => {
+            this.markList = res.filter(v => v.size > 1).map(v => v.name.slice(0, -3))
+            this.allDayList = res;
+          })
+          setTimeout(() => {
+            this.status = ''
+          }, 2000);
+        } else {
+          alert('别人刚刚更新了这篇内容，请刷新获取最新内容，再做修改！')
+        }
       } catch (error) {
         this.status = '没存上，再来！'
       }
 
     },
-    clickDate() {
-      this.date = new Date()
-      this.datetostr();
-      this.calendar();
-      this.clickItem(this.dateString)
-    },
-    async search(e) {
-      this.searchNum = 0
-      this.searchNumAll = 0
-      this.allowSearch = true
-      this.searchResult = []
-      for (let i = 0; i <= this.markList.length - 1; i++) {
-        try {
-          if (this.isSearchAll || String(this.markList[this.markList.length - i]).indexOf(`${this.searchYear}-${String(this.searchMonth).padStart(2, '0')}`) > -1) {
-            this.searchNumAll++
-            setTimeout(() => {
-              if (this.allowSearch) {
-                req.getArticle(this.markList[this.markList.length - i]).then(item => {
-                  this.searchNum++;
-                  let content = decodeURIComponent(atob(item.content))
-                  if (content.indexOf(this.query) > -1) {
-                    content = content.replace(this.query, `<span style="background: yellow;">${this.query}</span>`)
-                    this.searchResult.push({
-                      date: this.markList[this.markList.length - i],
-                      content: content
-                    })
-                  }
-                  if (/[1-9]0+/.test(String(this.searchNum)) || this.searchNum > this.searchNumAll - 3) {
-                    setTimeout(() => {
-                      this.searchResult.sort((a, b) => {
-                        return a.date < b.date ? 1 : -1
-                      })
-                    }, 100);
-                  }
-
-                }).catch(err => {
-
-                }).finally(() => {
-                  if (i == this.markList.length - 1 || this.searchNum == this.searchNumAll) {
-                    this.allowSearch = false;
+    async search(type) {
+      if (type == 'money') {
+        this.moneyOption.series[0].data = []
+        this.money = 0
+        this.moneyMonth = 0
+        this.moneyYear = 0
+        for (let i = 1; i <= this.markList.length - 1; i++) {
+          try {
+            this.getDayCache(this.markList[this.markList.length - i]).then(item => {
+              let content = item.content
+              try {
+                let money = 0;
+                (content.match(/[0-9.]*元/ig) || []).map(v => {
+                  try {
+                    let m = Number(v.replace(/元/g, ''))
+                    if (!!m) {
+                      money = money + m
+                    }
+                  } catch (error) {
+                    console.log(error)
                   }
                 })
+                if (this.markList[this.markList.length - i].indexOf(this.dateString) > -1) {
+                  this.money = this.money + money;
+                }
+                if (this.markList[this.markList.length - i].indexOf(`${this.year}-${String(this.month + 1).padStart(2, '0')}`) > -1) {
+                  this.moneyMonth = this.moneyMonth + money;
+                }
+                if (this.markList[this.markList.length - i].indexOf(String(this.year)) > -1) {
+                  this.moneyYear = this.moneyYear + money;
+                }
+                if (money > 0) {
+                  this.moneyOption.series[0].data.push([this.markList[this.markList.length - i], String(money)])
+                }
+                if (i == this.markList.length - 1) {
+                  moneyChart.setOption(this.moneyOption)
+                }
+              } catch (error) {
+                console.log(error)
               }
-            }, 100 * this.searchNumAll);
+            })
+          } catch (error) {
+
           }
-        } catch (error) {
-
         }
-
       }
+      if (type == 'sport') {
+        this.sportList = []
+        for (let i = 1; i <= this.markList.length - 1; i++) {
+          try {
+            this.getDayCache(this.markList[this.markList.length - i]).then(item => {
+              let content = item.content
+              try {
+                if (content.match(/滑雪|球|跑步|慢跑|散步|运动|骑车|自行车|跳绳/ig)) {
+                  this.sportList.push({
+                    date: this.markList[this.markList.length - i],
+                    content: content
+                  })
+                }
+              } catch (error) {
+                console.log(error)
+              }
+              if (i == this.markList.length - 1) {
+                this.calendar();
+              }
+            })
+          } catch (error) {
 
+          }
+        }
+      }
+      if (!type) {
+        this.searchNum = 0
+        this.searchNumAll = 0
+        this.allowSearch = true
+        this.searchResult = []
+        for (let i = 0; i <= this.markList.length - 1; i++) {
+          try {
+            if (this.isSearchAll || String(this.markList[this.markList.length - i]).indexOf(`${this.searchYear}-${String(this.searchMonth).padStart(2, '0')}`) > -1) {
+              this.searchNumAll++
+              setTimeout(() => {
+                if (this.allowSearch) {
+                  this.getDayCache(this.markList[this.markList.length - i]).then(item => {
+                    this.searchNum++;
+                    let content = item.content
+                    if (content.indexOf(this.query) > -1) {
+                      content = content.replaceAll(this.query, `<span style="background: yellow;">${this.query}</span>`)
+                      this.searchResult.push({
+                        date: this.markList[this.markList.length - i],
+                        content: content
+                      })
+                    }
+                    if (/[1-9]0+/.test(String(this.searchNum)) || this.searchNum > this.searchNumAll - 3) {
+                      setTimeout(() => {
+                        this.searchResult.sort((a, b) => {
+                          return a.date < b.date ? 1 : -1
+                        })
+                      }, 100);
+                    }
+
+                  }).catch(err => {
+
+                  }).finally(() => {
+                    if (i == this.markList.length - 1 || this.searchNum == this.searchNumAll) {
+                      this.allowSearch = false;
+                    }
+                  })
+                }
+              }, 100 * this.searchNumAll);
+            }
+          } catch (error) {
+
+          }
+        }
+      }
     },
     async clickItem(dateString) {
-      if (this.isEdit) {
-        return
+      if (dateString) {
+        this.date = new Date(dateString)
+      } else {
+        this.date = new Date()
       }
-      this.$emit('clickDay', dateString)
-      this.dateString = dateString
-
-      // query day event
-      this.calendar()
+      if (this.year != this.date.getFullYear() || this.month != this.date.getMonth()) {
+        setTimeout(() => {
+          this.search('money')
+        }, 1000);
+      }
+      this.money = 0
+      this.year = this.date.getFullYear()
+      this.month = this.date.getMonth()
+      this.day = this.date.getDate()
+      this.dateString = `${this.year}-${this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1
+        }-${this.day < 10 ? '0' + this.day : this.day}`
+      dateString = this.dateString
+      this.calendar();
       this.dateContent = 'loading...'
       try {
-        const item = await req.getArticle(dateString)
-        this.dateContent = decodeURIComponent(atob(item.content))
+        const item = await this.getDayCache(dateString)
+        this.dateContent = item.content
         this.curSha = item.sha
+        try {
+          let money = 0;
+          (this.dateContent.match(/[0-9.]*元/ig) || []).map(v => {
+            try {
+              let m = Number(v.replace(/元/g, ''))
+              if (!!m) {
+                money = money + m
+              }
+            } catch (error) {
+              console.log(error)
+            }
+          })
+          this.money = money
+        } catch (error) {
+          console.log(error)
+        }
       } catch (error) {
         if (this.dateString == dateString) {
           this.dateContent = this.temp
@@ -403,11 +674,11 @@ export default {
       for (let i = Number(dateString.slice(0, 4)) - 1; i > 2011; i--) {
         try {
           if (this.markList.find(v => v == `${i}${dateString.slice(4)}`)) {
-            const item = await req.getArticle(`${i}${dateString.slice(4)}`)
+            const item = await this.getDayCache(`${i}${dateString.slice(4)}`)
             if (this.dateString == dateString) {
               this.history.push({
                 date: `${i}${dateString.slice(4)}`,
-                content: decodeURIComponent(atob(item.content))
+                content: item.content
               })
             }
           }
@@ -416,7 +687,6 @@ export default {
       }
     },
     prev(type) {
-      this.$emit('change')
       if (type === 'year') {
         this.date = new Date(this.date.getFullYear() - 1, this.date.getMonth(), 1)
         this.year = this.date.getFullYear()
@@ -427,9 +697,9 @@ export default {
         this.month = this.date.getMonth()
       }
       this.calendar()
+      this.search('money')
     },
     next(type) {
-      this.$emit('change')
       if (type === 'year') {
         this.date = new Date(this.date.getFullYear() + 1, this.date.getMonth(), 1)
         this.year = this.date.getFullYear()
@@ -440,6 +710,7 @@ export default {
         this.month = this.date.getMonth()
       }
       this.calendar()
+      this.search('money')
     },
     async calendar() {
       this.year = this.date.getFullYear()
@@ -476,6 +747,7 @@ export default {
           selected: this.dateString == dateString,
           marked: this.markList.findIndex(v => v.indexOf(dateString) > -1) > -1,
           desc: markDate ? markDate.desc : '',
+          sported: this.sportList.findIndex(v => v.date == dateString) > -1,
           events: this.events.filter((v) => v.dateString == dateString)
         })
       }
@@ -507,6 +779,159 @@ export default {
       }
 
     },
+  }
+}
+
+class DB {
+  /* 
+  {
+          dbName: "test",   //数据库名称
+          objName: "test1",  // 表名称
+          param: { a: 1 },   // id值
+          response: {        // 存储的value
+            b: 2,
+          },
+  }
+  */
+  constructor() {
+    this.db = null;
+  }
+  getType(val) {
+    let type = typeof val == "object";
+    return type;
+  }
+  // 打开数据库
+  open(parm) {
+    if (this.db) {
+      return this.db;
+    }
+    return new Promise((res, rej) => {
+      let request = window.indexedDB.open(parm.dbName, parm.versions);
+      request.onerror = function (event) {
+        console.log(event);
+        // 错误处理
+        rej();
+      };
+      request.onsuccess = event => {
+        this.db = request.result;
+        res();
+        // 成功处理
+      };
+      // 数据库更新时的回调
+      request.onupgradeneeded = event => {
+        this.db = event.target.result;
+        this.createdDB(parm);
+      };
+    });
+  }
+  // 创建库表
+  createdDB(parm) {
+    if (!this.db.objectStoreNames.contains(parm.objName)) {
+      this.db.createObjectStore(parm.objName, {
+        keyPath: "id"
+      });
+      // objectStore.createIndex("data", "data", { unique: false });
+      // unique name可能会重复
+    }
+  }
+  // 新增（不需要使用）
+  async add(parm = { dbName, objName, param, response }) {
+    await this.open(parm);
+    // await this.upgrade(dbName);
+    return new Promise((res, rej) => {
+      let transaction = this.db.transaction([parm.objName], "readwrite");
+      let objectStore = transaction.objectStore(parm.objName);
+
+      // 用户读取数据，参数是主键
+      let request = objectStore.add({
+        id: JSON.stringify(parm.param),
+        data: JSON.stringify(parm.response)
+      });
+      console.log(request);
+
+      request.onsuccess = function (event) {
+        res(event);
+        console.log("数据写入成功");
+      };
+
+      request.onerror = function (event) {
+        rej();
+        console.log("数据写入失败");
+      };
+    });
+  }
+  // 读取库表数据
+  async read(parm = { dbName, objName, param, response }) {
+    await this.open(parm);
+
+    return new Promise((res, rej) => {
+      let type = this.getType(parm.param);
+
+      var transaction = this.db.transaction([parm.objName]);
+      var objectStore = transaction.objectStore(parm.objName);
+      // 用户读取数据，参数是主键
+      var request = objectStore.get(
+        type ? JSON.stringify(parm.param) : parm.param
+      );
+
+      request.onerror = function (event) {
+        console.log("事务失败");
+        rej();
+      };
+
+      request.onsuccess = function (event) {
+        if (request.result) {
+          let data = (request.result.data);
+          res(data);
+        } else {
+          res(request.result);
+          console.log("未获得数据记录");
+        }
+      };
+    });
+  }
+  // 修改库表数据,但是因为创建数据库时直接创建了库表,所以无论是添加还是修改都掉这个就可以了.
+  async update(parm = { dbName, objName, param, response }) {
+    await this.open(parm);
+
+    return new Promise((res, rej) => {
+      let type = this.getType(parm.param);
+      var request = this.db
+        .transaction([parm.objName], "readwrite")
+        .objectStore(parm.objName)
+        .put({
+          id: type ? JSON.stringify(parm.param) : parm.param,
+          data: type ? JSON.stringify(parm.response) : parm.response
+        });
+
+      request.onsuccess = function (event) {
+        res();
+        console.log("数据更新成功");
+      };
+
+      request.onerror = function (event) {
+        rej();
+        console.log("数据更新失败");
+      };
+    });
+  }
+  // 删除某个表的数据
+  async remove(parm = { dbName, objName, param, response }) {
+    await this.open(parm);
+
+    return new Promise((res, rej) => {
+      let type = this.getType(parm.param);
+
+      var request = this.db
+        .transaction([parm.objName], "readwrite")
+        .objectStore(parm.objName)
+        .delete(type ? JSON.stringify(parm.param) : parm.param);
+
+      request.onsuccess = function (event) {
+        res();
+        console.log("数据删除成功");
+      };
+    });
   }
 }
 </script>
@@ -631,16 +1056,7 @@ export default {
    }
 
    .calendar-day {
-     /* padding: 0 15%; */
      font-size: 12px;
-
-     span {
-       display: inline-block;
-       text-align: center;
-       height: 32px;
-       width: 34px;
-       line-height: 32px;
-     }
    }
  }
 </style>

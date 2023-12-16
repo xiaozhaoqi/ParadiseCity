@@ -1,20 +1,18 @@
 <template>
   <div :class="`calendar-item`" @click="clickItem">
-    <div :class="{ day: true, actived, weekend: !!isWeekend }">
-      {{ value ? value : '' }}
+    <div :class="{ day: true, weekend: !!isWeekend }">
+      <span :class="{ sported }"> {{ value ? value : '' }}</span>
     </div>
-    <!-- <div class="selected" v-if="selected"></div> -->
     <div class="xiu" v-if="emojimark">{{ emojimark }}</div>
     <div class="bottom">
-      <div class="kuaisujinji" v-if="marked && !selected"></div>
-      <div class="yingji" v-if="selected"></div>
+      <div :class="{ marked, actived, selected }"></div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['value', 'actived', 'dateString', 'selected', 'marked', 'isWeekend', 'events'],
+  props: ['value', 'sported', 'actived', 'dateString', 'selected', 'marked', 'isWeekend', 'events'],
   data: function () {
     let events = this.events || []
     return {
@@ -43,7 +41,6 @@ export default {
     background: #ecf1fe;
   }
 
-  /* border: 1px solid #999; */
   margin-top: 4px;
   cursor: pointer;
   position: relative;
@@ -55,32 +52,27 @@ export default {
   line-height: 32px;
   font-size: 16px;
 
-  .actived {
-    margin: 3px auto;
-    width: 24px;
-    height: 24px;
-    line-height: 23px;
-    background-color: #508efd;
+
+  .sported {
+    border: 3px solid #f93885;
     border-radius: 50%;
-    color: #fff;
+    line-height: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .weekend {
     color: #b7bcc0;
   }
 
-  .day {}
-
-  .selected {
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: #02a7f0;
+  .day {
+    display: flex;
+    justify-content: center;
   }
+
 
   .xiu,
   .ban {
@@ -97,15 +89,26 @@ export default {
     color: #c30000;
   }
 
-  .yingji {
-    background: #f4b346;
+
+
+
+
+  .marked {
+    background: #0a8750;
+    height: 3px;
+    width: 50%;
+  }
+
+  .actived {
+    background: #02a7f0;
     margin-right: 1px;
     height: 3px;
     width: 50%;
   }
 
-  .kuaisujinji {
-    background: #0a8750;
+  .selected {
+    background: #f4b346;
+    margin-right: 1px;
     height: 3px;
     width: 50%;
   }

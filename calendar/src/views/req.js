@@ -67,7 +67,7 @@ async function sendNewArticle({ title, content, sha }) {
     )
         .then((res) => res.json())
         .then((res) => {
-            return true
+            return res
         })
 }
 async function updateArticle(sha, oldTitle, newTitle, oldCatagory, newCatagory, createTime, content, author) {
