@@ -1,60 +1,62 @@
 <template>
   <Transition>
-    <div class="calendar bg" v-if="pwd == '1225'">
-      <div><a href="../">🔙</a></div>
-      <div class="calendar-tip" v-show="dateString">
-        <span class="prev-year" @click="prev('year')">上年</span>
-        <span class="prev-month" @click="prev('month')">上月</span>
-        <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickItem('')">
-          {{ `${year}-${month + 1}` }}
-        </span>
-        <span class="next-month" @click="next('month')">下月</span>
-        <span class="next-year" @click="next('year')">下年</span>
-      </div>
-      <div class="calendar-day">
-        <Item v-for="(item, index) in [
-          { value: '一' },
-          { value: '二' },
-          { value: '三' },
-          { value: '四' },
-          { value: '五' },
-          { value: '六' },
-          { value: '日' }
-        ]" :key="item.key" v-bind="item" />
-      </div>
-      <div class="calendar-day">
-        <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
-      </div>
-      <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
-        <input type="date" v-model="dateString" @change="clickItem(dateString)" />
-        <button @click="clickItem('')" style="font-size: 12px;margin-left: 10px;">今天</button>
-        <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
-        <button @click="clickItem('1995-12-25')" style="font-size: 12px;margin-left: 10px;">体重</button>
-        <button @click="updateDateContent" style="font-size: 12px;margin-left: 10px;">保存</button>
-      </div>
-
-      <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent" placeholder="今天你运动了吗？点我记录一下吧" />
-      <div style="color:red;font-size: 14px; ">{{ status }}</div>
-
-      <div>
-        <p style="font-size: 13px;font-weight: bold;">消费
-          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ year }}年 {{ moneyYear }}
-            元，</span>
-          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ month + 1 }}月 {{
-            moneyMonth }} 元，</span>
-          <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ day }}日 {{ money }}
-            元</span>
-        </p>
-      </div>
-      <div style="display: flex;">
-        <div>
-          <p style="font-size: 13px;font-weight: bold;">往年今日</p>
-          <div v-for="item in history" :key="item.key">
-            <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
-            <p style="font-size: 12px;">{{ item.content }}</p>
-          </div>
+    <div>
+      <div class="calendar bg" v-show="pwd == '1225'">
+        <div><a href="../">🔙</a></div>
+        <div class="calendar-tip" v-show="dateString">
+          <span class="prev-year" @click="prev('year')">上年</span>
+          <span class="prev-month" @click="prev('month')">上月</span>
+          <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickItem('')">
+            {{ `${year}-${month + 1}` }}
+          </span>
+          <span class="next-month" @click="next('month')">下月</span>
+          <span class="next-year" @click="next('year')">下年</span>
         </div>
-        <!-- <div style="flex: 0 0 50%;">
+        <div class="calendar-day">
+          <Item v-for="(item, index) in [
+            { value: '一' },
+            { value: '二' },
+            { value: '三' },
+            { value: '四' },
+            { value: '五' },
+            { value: '六' },
+            { value: '日' }
+          ]" :key="item.key" v-bind="item" />
+        </div>
+        <div class="calendar-day">
+          <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
+        </div>
+        <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
+          <input type="date" v-model="dateString" @change="clickItem(dateString)" />
+          <button @click="clickItem('')" style="font-size: 12px;margin-left: 10px;">今天</button>
+          <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
+          <button @click="clickItem('1995-12-25')" style="font-size: 12px;margin-left: 10px;">体重</button>
+          <button @click="updateDateContent" style="font-size: 12px;margin-left: 10px;">保存</button>
+        </div>
+
+        <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent"
+          placeholder="今天你运动了吗？点我记录一下吧" />
+        <div style="color:red;font-size: 14px; ">{{ status }}</div>
+
+        <div>
+          <p style="font-size: 13px;font-weight: bold;">消费
+            <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ year }}年 {{ moneyYear }}
+              元，</span>
+            <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ month + 1 }}月 {{
+              moneyMonth }} 元，</span>
+            <span style="display: inline-block; font-weight: bold;font-size: 12px;">{{ day }}日 {{ money }}
+              元</span>
+          </p>
+        </div>
+        <div style="display: flex;">
+          <div>
+            <p style="font-size: 13px;font-weight: bold;">往年今日</p>
+            <div v-for="item in history" :key="item.key">
+              <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+              <p style="font-size: 12px;">{{ item.content }}</p>
+            </div>
+          </div>
+          <!-- <div style="flex: 0 0 50%;">
         <p style="font-size: 13px;font-weight: bold;">待办事项</p>
         <div v-for="item in todoList" :key="item.key">
           <p style="font-size: 13px;font-weight: bold;">{{ item.dateString }}</p>
@@ -64,105 +66,79 @@
           </p>
         </div>
       </div> -->
-      </div>
+        </div>
 
-      <div style="margin: 30px 0 0;overflow: hidden;">
-        <div id="weightChart" style="width:100%;height:400px;"></div>
-        <div id="moneyChart" style="width:100%;height:400px;"></div>
-      </div>
+        <div style="margin: 30px 0 0;overflow: hidden;">
+          <div id="weightChart" style="width:calc(100vw - 40px);height:400px;"></div>
+          <div id="moneyChart" style="width:calc(100vw - 40px);height:400px;"></div>
+        </div>
 
-      <div v-show="searchModal" style="
+        <div v-show="searchModal" style="
       position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: auto;
     width: 100%;
     padding: 20px;
     background: #fff;">
-        <div>
           <div>
-            <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
-              历史搜索
-              <span v-show="!isSearchAll" style="font-size: 12px;">
-                <input style="margin-right: 4px;" @change="(e) => {
-                  if (e.target.value >= 2095) {
-                    searchYear = 2095
-                  } if (e.target.value <= 1995) {
-                    searchYear = 1995
-                  }
-                }" type="number" v-model="searchYear" min="1995" max="2095">
-                <span style="margin-right: 4px;">年</span>
-                <input style="margin-right: 4px;" @change="(e) => {
-                  if (e.target.value >= 12) {
-                    searchMonth = 12
-                  } if (e.target.value <= 1) {
-                    searchMonth = 1
-                  }
-                }" type="number" v-model="searchMonth" min="1" max="12">
-                <span style="margin-right: 4px;">月</span>
-              </span>
-              <button @click="isSearchAll = !isSearchAll" style="margin-right: 4px;">{{ !isSearchAll ? '全部' : '按月'
-              }}</button>
-              <button @click="searchModal = false">关闭</button>
-            </p>
-            <input placeholder="输入关键字" type="text" v-model="query" :disabled="allowSearch"
-              style="margin-right: 4px;width: 120px;">
-            <button @click="search" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
-            <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
-            <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
-            <div v-for="item in searchResult" :key="item.key">
-              <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
-              <p style="font-size: 12px;" v-html="item.content"></p>
+            <div>
+              <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
+                历史搜索
+                <span v-show="!isSearchAll" style="font-size: 12px;">
+                  <input style="margin-right: 4px;" @change="(e) => {
+                    if (e.target.value >= 2095) {
+                      searchYear = 2095
+                    } if (e.target.value <= 1995) {
+                      searchYear = 1995
+                    }
+                  }" type="number" v-model="searchYear" min="1995" max="2095">
+                  <span style="margin-right: 4px;">年</span>
+                  <input style="margin-right: 4px;" @change="(e) => {
+                    if (e.target.value >= 12) {
+                      searchMonth = 12
+                    } if (e.target.value <= 1) {
+                      searchMonth = 1
+                    }
+                  }" type="number" v-model="searchMonth" min="1" max="12">
+                  <span style="margin-right: 4px;">月</span>
+                </span>
+                <button @click="isSearchAll = !isSearchAll" style="margin-right: 4px;">{{ !isSearchAll ? '全部' : '按月'
+                }}</button>
+                <button @click="searchModal = false">关闭</button>
+              </p>
+              <input placeholder="输入关键字" type="text" v-model="query" :disabled="allowSearch"
+                style="margin-right: 4px;width: 120px;">
+              <button @click="search('history')" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
+              <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
+              <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
+              <div v-for="item in searchResult" :key="item.key">
+                <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+                <p style="font-size: 12px;" v-html="item.content"></p>
+              </div>
+              <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
             </div>
-            <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
           </div>
         </div>
       </div>
+      <div v-show="pwd != '1225'">
+        <img :src="bg" alt="" @load="bgLoaded = true"
+          style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;width: 100%;margin: auto;z-index: -1;">
+        <span v-show="bgLoaded"
+          style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;width: 100%;font-weight: bold;margin: auto;width: 50px;font-size: 10px;height: 50px;border: none;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;border-radius: 50%;display: block;background: #fff;line-height: 50px;text-align: center;"
+          @click="openpwd">
+          芝麻开门
+        </span>
+        <span
+          style="position: fixed;right: 0;top: 0;bottom: 0; font-weight: bold;margin: auto;width: 50px;font-size: 10px;height: 50px;border: none;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;border-radius: 50%;display: block;background: #fff;opacity: 0;line-height: 50px;text-align: center;"
+          @click="savepwd">
+          芝麻开门，别关门了
+        </span>
+      </div>
     </div>
-    <div v-else>
-      <img :src="bg" alt="" style="position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    margin: auto;
-    z-index: -1;">
-      <span style="position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    font-weight: bold;
-    margin: auto;width: 50px;
-    font-size: 10px;
-    height: 50px;border: none;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;
-    border-radius: 50%;display: block;
-    background: #fff;
-    line-height: 50px;
-    text-align: center;" @click="pwd = '1225'">
-        芝麻开门
-      </span>
-      <span style="position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0; 
-    font-weight: bold;
-    margin: auto;width: 50px;
-    font-size: 10px;
-    height: 50px;border: none;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;
-    border-radius: 50%;display: block;
-    background: #fff;
-    opacity: 0;
-    line-height: 50px;
-    text-align: center;" @click="savepwd">
-        芝麻开门，别关门了
-      </span>
-    </div>
+
   </Transition>
 </template>
 
@@ -180,6 +156,7 @@ export default {
     return {
       bg: `bg (${String(Date.now()).slice(-1)}).jpg`,
       date,
+      bgLoaded: false,
       db: new DB(),
       searchModal: false,
       todoList: [],
@@ -214,7 +191,7 @@ export default {
       weightOption: {
         grid: {
           left: 40,
-          right: 40,
+          right: 50,
         },
         tooltip: {
           trigger: 'item',
@@ -322,7 +299,7 @@ export default {
       moneyOption: {
         grid: {
           left: 40,
-          right: 40,
+          right: 50,
         },
         tooltip: {
           trigger: 'item',
@@ -407,9 +384,16 @@ export default {
   async mounted() {
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
+    window.addEventListener("resize", () => {
+      moneyChart.resize()
+      weightChart.resize()
+    });
     await this.init();
   },
   methods: {
+    openpwd() {
+      this.pwd = '1225'
+    },
     savepwd() {
       localStorage.setItem('pwd', '1225');
       this.pwd = '1225'
@@ -475,7 +459,6 @@ export default {
           this.weightOption.series[1].data = res.content.split('\n').map(v => ([v.split(' ')[0], v.split(' ')[1]]))
           weightChart.setOption(this.weightOption)
         })
-        this.search('sport')
       })
     },
     async updateDateContent() {
@@ -516,6 +499,7 @@ export default {
         this.money = 0
         this.moneyMonth = 0
         this.moneyYear = 0
+        this.sportList = []
         for (let i = 1; i <= this.markList.length - 1; i++) {
           try {
             this.getDayCache(this.markList[this.markList.length - i]).then(item => {
@@ -532,7 +516,7 @@ export default {
                     console.log(error)
                   }
                 })
-                if (this.markList[this.markList.length - i].indexOf(this.dateString) > -1) {
+                if (this.markList[this.markList.length - i].indexOf(`${this.year}-${String(this.month + 1).padStart(2, '0')}-${String(this.day).padStart(2, '0')}`) > -1) {
                   this.money = this.money + money;
                 }
                 if (this.markList[this.markList.length - i].indexOf(`${this.year}-${String(this.month + 1).padStart(2, '0')}`) > -1) {
@@ -550,18 +534,6 @@ export default {
               } catch (error) {
                 console.log(error)
               }
-            })
-          } catch (error) {
-
-          }
-        }
-      }
-      if (type == 'sport') {
-        this.sportList = []
-        for (let i = 1; i <= this.markList.length - 1; i++) {
-          try {
-            this.getDayCache(this.markList[this.markList.length - i]).then(item => {
-              let content = item.content
               try {
                 if (content.match(/滑雪|球|跑步|慢跑|散步|运动|骑车|自行车|跳绳/ig)) {
                   this.sportList.push({
@@ -581,44 +553,42 @@ export default {
           }
         }
       }
-      if (!type) {
+      if (type == 'history') {
         this.searchNum = 0
         this.searchNumAll = 0
         this.allowSearch = true
         this.searchResult = []
-        for (let i = 0; i <= this.markList.length - 1; i++) {
+        for (let i = 1; i <= this.markList.length - 1; i++) {
           try {
             if (this.isSearchAll || String(this.markList[this.markList.length - i]).indexOf(`${this.searchYear}-${String(this.searchMonth).padStart(2, '0')}`) > -1) {
               this.searchNumAll++
-              setTimeout(() => {
-                if (this.allowSearch) {
-                  this.getDayCache(this.markList[this.markList.length - i]).then(item => {
-                    this.searchNum++;
-                    let content = item.content
-                    if (content.indexOf(this.query) > -1) {
-                      content = content.replaceAll(this.query, `<span style="background: yellow;">${this.query}</span>`)
-                      this.searchResult.push({
-                        date: this.markList[this.markList.length - i],
-                        content: content
+              if (this.allowSearch) {
+                this.getDayCache(this.markList[this.markList.length - i]).then(item => {
+                  this.searchNum++;
+                  let content = item.content
+                  if (content.indexOf(this.query) > -1) {
+                    content = content.replaceAll(this.query, `<span style="background: yellow;">${this.query}</span>`)
+                    this.searchResult.push({
+                      date: this.markList[this.markList.length - i],
+                      content: content
+                    })
+                  }
+                  if (/[1-9]0+/.test(String(this.searchNum)) || this.searchNum > this.searchNumAll - 3) {
+                    setTimeout(() => {
+                      this.searchResult.sort((a, b) => {
+                        return a.date < b.date ? 1 : -1
                       })
-                    }
-                    if (/[1-9]0+/.test(String(this.searchNum)) || this.searchNum > this.searchNumAll - 3) {
-                      setTimeout(() => {
-                        this.searchResult.sort((a, b) => {
-                          return a.date < b.date ? 1 : -1
-                        })
-                      }, 100);
-                    }
+                    }, 100);
+                  }
 
-                  }).catch(err => {
+                }).catch(err => {
 
-                  }).finally(() => {
-                    if (i == this.markList.length - 1 || this.searchNum == this.searchNumAll) {
-                      this.allowSearch = false;
-                    }
-                  })
-                }
-              }, 100 * this.searchNumAll);
+                }).finally(() => {
+                  if (i == this.markList.length - 1 || this.searchNum == this.searchNumAll) {
+                    this.allowSearch = false;
+                  }
+                })
+              }
             }
           } catch (error) {
 
@@ -968,7 +938,7 @@ class DB {
  }
 
  .bg {
-   padding: 1rem;
+   padding: 20px;
    width: 100%;
    height: 100%;
    background: #fff;
