@@ -41,7 +41,7 @@ export default {
     background: #ecf1fe;
   }
 
-  margin-top: 4px;
+  margin-top: 12px;
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -77,7 +77,7 @@ export default {
   .xiu,
   .ban {
     position: absolute;
-    top: -2px;
+    top: -10px;
     right: 0;
     font-size: 8px;
     color: #0a8750;
