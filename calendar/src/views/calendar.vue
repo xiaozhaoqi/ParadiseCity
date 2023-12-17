@@ -41,17 +41,17 @@
         <div style="color:red;font-size: 14px; ">{{ status }}</div>
 
         <div>
-          <p style="font-size: 13px;font-weight: bold;">消费
-            <span style="display: inline-block; font-weight: bold;font-size: 12px;">
+          <p style="font-size: 13px;font-weight: bold;display: flex;justify-content: space-between;">
+            <span style="display: inline-block;width:120px; font-weight: bold;font-size: 12px;">
               {{ year }}年
               <span style="color:#0a8750; font-weight: bold;font-size: 12px;">{{ moneyYear }}</span>
-              元，
+              元
             </span>
-            <span style="display: inline-block; font-weight: bold;font-size: 12px;">
+            <span style="display: inline-block;width:120px; font-weight: bold;font-size: 12px;">
               {{ month + 1 }}月
               <span :style="`color:${moneyMonth > 3000 ? '#f93885' : '#0a8750'}; font-weight: bold;font-size: 12px;`"> {{
                 moneyMonth }}</span>
-              元，
+              元
             </span>
             <span style="display: inline-block; font-weight: bold;font-size: 12px;">
               {{ day }}日
@@ -91,7 +91,7 @@
                 历史搜索
               </p>
               <input placeholder="输入关键字" type="text" v-model="query" :disabled="allowSearch"
-                style="margin-right: 4px;width: 120px;">
+                style="margin-right: 4px;font-size: 13px;width: 120px;">
               <button @click="search('history')" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
               <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
               <button @click="searchModal = false" style="margin-right: 4px;">关闭</button>
@@ -111,7 +111,7 @@
               <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
                 记录体重
               </p>
-              <input type="date" v-model="weightDate" style="margin-right: 4px;width: 120px;">
+              <input type="date" v-model="weightDate" style="margin-right: 4px;width: 100px;font-size: 13px;">
               <input placeholder="琦体重" type="text" v-model="weightQ" style="margin-right: 4px;width: 60px;">
               <input placeholder="楠体重" type="text" v-model="weightN" style="margin-right: 4px;width: 60px;">
               <button @click="saveWeight" style="margin-right: 4px;">保存</button>
@@ -518,9 +518,9 @@ export default {
     async search(type) {
       if (type == 'money') {
         this.moneyOption.series[0].data = []
-        this.money = 0
-        this.moneyMonth = 0
-        this.moneyYear = 0
+        let moneyDay = 0
+        let moneyMonth = 0
+        let moneyYear = 0
         this.sportList = []
         for (let i = 1; i <= this.markList.length - 1; i++) {
           try {
@@ -539,19 +539,22 @@ export default {
                   }
                 })
                 if (this.markList[this.markList.length - i].indexOf(`${this.year}-${String(this.month + 1).padStart(2, '0')}-${String(this.day).padStart(2, '0')}`) > -1) {
-                  this.money = this.money + money;
+                  moneyDay = moneyDay + money;
                 }
                 if (this.markList[this.markList.length - i].indexOf(`${this.year}-${String(this.month + 1).padStart(2, '0')}`) > -1) {
-                  this.moneyMonth = this.moneyMonth + money;
+                  moneyMonth = moneyMonth + money;
                 }
                 if (this.markList[this.markList.length - i].indexOf(String(this.year)) > -1) {
-                  this.moneyYear = this.moneyYear + money;
+                  moneyYear = moneyYear + money;
                 }
                 if (money > 0) {
                   this.moneyOption.series[0].data.push([this.markList[this.markList.length - i], String(money)])
                 }
                 if (i == this.markList.length - 1) {
                   moneyChart.setOption(this.moneyOption)
+                  this.money = moneyDay
+                  this.moneyMonth = moneyMonth
+                  this.moneyYear = moneyYear
                 }
               } catch (error) {
                 console.log(error)
@@ -622,12 +625,6 @@ export default {
       } else {
         this.date = new Date()
       }
-      if (this.year != this.date.getFullYear() || this.month != this.date.getMonth()) {
-        setTimeout(() => {
-          this.search('money')
-        }, 1000);
-      }
-      this.money = 0
       this.year = this.date.getFullYear()
       this.month = this.date.getMonth()
       this.day = this.date.getDate()
@@ -640,22 +637,6 @@ export default {
         const item = await this.getDayCache(dateString)
         this.dateContent = item.content
         this.curSha = item.sha
-        try {
-          let money = 0;
-          (this.dateContent.match(/[0-9.]*元/ig) || []).map(v => {
-            try {
-              let m = Number(v.replace(/元/g, ''))
-              if (!!m) {
-                money = money + m
-              }
-            } catch (error) {
-              console.log(error)
-            }
-          })
-          this.money = money
-        } catch (error) {
-          console.log(error)
-        }
       } catch (error) {
         if (this.dateString == dateString) {
           this.dateContent = this.temp
@@ -677,6 +658,7 @@ export default {
         } catch (error) {
         }
       }
+      this.search('money')
     },
     prev(type) {
       if (type === 'year') {
@@ -689,7 +671,7 @@ export default {
         this.month = this.date.getMonth()
       }
       this.calendar()
-      this.search('money')
+      this.search('money', type)
     },
     next(type) {
       if (type === 'year') {
@@ -702,7 +684,7 @@ export default {
         this.month = this.date.getMonth()
       }
       this.calendar()
-      this.search('money')
+      this.search('money', type)
     },
     async calendar() {
       this.year = this.date.getFullYear()
