@@ -490,7 +490,7 @@ export default {
       // update
       try {
         let remoteCur = await req.getArticle(this.dateString)
-        if (remoteCur.sha == this.curSha) {
+        if (remoteCur.sha == this.curSha || this.curSha == '') {
           let res = await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
           this.status = 'success!';
           this.db.update({
