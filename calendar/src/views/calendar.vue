@@ -155,6 +155,7 @@ export default {
   data: function () {
     const date = new Date()
     return {
+      force: false,
       bg: `bg (${String(Date.now()).slice(-1)}).jpg`,
       date,
       bgLoaded: false,
@@ -210,27 +211,19 @@ export default {
           axisPointer: {
             show: true,
             type: 'line',
-            label: {
-              show: false
-            },
-            lineStyle: {
-              width: 0.5
-            }
           },
           type: 'time',
-          boundaryGap: false
         },
         legend: {},
         yAxis: {
           min: 50,
           max: 90,
-          interval: 2,
+          interval: 5,
           type: 'value',
-          boundaryGap: [0, '100%']
         },
         dataZoom: [
           {
-            start: 70,
+            start: 90,
             end: 100,
             brushSelect: false
           }
@@ -261,13 +254,13 @@ export default {
               color: '#0a8750'
             },
             name: '楠',
-            type: 'line',
-            smooth: true,
-            symbol: 'none',
+            type: 'scatter',
+            symbolSize: 2,
             data: []
           },
           {
             markPoint: {
+              label: false,
               data: [
                 {
                   type: 'max',
@@ -291,16 +284,15 @@ export default {
               color: '#02a7f0'
             },
             name: '琦',
-            type: 'line',
-            smooth: true,
-            symbol: 'none',
+            type: 'scatter',
+            symbolSize: 2,
             data: []
           }
         ]
       },
       moneyOption: {
         grid: {
-          left: 40,
+          left: 50,
           right: 50,
         },
         tooltip: {
@@ -430,20 +422,18 @@ export default {
           // 内容不一致，重新查
           console.log('内容不一致，重新查' + dateString)
           return req.getArticle(dateString).then(res => {
-            if (res.content) {
-              let cache = {
-                date: dateString,
-                content: decodeURIComponent(atob(res.content)),
-                sha: res.sha
-              }
-              this.db.update({
-                dbName: "calendar",
-                objName: "dayCache",
-                param: dateString,
-                response: cache
-              })
-              return cache;
+            let cache = {
+              date: dateString,
+              content: decodeURIComponent(atob(res.content)),
+              sha: res.sha
             }
+            this.db.update({
+              dbName: "calendar",
+              objName: "dayCache",
+              param: dateString,
+              response: cache
+            })
+            return cache;
           }).catch((err) => {
           })
         }
@@ -490,7 +480,8 @@ export default {
       // update
       try {
         let remoteCur = await req.getArticle(this.dateString)
-        if (remoteCur.sha == this.curSha || this.curSha == '') {
+        if (remoteCur.sha == this.curSha || this.curSha == '' || this.force) {
+          this.force = false;
           let res = await req.sendNewArticle({ title: this.dateString, content: this.dateContent, sha: this.curSha })
           this.status = 'success!';
           this.db.update({
@@ -508,10 +499,15 @@ export default {
             this.status = ''
           }, 2000);
         } else {
-          alert('别人刚刚更新了这篇内容，请刷新获取最新内容，再做修改！')
+          let res = confirm('别人可能更新了这篇内容，是否覆盖更新？冲突内容如下：' + decodeURIComponent(atob(remoteCur.content)))
+          if (res) {
+            this.force = true;
+            this.curSha = remoteCur.sha;
+            this.updateDateContent()
+          }
         }
       } catch (error) {
-        this.status = '没存上，再来！'
+        this.status = '没存上，再来！error: ' + error
       }
 
     },
