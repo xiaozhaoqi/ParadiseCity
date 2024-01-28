@@ -41,7 +41,7 @@ export default {
     background: #ecf1fe;
   }
 
-  margin-top: 12px;
+  margin: 6px 0;
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -77,7 +77,7 @@ export default {
   .xiu,
   .ban {
     position: absolute;
-    top: -10px;
+    top: -2px;
     right: 0;
     font-size: 8px;
     color: #0a8750;
@@ -96,24 +96,27 @@ export default {
   .marked {
     background: #0a8750;
     height: 3px;
-    width: 50%;
+    width: 20%;
+    border-radius: 4px;
   }
 
   .actived {
     background: #02a7f0;
     height: 3px;
-    width: 50%;
+    width: 20%;
+    border-radius: 4px;
   }
 
   .selected {
     background: #f4b346;
     height: 3px;
-    width: 50%;
+    width: 20%;
+    border-radius: 4px;
   }
 
   .bottom {
     position: absolute;
-    bottom: 0;
+    bottom: -2px;
     left: 2px;
     right: 2px;
     height: 3px;

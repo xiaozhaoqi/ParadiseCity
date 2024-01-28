@@ -3,14 +3,21 @@
     <div>
       <div class="calendar bg" v-show="pwd == '1225' && dateString">
         <div><a href="../">🔙</a></div>
-        <div class="calendar-tip">
+        <div class="calendar-tip" v-if="!yearMode">
           <span class="prev-year" @click="prev('year')">上年</span>
           <span class="prev-month" @click="prev('month')">上月</span>
           <span style="font-size: 16px;font-weight: bold;" title="当前日期" @click="clickItem('')">
-            {{ `${year}-${month + 1}` }}
+            {{ `${year}-${String(month + 1).padStart(2, '0')}` }}
           </span>
           <span class="next-month" @click="next('month')">下月</span>
           <span class="next-year" @click="next('year')">下年</span>
+        </div>
+        <div class="calendar-tip" v-if="yearMode">
+          <span class="prev-year" @click="prev('year'); getYearList();">上年</span>
+          <span style="font-size: 16px;font-weight: bold;" title="当前日期">
+            {{ `${year}` }}
+          </span>
+          <span class="next-year" @click="next('year'); getYearList();">下年</span>
         </div>
         <div class="calendar-day">
           <Item v-for="(item, index) in [
@@ -23,24 +30,38 @@
             { value: '日' }
           ]" :key="item.key" v-bind="item" />
         </div>
-        <div class="calendar-day">
+        <div class="calendar-day" v-if="!yearMode">
           <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
         </div>
-        <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
-          <input type="date" style="width: 100px; font-size: 13px;" v-model="dateString"
-            @change="clickItem(dateString)" />
-          <button @click="clickItem('')" style="font-size: 12px;margin-left: 10px;">今天</button>
-          <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
-          <button @click="addWeightModal = true; weightDate = dateString"
-            style="font-size: 12px;margin-left: 10px;">体重</button>
-          <button @click="updateDateContent" style="font-size: 12px;margin-left: 10px;">保存</button>
+        <div v-if="yearMode" style="padding-bottom: 300px;">
+          <div v-for="(list, index) in yearList" :key="index">
+            <div style="text-align: center;font-size: 14px;font-weight: bold;margin-top:5px;">{{ `${index + 1} 月` }}</div>
+            <div class="calendar-day">
+              <Item v-for="(item) in list" :key="item.key" v-bind="item" @clickItem="clickItem(item.dateString)" />
+            </div>
+          </div>
         </div>
+        <div
+          :style="`${yearMode ? 'position:fixed;bottom:0;background:#fff;left:10px;right:10px;height: 300px;overflow: auto;border-top: 1px solid #ccc;' : ''}`">
+          <div style="margin: 10px 0;font-size: 14px;display: flex;align-items: center;">
+            <input type="date" style="width: 100px; font-size: 13px;" v-model="dateString"
+              @change="clickItem(dateString)" />
+            <button @click="updateDateContent" style="font-size: 12px;margin-left: 10px;">保存</button>
+            <!-- <button @click="clickItem('')" style="font-size: 12px;margin-left: 10px;">今天</button> -->
+            <button @click="searchModal = true;" style="font-size: 12px;margin-left: 10px;">搜索</button>
+            <button @click="addWeightModal = true; weightDate = dateString"
+              style="font-size: 12px;margin-left: 10px;">体重</button>
+            <button @click="getYearList(); yearMode = !yearMode;" style="font-size: 12px;margin-left: 10px;">{{ yearMode ?
+              '月度' : '年度'
+            }}</button>
+          </div>
 
-        <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent"
-          placeholder="今天你运动了吗？点我记录一下吧" />
-        <div style="color:red;font-size: 14px; ">{{ status }}</div>
 
-        <div>
+          <textarea class="date-content" :rows="7" style="width: 100%" v-model="dateContent"
+            :placeholder="`运动（滑雪|球|跑步|慢跑|散步|运动|骑车|自行车|跳绳）\n饮食\n今日最佳\n等等`" />
+          <div style="color:red;font-size: 14px; ">{{ status }}</div>
+
+
           <p style="font-size: 13px;font-weight: bold;display: flex;justify-content: space-between;">
             <span style="display: inline-block;width:120px; font-weight: bold;font-size: 12px;">
               {{ year }}年
@@ -49,8 +70,9 @@
             </span>
             <span style="display: inline-block;width:120px; font-weight: bold;font-size: 12px;">
               {{ month + 1 }}月
-              <span :style="`color:${moneyMonth > 3000 ? '#f93885' : '#0a8750'}; font-weight: bold;font-size: 12px;`"> {{
-                moneyMonth }}</span>
+              <span :style="`color:${moneyMonth > 3000 ? '#f93885' : '#0a8750'}; font-weight: bold;font-size: 12px;`">
+                {{
+                  moneyMonth }}</span>
               元
             </span>
             <span style="display: inline-block; font-weight: bold;font-size: 12px;">
@@ -60,16 +82,16 @@
               元
             </span>
           </p>
-        </div>
-        <div style="display: flex;">
-          <div>
-            <p style="font-size: 13px;font-weight: bold;">往年今日</p>
-            <div v-for="item in history" :key="item.key">
-              <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
-              <p style="font-size: 12px;">{{ item.content }}</p>
+
+          <div style="display: flex;">
+            <div>
+              <p style="font-size: 13px;font-weight: bold;">往年今日</p>
+              <div v-for="item in history" :key="item.key">
+                <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+                <p style="font-size: 12px;">{{ item.content }}</p>
+              </div>
             </div>
-          </div>
-          <!-- <div style="flex: 0 0 50%;">
+            <!-- <div style="flex: 0 0 50%;">
             <p style="font-size: 13px;font-weight: bold;">待办事项</p>
             <div v-for="item in todoList" :key="item.key">
               <p style="font-size: 13px;font-weight: bold;">{{ item.dateString }}</p>
@@ -79,9 +101,8 @@
               </p>
             </div>
           </div> -->
+          </div>
         </div>
-
-
 
         <div v-show="searchModal"
           style="position: fixed;top: 0;bottom: 0;left: 0;right: 0;overflow: auto;width: 100%;padding: 20px;background: #fff;">
@@ -169,6 +190,7 @@ export default {
       firstDay: null,
       monthDayLength: null,
       itemList: [],
+      yearList: [],
       selected: [],
       events: [],
       markList: [],
@@ -374,6 +396,7 @@ export default {
       allDayList: [],
       sportList: [],
       addWeightModal: false,
+      yearMode: false,
     }
   },
   async mounted() {
@@ -628,6 +651,9 @@ export default {
         }-${this.day < 10 ? '0' + this.day : this.day}`
       dateString = this.dateString
       this.calendar();
+      if (this.yearMode) {
+        this.getYearList();
+      }
       this.dateContent = 'loading...'
       try {
         const item = await this.getDayCache(dateString)
@@ -681,6 +707,50 @@ export default {
       }
       this.calendar()
       this.search('money', type)
+    },
+    getYearList() {
+      this.yearList = []
+      for (let i = 0; i < 12; i++) {
+        let year = this.date.getFullYear()
+        let month = i // 取当前月，此数字是实际月份减一
+        let day = this.date.getDate()
+
+        // query month event list
+        let firstDay =
+          (new Date(year, month, 1).getDay() == 0
+            ? 7
+            : new Date(year, month, 1).getDay()) - 1 // 本月第一天是星期几
+        let monthDayLength = new Date(year, month + 1, -1).getDate() + 1 // 本月一共有几天
+        let itemList = []
+        for (let i = 0; i < firstDay; i++) {
+          itemList.push({
+            value: 0,
+            events: [],
+            key: i
+          })
+        }
+        for (let j = 1; j <= monthDayLength; j++) {
+          const dateString = `${year}-${month + 1 < 10 ? '0' + (month + 1) : month + 1
+            }-${j < 10 ? '0' + j : j}`
+          const markDate = this.events.find((v) => v.dateString == dateString)
+          itemList.push({
+            isWeekend: new Date(dateString).getDay() == 6 || new Date(dateString).getDay() == 0,
+            value: j,
+            actived:
+              year == new Date().getFullYear() &&
+              month == new Date().getMonth() &&
+              j == new Date().getDate(),
+            dateString,
+            key: dateString,
+            selected: this.dateString == dateString,
+            marked: this.markList.findIndex(v => v.indexOf(dateString) > -1) > -1,
+            desc: markDate ? markDate.desc : '',
+            sported: this.sportList.findIndex(v => v.date == dateString) > -1,
+            events: this.events.filter((v) => v.dateString == dateString)
+          })
+        }
+        this.yearList[i] = itemList
+      }
     },
     async calendar() {
       this.year = this.date.getFullYear()
