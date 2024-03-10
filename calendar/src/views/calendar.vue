@@ -474,7 +474,7 @@ export default {
     },
     async init(type, dateString) {
       req.getArticleList().then(res => {
-        this.markList = res.filter(v => v.size > 1).map(v => v.path.slice(0, -3))
+        this.markList = res.filter(v => v.size > 1).map(v => v.path.slice(15, -3))
         this.allDayList = res;
       }).finally(() => {
         this.getDayCache('1996-10-13').then(res => {

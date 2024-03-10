@@ -6,7 +6,7 @@ const rightToken = 'OKkpvrlYIvKpjAiWtKDJ7W4WdLiZRBgT4JGYGJR0DJf9Yny'
 // 增删改查存储库文件
 async function getArticleList() {
     return await fetch(
-        'https://api.github.com/repos/xiaozhaoqi/privateRepository/git/trees/0982adb64c4c67ef0d691f34b3c14d0af4196d86',
+        'https://api.github.com/repos/xiaozhaoqi/privateRepository/git/trees/master?recursive=1',
         {
             method: 'GET',
             headers: {
@@ -20,7 +20,7 @@ async function getArticleList() {
             else return null
         })
         .then((res) => {
-            return res.tree
+            return res.tree.filter(v => v.path.indexOf('files/calendar/') > -1)
         })
         .catch(() => {
 

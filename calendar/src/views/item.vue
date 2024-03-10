@@ -1,11 +1,11 @@
 <template>
   <div :class="`calendar-item`" @click="clickItem">
     <div :class="{ day: true, weekend: !!isWeekend }">
-      <span :class="{ sported }"> {{ value ? value : '' }}</span>
+      <span :class="{ sported, selected }"> {{ value ? value : '' }}</span>
     </div>
     <div class="xiu" v-if="emojimark">{{ emojimark }}</div>
     <div class="bottom">
-      <div :class="{ marked, actived, selected }"></div>
+      <div :class="{ marked, actived }"></div>
     </div>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
   data: function () {
     let events = this.events || []
     return {
-      emojimark: events.map((v) => v.emojimark).join('')
+      emojimark: this.actived ? '今天' : events.map((v) => v.emojimark).join('')
     }
   },
   watch: {
@@ -108,10 +108,14 @@ export default {
   }
 
   .selected {
-    background: #f4b346;
-    height: 3px;
-    width: 20%;
-    border-radius: 4px;
+    border-radius: 50%;
+    line-height: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #f4b346;
   }
 
   .bottom {
