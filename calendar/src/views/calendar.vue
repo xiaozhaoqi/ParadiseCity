@@ -474,7 +474,8 @@ export default {
     }
   },
   async mounted() {
-    this.che();
+    // this.che();
+
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
     window.addEventListener("resize", () => {
@@ -556,7 +557,7 @@ export default {
       this.pwd = '1225'
     },
     savepwd() {
-      // this.reg();
+      this.reg();
 
     },
     getDayCache(dateString) {
