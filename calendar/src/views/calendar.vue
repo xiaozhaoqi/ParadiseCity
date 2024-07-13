@@ -444,20 +444,38 @@ export default {
           challenge: this.base64ToArrayBuffer(
             '123'
           ),
-          allowCredentials: [ 
+          allowCredentials: [
             {
+              // surfacebook
               type: "public-key",
               id: this.base64ToArrayBuffer(
                 'n6Ve7V+J8MxUwA9Qt9JZBwfTT4xKmSyuE4IEByxyiQU='
               ),
               transports: ["internal"]
-            }, 
+            },
+            {
+              // 15promax
+              type: "public-key",
+              id: this.base64ToArrayBuffer(
+                'PX8K+8XCc61TFwDFdXzri4rZAp4='
+              ),
+              transports: ["internal"]
+            },
+            {
+              // 12turbo
+              type: "public-key",
+              id: this.base64ToArrayBuffer(
+                '+R/HEQXmiUohHgnEt8ZL+si53qAfGCTfqdYQ/3z49YTgFCaxprmh3EZsEibYO11o4BQmsaa5odxGbBIm2DtdaOAUJrGmuaHcRmwSJtg7XWjgXsp3Pt16tj6rHkzJ+fnR'
+              ),
+              transports: ["internal"]
+            },
           ]
         }
       }
     }
   },
   async mounted() {
+    this.che();
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
     window.addEventListener("resize", () => {
