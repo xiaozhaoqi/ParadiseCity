@@ -472,7 +472,7 @@ export default {
               // 12turbo
               type: "public-key",
               id: this.base64ToArrayBuffer(
-                '+R/HEQXmiUohHgnEt8ZL+si53qAfGCTfqdYQ/3z49YTgFCaxprmh3EZsEibYO11o4BQmsaa5odxGbBIm2DtdaOAUJrGmuaHcRmwSJtg7XWjgXsp3Pt16tj6rHkzJ+fnR'
+                'AU46d2/ag0etJmpyzI8PieRAizbOM7EUVi5+RXhDnztV8SGUbrxgeokXZAmS3jUqUAsVJSuUfdvVFn6VH7xyEOQ='
               ),
               transports: ["internal"]
             },
@@ -482,7 +482,7 @@ export default {
     }
   },
   async mounted() {
-    // this.che();
+    this.che();
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
     window.addEventListener("resize", () => {
