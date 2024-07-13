@@ -445,10 +445,18 @@ export default {
           ),
           allowCredentials: [
             {
-              // surfacebook
+              // surfacebook local
               type: "public-key",
               id: this.base64ToArrayBuffer(
                 '1J911IipcxxOUldDVHAmnFVd+np+WE50cE9MzEEkWBY='
+              ),
+              transports: ["internal"]
+            },
+            {
+              // surfacebook online
+              type: "public-key",
+              id: this.base64ToArrayBuffer(
+                'lkaCNC4SuNmXLPZ2pKRqS9wtimJgWd28d2A6UN01rB0='
               ),
               transports: ["internal"]
             },
@@ -474,8 +482,7 @@ export default {
     }
   },
   async mounted() {
-    // this.che();
-
+    this.che();
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
     window.addEventListener("resize", () => {
@@ -557,7 +564,7 @@ export default {
       this.pwd = '1225'
     },
     savepwd() {
-      this.reg();
+      // this.reg();
 
     },
     getDayCache(dateString) {
