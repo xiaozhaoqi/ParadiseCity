@@ -489,7 +489,9 @@ export default {
       moneyChart.resize()
       weightChart.resize()
     });
-    await this.init();
+    setTimeout(() => {
+      this.init();
+    }, 1000);
   },
   methods: {
     async che() {
