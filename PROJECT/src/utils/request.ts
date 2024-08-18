@@ -1,6 +1,6 @@
 // 此Token拥有读写存储库的权限，但无法用于GitHub账户设置
-const leftToken = 'github_pat_11AFKPCHY0jV4MXPuE7x1s_7oq6f1q7v6N4'
-const rightToken = 'OKkpvrlYIvKpjAiWtKDJ7W4WdLiZRBgT4JGYGJR0DJf9Yny'
+const leftToken = 'github_pat_11AFKPCHY0DuXBwT3jHYGF'
+const rightToken = '_SU2LzQ1pgpla9ZFthYURWbieR8uEHVs6c2pM9D2TOTvV2WT7WUIW2MiAreX'
 
 // 扩展fetch方法，任意AJAX调用都会展示进度条
 window.PARADISE_CITY_Fetch = window.fetch

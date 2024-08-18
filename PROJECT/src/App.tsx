@@ -53,7 +53,7 @@ export default class Layout extends React.Component {
           item.day = date.getDate()
           item.date = date.toLocaleDateString()
           item.catagory = args[1]
-          item.author = args.length > 3 ? args[2] : 'zhaoqi.xiao'
+          item.author = args.length > 3 ? args[2] : '匿名'
         }
         return item
       }).sort((a, b) => (a.date < b.date ? 1 : -1)).map((v, i) => ({ ...v, sort: i })) || []
@@ -120,7 +120,7 @@ export default class Layout extends React.Component {
           {/* <label htmlFor='color' title="点击更换文字颜色">👫</label> */}
           {/* <Link to='/ParadiseCity/about' style={ { float: 'right' } }>我</Link> */}
           <Link to='/ParadiseCity/write' style={{ float: 'right', 'line-height': '2em' }}>✍</Link>
-          <a href='./calendar' style={{ float: 'right' }}>📅</a>
+          <a href='./calendar' style={{ float: 'right', opacity: '.01' }}>📅</a>
           <span className={styles['scroll-tips']}>
             <Link to='/ParadiseCity/'>
               {/* <span>为</span>

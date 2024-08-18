@@ -1,18 +1,18 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7644920c8f27afc12c84c91eab814bb0",
+    "revision": "af258ff35ddc4661a869cced8599a07f",
     "url": "/ParadiseCity/about.html"
   },
   {
-    "revision": "7644920c8f27afc12c84c91eab814bb0",
+    "revision": "af258ff35ddc4661a869cced8599a07f",
     "url": "/ParadiseCity/article.html"
   },
   {
-    "revision": "7644920c8f27afc12c84c91eab814bb0",
+    "revision": "af258ff35ddc4661a869cced8599a07f",
     "url": "/ParadiseCity/index.html"
   },
   {
-    "revision": "1aa02456472dd67d2c4f",
+    "revision": "7bf987af12fdfe7183a4",
     "url": "/ParadiseCity/static/css/main.52728a08.chunk.css"
   },
   {
@@ -20,15 +20,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ParadiseCity/static/js/2.9f5060f5.chunk.js"
   },
   {
-    "revision": "1aa02456472dd67d2c4f",
-    "url": "/ParadiseCity/static/js/main.a3339d2a.chunk.js"
+    "revision": "7bf987af12fdfe7183a4",
+    "url": "/ParadiseCity/static/js/main.7cb10961.chunk.js"
   },
   {
     "revision": "147a521f87ee5557ff09",
     "url": "/ParadiseCity/static/js/runtime-main.46c3c9d1.js"
   },
   {
-    "revision": "7644920c8f27afc12c84c91eab814bb0",
+    "revision": "af258ff35ddc4661a869cced8599a07f",
     "url": "/ParadiseCity/write.html"
   }
 ]);

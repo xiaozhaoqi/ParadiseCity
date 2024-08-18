@@ -67,7 +67,6 @@ export default withRouter((props) => {
               window.PARADISE_lastest_catagory = catagory
               window.PARADISE_history.push('/ParadiseCity/article', {
                 ...item,
-                from: 'way2explore'
               })
               document.location.hash = item.sha
             } }
