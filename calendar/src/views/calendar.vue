@@ -151,11 +151,11 @@
       <div v-show="pwd != '1225'">
         <img :src="bg" alt="" @load="bgLoaded = true"
           style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;width: 100%;margin: auto;z-index: -1;">
-        <!-- <span v-show="bgLoaded && dateString"
+        <span v-show="bgLoaded"
           style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;width: 100%;font-weight: bold;margin: auto;width: 50px;font-size: 10px;height: 50px;border: none;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;border-radius: 50%;display: block;background: #fff;line-height: 50px;text-align: center;"
           @click="openpwd">
           芝麻开门
-        </span> -->
+        </span>
         <span
           style="position: fixed;right: 0;top: 0;bottom: 0; font-weight: bold;margin: auto;width: 50px;font-size: 10px;height: 50px;border: none;box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 4px;border-radius: 50%;display: block;background: #fff;opacity: 0;line-height: 50px;text-align: center;"
           @click="savepwd">
@@ -482,16 +482,12 @@ export default {
     }
   },
   async mounted() {
-    this.che();
     moneyChart = echarts.init(document.getElementById('moneyChart'), null, { locale: "ZH" })
     weightChart = echarts.init(document.getElementById('weightChart'), null, { locale: "ZH" })
     window.addEventListener("resize", () => {
       moneyChart.resize()
       weightChart.resize()
     });
-    setTimeout(() => {
-      this.init();
-    }, 1000);
   },
   methods: {
     async che() {
@@ -562,8 +558,10 @@ export default {
       // this.addWeightModal = false;
       this.init('update');
     },
-    openpwd() {
-      this.pwd = '1225'
+    async openpwd() {
+      await this.che();
+      this.init();
+      // this.pwd = '1225'
     },
     savepwd() {
       this.reg();
