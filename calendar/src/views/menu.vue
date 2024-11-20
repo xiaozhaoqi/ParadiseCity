@@ -1,6 +1,15 @@
 <template>
     <div>
-        <t-navbar title="502美食园" :fixed="false" class="custom-navbar" />
+        <t-navbar :fixed="false">
+            <template #left>
+                <t-search @change="onSearch" v-model="searchText" placeholder="502美食园" shape="round" />
+            </template>
+            <!-- <template #right>
+                <t-icon name="home" size="24px" />
+                <t-icon name="ellipsis" size="24px" />
+            </template> -->
+        </t-navbar>
+        <!-- <t-navbar title="502美食园" :fixed="false" class="custom-navbar" /> -->
 
         <div class="side-bar-wrapper">
             <t-side-bar :value="sideBarIndex" @change="onSideBarChange" @click="onSideBarClick">
@@ -25,107 +34,47 @@
         </div>
     </div>
 </template>
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref, onMounted } from 'vue';
-import { TdSideBarProps, TdSideBarItemProps } from 'tdesign-mobile-vue';
 import { useRoute, useRouter } from 'vue-router'
+import { getCurrentInstance } from 'vue';
+const vm = getCurrentInstance();
 const router = useRouter()
 
 const image = 'https://tdesign.gtimg.com/mobile/demos/example2.png';
 const items = new Array(12).fill({ label: '鱼香肉丝', image, desc: '描述' }, 0, 12);
-const sideBarIndex = ref<TdSideBarProps['value']>(1);
+const sideBarIndex = ref(1);
+const getImgUrl = (name) => {
+    return new URL(`${name}`, import.meta.url).href;
+};
 
 const data = reactive({
     categories: [
         {
-            label: '主食',
-            title: '主食',
+            label: '特色菜',
+            title: '特色菜',
             badgeProps: {},
             items: [
-                {
-                    label: '钵仔饭', image, desc: '描述'
-                }, {
-                    label: '煮挂面', image, desc: '描述'
-                }, {
-                    label: '小米粥', image, desc: '描述'
-                },
             ],
         },
-        {
-            label: '素菜',
-            title: '素菜',
-            items: [
-                {
-                    label: '西红柿炒鸡蛋', image, desc: '描述'
-                }, {
-                    label: '蘸酱菜', image, desc: '描述'
-                }, {
-                    label: '酸辣土豆丝', image, desc: '描述'
-                }, {
-                    label: '酸辣白菜', image, desc: '描述'
-                }, {
-                    label: '蒸茄子', image, desc: '描述'
-                },
-            ],
-        },
-        {
-            label: '肉菜',
-            title: '肉菜',
-            badgeProps: {},
-            items: [
-                {
-                    label: '煎鸡胸', image, desc: '描述'
-                }, {
-                    label: '水煮虾', image, desc: '描述'
-                }, {
-                    label: '涮牛羊肉', image, desc: '描述'
-                },
-            ],
-        },
-        {
-            label: '火锅专区',
-            title: '火锅专区',
-            items: [
-                {
-                    label: '蟹棒', image, desc: '描述'
-                }, {
-                    label: '宽粉', image, desc: '描述'
-                }, {
-                    label: '生菜', image, desc: '描述'
-                }, {
-                    label: '冻豆腐', image, desc: '描述'
-                }, {
-                    label: '粉丝', image, desc: '描述'
-                },
-            ],
-        },
-        {
-            label: '水果',
-            title: '水果',
-            badgeProps: {},
-            items: [
-                {
-                    label: '苹果', image, desc: '描述'
-                }, {
-                    label: '橘子', image, desc: '描述'
-                }, {
-                    label: '柚子', image, desc: '描述'
-                }, {
-                    label: '西瓜', image, desc: '描述'
-                }, {
-                    label: '猕猴桃', image, desc: '描述'
-                },
-            ],
-        },
+
     ],
 });
+const files = import.meta.glob('../assets/menu/**/*')
 
-const wrapper = ref<HTMLElement>();
-const offsetTopList = reactive<number[]>([]);
+Object.keys(files).map(key => {
+    data.categories[0].items.push({
+        label: key.slice(15).slice(0, -4),
+        image: getImgUrl(key),
+        desc: ''
+    })
+})
+const wrapper = ref();
+const offsetTopList = reactive([]);
 const contentStyle = ref('');
 const getOffsetTopList = () => {
     if (wrapper.value) {
-        const $title = wrapper.value.querySelectorAll<HTMLElement>(`.title`);
+        const $title = wrapper.value.querySelectorAll(`.title`);
         $title.forEach((item) => offsetTopList.push(item.offsetTop));
     }
 };
@@ -133,31 +82,50 @@ const backClick = () => {
     router.replace({ path: '/' })
 }
 
-const moveToActiveSideBar = (index: number) => {
+const moveToActiveSideBar = (index) => {
     if (wrapper.value) {
         wrapper.value.scrollTop = offsetTopList[index] - offsetTopList[0];
     }
 };
-
+const searchText = ref('');
+const dataBak = data.categories[0].items
+const onSearch = () => {
+    if (searchText.value) {
+        data.categories[0].items = data.categories[0].items.filter(v => v.label.indexOf(searchText.value) > -1)
+    } else {
+        data.categories[0].items = dataBak
+    }
+    document.querySelectorAll('img').forEach(v => {
+        v.addEventListener('click', (e) => {
+            vm.proxy.$hevueImgPreview(e.target.src)
+        })
+    })
+};
 onMounted(() => {
+
     getOffsetTopList();
     moveToActiveSideBar(Number(sideBarIndex.value));
+    document.querySelectorAll('img').forEach(v => {
+        v.addEventListener('click', (e) => {
+            vm.proxy.$hevueImgPreview(e.target.src)
+        })
+    })
 });
 
-const onSideBarClick = (value: TdSideBarProps['value'], label: TdSideBarItemProps['label']) => {
-    console.log('=onSideBarClick===', value, label);
+const onSideBarClick = (value, label) => {
+
 };
 const clickItem = () => {
 
 }
-const onSideBarChange = (value: TdSideBarProps['value']) => {
+const onSideBarChange = (value) => {
     sideBarIndex.value = value;
     moveToActiveSideBar(Number(value));
 };
 
-const onScroll = (e: WheelEvent | Event) => {
+const onScroll = (e) => {
     const threshold = offsetTopList[0]; // 下一个标题与顶部的距离
-    const { scrollTop } = e.target as HTMLElement;
+    const { scrollTop } = e.target;
     if (scrollTop < threshold) {
         sideBarIndex.value = 0;
         return;
@@ -170,6 +138,10 @@ const onScroll = (e: WheelEvent | Event) => {
 };
 </script>
 <style lang="less" scoped>
+:deep(.t-image__img) {
+    height: 60px;
+}
+
 .custom-navbar {
     --td-navbar-bg-color: #f3f3f3;
     --td-navbar-color: #222;
