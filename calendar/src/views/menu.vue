@@ -62,7 +62,7 @@ Object.keys(files).map(key => {
     let path = k[k.length - 1]
     data.categories[0].items.push({
         label: name,
-        image: '/menu/' + path,
+        image: document.location.href.indexOf('github.io') > -1 ? ('/ParadiseCity/calendar/menu/' + path) : ('/menu/' + path),
         desc: ''
     })
 })
