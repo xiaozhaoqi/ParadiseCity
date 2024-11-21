@@ -26,7 +26,7 @@
                                 :description="cargo.desc" :image="cargo.image" @click="clickItem" :layout="`horizontal`"
                                 :image-props="{ shape: 'round', lazy: true }">
                             </t-grid-item>
-                            <div>+</div>
+                            <!-- <div>+</div> -->
                         </div>
                     </t-grid>
                 </div>
@@ -35,18 +35,13 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { getCurrentInstance } from 'vue';
 const vm = getCurrentInstance();
 const router = useRouter()
 
-const image = 'https://tdesign.gtimg.com/mobile/demos/example2.png';
-const items = new Array(12).fill({ label: '鱼香肉丝', image, desc: '描述' }, 0, 12);
 const sideBarIndex = ref(1);
-const getImgUrl = (name) => {
-    return new URL(`${name}`, import.meta.url).href;
-};
 
 const data = reactive({
     categories: [
@@ -60,12 +55,14 @@ const data = reactive({
 
     ],
 });
-const files = import.meta.glob('../assets/menu/**/*')
-
+const files = import.meta.globEager('../../public/menu/**/*')
 Object.keys(files).map(key => {
+    let k = key.split('/')
+    let name = k[k.length - 1].slice(0, -4)
+    let path = k[k.length - 1]
     data.categories[0].items.push({
-        label: key.slice(15).slice(0, -4),
-        image: getImgUrl(key),
+        label: name,
+        image: '/menu/' + path,
         desc: ''
     })
 })
@@ -88,13 +85,14 @@ const moveToActiveSideBar = (index) => {
     }
 };
 const searchText = ref('');
-const dataBak = data.categories[0].items
-const onSearch = () => {
+const dataBak = [...data.categories[0].items]
+const onSearch = async () => {
     if (searchText.value) {
-        data.categories[0].items = data.categories[0].items.filter(v => v.label.indexOf(searchText.value) > -1)
+        data.categories[0].items = dataBak.filter(v => v.label.indexOf(searchText.value) > -1)
     } else {
         data.categories[0].items = dataBak
     }
+    await nextTick();
     document.querySelectorAll('img').forEach(v => {
         v.addEventListener('click', (e) => {
             vm.proxy.$hevueImgPreview(e.target.src)
