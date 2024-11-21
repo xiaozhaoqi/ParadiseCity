@@ -1,6 +1,6 @@
 <template>
     <div>
-        <t-navbar :fixed="false">
+        <t-navbar :fixed="true">
             <template #left>
                 <t-search @change="onSearch" v-model="searchText" placeholder="502美食园" shape="round" />
             </template>
@@ -294,6 +294,7 @@ const onScroll = (e) => {
 }
 
 .side-bar-wrapper {
+    padding-top: 50px;
     display: flex;
     height: 100vh;
     background-color: var(--bg-color-demo, #fff);
