@@ -22,14 +22,14 @@
         </div>
         <div class="calendar-day">
           <Item v-for="(item, index) in [
-        { value: '一' },
-        { value: '二' },
-        { value: '三' },
-        { value: '四' },
-        { value: '五' },
-        { value: '六' },
-        { value: '日' }
-      ]" :key="item.key" v-bind="item" />
+            { value: '一' },
+            { value: '二' },
+            { value: '三' },
+            { value: '四' },
+            { value: '五' },
+            { value: '六' },
+            { value: '日' }
+          ]" :key="item.key" v-bind="item" />
         </div>
         <div class="calendar-day" v-if="!yearMode">
           <Item v-for="(item, index) in itemList" :key="item.key" v-bind="item" @clickItem="clickItem" />
@@ -54,9 +54,13 @@
             <button @click="addWeightModal = true; weightDate = dateString"
               style="font-size: 12px;margin-left: 10px;">体重</button>
             <button @click="getYearList(); yearMode = !yearMode;" style="font-size: 12px;margin-left: 10px;">{{ yearMode
-        ?
-        '月度' : '年度'
-              }}</button>
+              ?
+              '月度' : '年度'
+            }}</button>
+            <button @click="bookMode = !bookMode; getBookList();" style="font-size: 12px;margin-left: 10px;">{{ bookMode
+              ?
+              '日历' : '阅览'
+            }}</button>
           </div>
 
 
@@ -75,13 +79,13 @@
               {{ month + 1 }}月
               <span :style="`color:${moneyMonth > 3000 ? '#f93885' : '#0a8750'}; font-weight: bold;font-size: 12px;`">
                 {{
-        moneyMonth }}</span>
+                  moneyMonth }}</span>
               元
             </span>
             <span style="display: inline-block; font-weight: bold;font-size: 12px;">
               {{ day }}日
               <span :style="`color:${money > 100 ? '#f93885' : '#0a8750'}; font-weight: bold;font-size: 12px;`">{{ money
-                }}</span>
+              }}</span>
               元
             </span>
           </p>
@@ -114,14 +118,41 @@
               <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
                 历史搜索
               </p>
-              <input placeholder="输入关键字" type="text" v-model="query" :disabled="allowSearch"
+              <input placeholder="输入关键字或日期" type="text" v-model="query" :disabled="allowSearch"
                 style="margin-right: 4px;font-size: 13px;width: 120px;">
               <button @click="search('history')" :disabled="allowSearch" style="margin-right: 4px;">搜索</button>
               <button @click="allowSearch = false" :disabled="!allowSearch" style="margin-right: 4px;">停止</button>
               <button @click="searchModal = false" style="margin-right: 4px;">关闭</button>
               <span style="font-size: 12px;">进度：{{ searchNum }}/{{ searchNumAll }}</span>
+              <div v-if="searchResult.length > 0" style="font-size: 13px;font-weight: bold;">找到 {{ searchResult.length
+                }} 条结果</div>
               <div v-for="item in searchResult" :key="item.key">
-                <p style="font-size: 13px;font-weight: bold;">{{ item.date }}</p>
+                <p style="font-size: 13px;font-weight: bold;">{{ item.date }} <span
+                    v-html="getWeekDay(item.date)"></span></p>
+                <p style="font-size: 12px;" v-html="item.content"></p>
+              </div>
+              <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
+            </div>
+          </div>
+        </div>
+        <div v-show="bookMode"
+          style="position: fixed;top: 0;bottom: 0;left: 0;right: 0;overflow: auto;width: 100%;padding: 20px;background: #fff;">
+          <div>
+            <div>
+              <p style="font-size: 13px;font-weight: bold; margin-bottom: 4px;">
+                日记阅览
+              </p>
+              <button @click="bookPage--; getBookList()" :disabled="bookPage < 1"
+                style="margin-right: 4px;">上一页</button>
+              <span style="font-size: 12px;margin-right: 4px;"> {{ bookPage }}/{{ Number((markList.length /
+                10).toFixed(0)) }} </span>
+
+              <button @click="bookPage++; getBookList()" :disabled="Number((markList.length /
+                10).toFixed(0)) <= bookPage" style="margin-right: 4px;">下一页</button>
+              <button @click="bookMode = false" style="margin-right: 4px;">关闭</button>
+              <div v-for="item in bookList" :key="item.key" style="margin:6px 0">
+                <p style="font-size: 13px;font-weight: bold;">{{ item.date }} <span
+                    v-html="getWeekDay(item.date)"></span></p>
                 <p style="font-size: 12px;" v-html="item.content"></p>
               </div>
               <div v-show="searchNum > 0 && searchResult.length == 0" style="font-size: 12px;color: #333;">搜不到哟</div>
@@ -184,8 +215,9 @@ export default {
       bgLoaded: false,
       db: new DB(),
       searchModal: false,
+      bookMode: false,
       todoList: [],
-      pwd: '',
+      pwd: '1225',
       year: '',
       month: '',
       day: '',
@@ -478,7 +510,9 @@ export default {
             },
           ]
         }
-      }
+      },
+      bookList: [],
+      bookPage: 0
     }
   },
   async mounted() {
@@ -488,6 +522,7 @@ export default {
       moneyChart.resize()
       weightChart.resize()
     });
+    this.init();
   },
   methods: {
     async che() {
@@ -566,12 +601,15 @@ export default {
     savepwd() {
       this.reg();
     },
-    getDayCache(dateString) {
+    getDayCache(dateString, mode) {
       return this.db.read({
         dbName: "calendar",
         objName: "dayCache",
         param: dateString,
       }).then(res => {
+        if (mode === 'cache') {
+          return res
+        }
         if (res && this.allDayList.find(v => v.sha == res.sha)) {
           // 命中缓存 
           return res
@@ -596,6 +634,9 @@ export default {
         }
       }).catch((err) => {
         console.error(err);
+        if (mode === 'cache') {
+          return {}
+        }
         return req.getArticle(dateString).then(res => {
           let cache = {
             date: dateString,
@@ -610,6 +651,7 @@ export default {
       req.getArticleList().then(res => {
         this.markList = res.filter(v => v.size > 1).map(v => v.path.slice(15, -3))
         this.allDayList = res;
+        this.bookPage = Number((this.markList.length / 10).toFixed(0));
       }).finally(() => {
         this.getDayCache('1996-10-13').then(res => {
           this.events = (res.content).split('\n').map(v => ({ dateString: v.split(' ')[0], emojimark: v.split(' ')[1] }))
@@ -667,6 +709,22 @@ export default {
         this.status = '没存上，再来！error: ' + error
       }
 
+    },
+    getWeekDay(date) {
+      return ['<span style="color: blue;">周日</span>', '周一', '周二', '周三', '周四', '周五', '<span style="color: blue;">周六</span>'][new Date(date).getDay()]
+    },
+    async getBookList() {
+      this.bookList = []
+      for (let i = 1; i <= 10; i++) {
+        try {
+          this.getDayCache(this.markList[this.bookPage * 10 + i], 'cache').then(item => {
+            this.bookList.push(item)
+
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      }
     },
     async search(type) {
       if (type == 'money') {
@@ -743,7 +801,7 @@ export default {
               this.getDayCache(this.markList[this.markList.length - i]).then(item => {
                 this.searchNum++;
                 let content = item.content
-                if (content.indexOf(this.query) > -1) {
+                if (item.content.indexOf(this.query) > -1 || item.date.indexOf(this.query) > -1) {
                   content = content.replaceAll(this.query, `<span style="background: yellow;">${this.query}</span>`)
                   this.searchResult.push({
                     date: this.markList[this.markList.length - i],
