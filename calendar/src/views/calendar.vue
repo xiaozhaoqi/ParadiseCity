@@ -217,7 +217,7 @@ export default {
       searchModal: false,
       bookMode: false,
       todoList: [],
-      pwd: '1225',
+      pwd: '',
       year: '',
       month: '',
       day: '',
@@ -522,7 +522,7 @@ export default {
       moneyChart.resize()
       weightChart.resize()
     });
-    this.init();
+    // this.init();
   },
   methods: {
     async che() {
