@@ -508,6 +508,14 @@ export default {
               ),
               transports: ["internal"]
             },
+            {
+              // oppo
+              type: "public-key",
+              id: this.base64ToArrayBuffer(
+                'Ae9/i0F3d3Yo8tOg2tMm562GI0YyNx++Yaw+ClxiFhgJKwaVKdPfRIBbAJwE2qzp4j+cuDkWUK487KH66xWMGzw='
+              ),
+              transports: ["internal"]
+            },
           ]
         }
       },
